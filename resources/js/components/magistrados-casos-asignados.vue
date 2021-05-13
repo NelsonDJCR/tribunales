@@ -4,7 +4,6 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link></li>
         </ol>
-        
 
         <div class="container-fluid">
             <!-- Tabla Listado -->
