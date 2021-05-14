@@ -30,12 +30,15 @@
                     name="nombre_tema"
                     v-model="dataFilter.nombre_tema"
                   />
+
+                  
                 </div>
                 <div class="mb-3 col-3">
                   <label for="" class="form-label"><b>Fecha </b></label>
                   <input
                     type="date"
                     class="form-control"
+
                     id="fecha_realizacion"
                     v-model="dataFilter.fecha_realizacion"
                   />

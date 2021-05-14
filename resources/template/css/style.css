@@ -335,7 +335,7 @@
   background: initial;
 }
 
- #app .main-panel .content-wrapper{
+ #app .main-panel, #app .main-panel .content-wrapper{
   background: #fff !important;
 }
 .main-panel .main .container .rounded-3{

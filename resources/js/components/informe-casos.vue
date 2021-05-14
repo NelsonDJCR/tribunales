@@ -145,6 +145,9 @@
         </template>
 
         <template v-if="action == 1">
+
+
+        
           <div>
             <div class="container mt-5">
               <label for="" class="p-2"
