@@ -11,6 +11,13 @@ Vue.component('tribunales-nuevo', require('./components/tribunales-nuevo.vue').d
 Vue.component('tribunales-editar', require('./components/tribunales-editar.vue').default);
 Vue.component('tribunales-ver', require('./components/tribunales-ver.vue').default);
 Vue.component('tribunales-nuevo', require('./components/tribunales-nuevo.vue').default);
+Vue.component('tribunales-actividades-nuevo', require('./components/tribunales-actividades-nuevo.vue').default);
+Vue.component('tribunales-actividades-editar', require('./components/tribunales-actividades-editar.vue').default);
+Vue.component('tribunales-actividades-ver', require('./components/tribunales-actividades-ver.vue').default);
+Vue.component('cuentas-cobro-nuevo', require('./components/cuentas-cobro-nuevo.vue').default);
+Vue.component('cuentas-cobro-editar', require('./components/cuentas-cobro-editar.vue').default);
+Vue.component('cuentas-cobro-ver', require('./components/cuentas-cobro-ver.vue').default);
+
 // Vue.component('tipo-documento', require('./components/tipoDocumento_J/index.vue').default);
 
 Vue.directive('permiso', function (el, binding,vnode) {

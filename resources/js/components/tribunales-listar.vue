@@ -10,7 +10,7 @@
         />
         <!-- <template v-if="action == 0"> -->
           <div class="container mt-5">
-            <label for="" class="p-2">Cabildos/Listado de tribunales </label>
+            <label for="" class="p-2">Tribunales de Garantía / Listado de tribunales </label>
             <div class="row p-2 text-center border shadow">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
@@ -29,7 +29,7 @@
             <form @submit.prevent="filter">
               <div class="row mt-5">
                 <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Tema</b></label>
+                  <label for="" class="form-label"><b>Nombre</b></label>
                   <input
                     type="text"
                     class="form-control"
