@@ -7,13 +7,14 @@
       crossorigin="anonymous"
     />
 
+
     <div class="container mt-5">
       <label for="" class="p-2"
-        >Cabildos/Listado de cabildos/Ver tribunal
+        >Cabildos/Listado de cabildos/Editar tribunal
       </label>
       <div class="row p-2 text-center border shadow">
         <div class="row">
-          <h1 class="text-blue"><b>VISUALIZACIÓN DE TRIBUNAL</b></h1>
+          <h1 class="text-blue"><b>EDITAR TRIBUNAL</b></h1>
         </div>
       </div>
 
@@ -114,6 +115,9 @@
                 class="form-select"
                 name="type_file"
                 v-model="sesion.type_file"
+
+
+                
               >
                 <option
                   v-for="(i, index) in type_file"
@@ -163,7 +167,9 @@
                 </div>
               </div>
             </div>
-           
+            <div class="row mt-5">
+              <button type="submit"  class="btn btn-primary">Crear sesión</button>
+            </div>
           </div>
         </div>
       </form>

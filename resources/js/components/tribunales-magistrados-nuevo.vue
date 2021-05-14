@@ -9,11 +9,11 @@
 
     <div class="container mt-5">
       <label for="" class="p-2"
-        >Cabildos/Listado de cabildos/Ver tribunal
+        >Cabildos/Listado de cabildos/Nuevo magistrados
       </label>
       <div class="row p-2 text-center border shadow">
         <div class="row">
-          <h1 class="text-blue"><b>VISUALIZACIÓN DE TRIBUNAL</b></h1>
+          <h1 class="text-blue"><b>NUEVO MAGISTRADO</b></h1>
         </div>
       </div>
 
@@ -163,7 +163,9 @@
                 </div>
               </div>
             </div>
-           
+            <div class="row mt-5">
+              <button type="submit"  class="btn btn-primary">Crear sesión</button>
+            </div>
           </div>
         </div>
       </form>
