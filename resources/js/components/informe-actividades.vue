@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <template v-if="pantalla == 'lista'">

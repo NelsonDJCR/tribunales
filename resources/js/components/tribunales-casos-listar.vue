@@ -10,34 +10,25 @@
         />
         <template v-if="action == 0">
           <div class="container mt-5">
-            <label for="" class="p-2">Tribunales/Listado de Actividades </label>
-            <div class="row p-2 text-center border shadow rounded-3 bg-white">
+            <label for="" class="p-2">Cabildos/Listado de casos </label>
+            <div class="row p-2 text-center border shadow">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                  <h1 class="text-blue"><b>LISTADO DE PQRS</b></h1>
+                  <h1 class="text-blue"><b>LISTADO DE CASOS</b></h1>
                 </div>
-
+                
               </div>
             </div>
             <form @submit.prevent="filter">
               <div class="row mt-5">
                 <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Tipo de Trámite</b></label>
+                  <label for="" class="form-label"><b>Tema</b></label>
                   <input
                     type="text"
                     class="form-control"
                     id="nombre_tema"
                     name="nombre_tema"
                     v-model="dataFilter.nombre_tema"
-                  />
-                </div>
-                <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Fecha de Recibido </b></label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="fecha_realizacion"
-                    v-model="dataFilter.fecha_realizacion"
                   />
                 </div>
                 <div class="mb-3 col-3">
@@ -57,23 +48,23 @@
                     ></option>
                   </select>
                 </div>
-
                 <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Estado</b></label>
-                  <select
-                    v-model="dataFilter.dep_id"
-                    class="form-select"
-                    name="dep_id"
-                    id="dep_id"
-                  >
-                    <option value="">Selecciona</option>
-                    <option
-                      v-for="(i, index) in departament"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option>
-                  </select>
+                  <label for="" class="form-label"><b>Fecha inicio</b></label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="fecha_realizacion"
+                    v-model="dataFilter.fecha_realizacion"
+                  />
+                </div>
+                <div class="mb-3 col-3">
+                  <label for="" class="form-label"><b>Fecha final</b></label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="fecha_final"
+                    v-model="dataFilter.fecha_end"
+                  />
                 </div>
 
                 <div class="row">
@@ -104,17 +95,17 @@
           <table class="table table-bordered table-striped table-sm" id="datos">
             <thead>
               <th style="width: 195px">Opciones</th>
-              <th>Tipo de Trámite</th>
-              <th>Prioridad</th>
-              <th>Fecha de Recibido</th>
+              <th>Tema</th>
               <th>Departamento</th>
               <th>Municipio</th>
-              <th>Solicitante</th>
+              <th>Dirección</th>
+              <th>Fecha inicio</th>
+              <th>Fecha fin</th>
               <th>Estado</th>
-              <th>Usuario Asignado</th>
             </thead>
             <tbody>
-              <tr v-for="(i, index) in cabildos" :key="index">
+              <!-- v-for="(i, index) in cabildos" :key="index" -->
+              <tr >
                 <td class="aling_btn_options">
                   <button
                     type="button"
@@ -150,12 +141,17 @@
                 <i class="fa fa-download"></i>
               </button> -->
                 </td>
+                <td>asd</td>
+                <td>dd</td>
+                <td>d</td>
+                <td>d</td>
+                <td>ddd </td>
+<!--                 
                 <td>{{ i.nombre_tema }}</td>
                 <td>{{ i.description }}</td>
                 <td>{{ i.nombre_dep }}</td>
                 <td>{{ i.nombre_ciu }}</td>
-                <td>{{ i.nombre_dep }}</td>
-                <td>{{ i.nombre_ciu }}</td>
+                <td>{{ i.fecha_realizacion }}</td> -->
               </tr>
             </tbody>
           </table>
