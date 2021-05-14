@@ -23,6 +23,7 @@ use App\Http\Middleware\ValidateSesion;
 use App\Http\Controllers\CabildosController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TipoDocumentoController;
+use App\Http\Controllers\TribunalesController;
 use App\Models\CabildoAbierto;
 use App\Models\TipoDocumento;
 use Illuminate\Support\Facades\App;
@@ -45,6 +46,25 @@ Route::middleware('auth')->group(function () {
     Route::get('redirectCentralizado', [CentralizadoController::class, 'redirectCentralizado'])->name('redirectCentralizado');
 
     Route::group(["middleware" => ["CheckDepto", "ChangeDb", "validateSesion"]], function () {
+
+
+
+
+
+        // Rutas para tribunales
+        Route::get('/departament-city', [TribunalesController::class, 'data']);
+
+
+
+
+        Route::post('/saveCourt', [TribunalesController::class, 'store']);
+
+
+
+
+
+
+
 
         Route::get('/main', [MainController::class, 'index'])->name('main');
         Route::get('/rol', [RolController::class, 'index']);

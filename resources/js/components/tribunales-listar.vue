@@ -21,6 +21,7 @@
                     @click="pantallaNuevo"
                     class="btn btn-warning text-white w-100 mt-2"
                   >
+
                     Nuevo tribunal
                   </button>
                 </div>
@@ -29,7 +30,7 @@
             <form @submit.prevent="filter">
               <div class="row mt-5">
                 <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Tema</b></label>
+                  <label for="" class="form-label"><b>Nombre</b></label>
                   <input
                     type="text"
                     class="form-control"
@@ -102,7 +103,7 @@
           <table class="table table-bordered table-striped table-sm" id="datos">
             <thead>
               <th style="width: 195px">Opciones</th>
-              <th>Tema</th>
+              <th>Nombre</th>
               <th>Departamento</th>
               <th>Municipio</th>
               <th>Dirección</th>
@@ -135,14 +136,6 @@
                   >
                     <i class="typcn typcn-eye"></i>
                   </button>
-
-                  <!-- <button
-                data-id=""
-                type="button"
-                class="btn download_parameterization download_btn"
-              >
-                <i class="fa fa-download"></i>
-              </button> -->
                 </td>
                 <td>j</td>
                 <td>hjkhhjk</td>

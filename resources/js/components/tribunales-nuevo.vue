@@ -1,5 +1,5 @@
 <template>
-  <div id="sesion">
+  <div id="form">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -17,7 +17,7 @@
         </div>
       </div>
 
-      <form @submit.prevent="save">
+      <form @submit.prevent="saveCourt">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
@@ -26,7 +26,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  v-model="sesion.theme"
+                  v-model="form.nombre"
                   maxlength="250"
                   name="theme"
                 />
@@ -38,13 +38,13 @@
                 <select
                   class="form-select"
                   name="department"
-                  v-model="sesion.department"
+                  v-model="form.dep_id"
                   id="departamento_id"
                   v-on:change="changeCity()"
                 >
                   <option disabled>Seleccione ...</option>
                   <option
-                    v-for="(i, index) in departament"
+                    v-for="(i, index) in departamentos"
                     :key="index"
                     :value="i.id"
                   >
@@ -60,7 +60,7 @@
                 <label for="" class="form-label"><b>Ciudad *</b></label>
                 <select
                   class="form-select"
-                  v-model="sesion.municipality"
+                  v-model="form.ciu_id"
                   name="municipality"
                   id="municipio"
                 >
@@ -82,7 +82,7 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                    v-model="form.fecha_inicio"
                     type="date"
                     class="form-control"
                   />
@@ -96,7 +96,7 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                    v-model="form.fecha_final"
                     type="date"
                     class="form-control"
                   />
@@ -113,10 +113,10 @@
               <select
                 class="form-select"
                 name="type_file"
-                v-model="sesion.type_file"
+                v-model="form.estado"
               >
                 <option
-                  v-for="(i, index) in type_file"
+                  v-for="(i, index) in estado"
                   :key="index"
                   :value="i.id"
                   v-text="i.nombre"
@@ -130,10 +130,10 @@
               <select
                 class="form-select"
                 name="type_file"
-                v-model="sesion.type_file"
+                v-model="form.type_file"
               >
                 <option
-                  v-for="(i, index) in type_file"
+                  v-for="(i, index) in tipo_documento"
                   :key="index"
                   :value="i.id"
                   v-text="i.nombre"
@@ -146,7 +146,7 @@
                 class="form-group files border"
                 role="button"
                 id="box_file"
-                @click="openModalFile()"
+                @click="box_file()"
               >
                 <div class="row mt-5">
                   <img
@@ -163,127 +163,51 @@
                 </div>
               </div>
             </div>
+            <input type="file" class="d-none" @change="archivo($event)" id="file">
             <div class="row mt-5">
-              <button type="submit"  class="btn btn-primary">Crear sesión</button>
+              <button type="submit"  class="btn btn-primary">Crear tribunal</button>
             </div>
           </div>
         </div>
       </form>
     </div>
 
-    <div
-      class="modal fade"
-      id="modal_file"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="staticBackdropLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">
-              Agregar Documentos
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              @click="closeAddFile()"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="row mb-2">
-              <div class="col-11">
-                <label class="form-label">Agrege todos los documentos</label>
-              </div>
-              <div class="col-1">
-                <button
-                  class="btn-more btn"
-                  id="add_file"
-                  @click="add_file()"
-                  type="button"
-                >
-                  <!-- <i class="fas fa-plus"></i> -->
-                  <i class="typcn typcn-document-add" style="color: green"></i>
-                </button>
-              </div>
-            </div>
-            <div class="col-12" id="box_files"></div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="closeAddFile()"
-            >
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+ 
   </div>
 </template>
 <script>
-// $('body').on('click', '.delete_file', function() {
-//   $(this).parent().parent().remove();
-// });
+
 export default {
   data() {
+    
     return {
-      type_file: [],
+      tipo_documento: [],
       ciudades: [],
-      departament: [],
-      sesion: {},
+      departamentos: [],
+      estado: [],
+      form: {},
       documentos: [],
       index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
     };
   },
   created() {
-    const url = "/data-new-sesion";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
+    axios.get("/departament-city").then((r) => {
+      this.tipo_documento = r.data.tipo_documento;
       this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
+      this.departamentos = r.data.departamentos;
+      this.estado = r.data.estado;
     });
   },
   methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
+    archivo(event){
+      this.archivo = event.file[0]
+      
     },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
+    uploadFile(event) {
+      this.archivo = event.target.files[0];
     },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
+    box_file(){
+      $("#file").trigger('click')
     },
     changeCity() {
       var id = $("#departamento_id").val();
@@ -291,22 +215,10 @@ export default {
         this.ciudades = r.data;
       });
     },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
-          });
-        }
-
+    saveCourt() {
+      let form = new FormData
+      axios.post('/saveCourt', form).then((res) => {
+        console.log(res.data);
       });
     },
   },

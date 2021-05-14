@@ -11,6 +11,11 @@ Vue.component('tribunales-nuevo', require('./components/tribunales-nuevo.vue').d
 Vue.component('tribunales-editar', require('./components/tribunales-editar.vue').default);
 Vue.component('tribunales-ver', require('./components/tribunales-ver.vue').default);
 Vue.component('tribunales-nuevo', require('./components/tribunales-nuevo.vue').default);
+
+Vue.component('tribunales-magistrados-nuevo', require('./components/tribunales-magistrados-nuevo.vue').default);
+Vue.component('tribunales-magistrados-ver', require('./components/tribunales-magistrados-ver.vue').default);
+Vue.component('tribunales-magistrados-editar', require('./components/tribunales-magistrados-editar.vue').default);
+
 // Vue.component('tipo-documento', require('./components/tipoDocumento_J/index.vue').default);
 
 Vue.directive('permiso', function (el, binding,vnode) {
