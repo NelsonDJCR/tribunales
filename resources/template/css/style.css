@@ -335,4 +335,16 @@
   background: initial;
 }
 
-    
+ #app .main-panel .content-wrapper{
+  background: #fff !important;
+}
+.main-panel .main .container .rounded-3{
+    border-radius: .63rem!important;
+    background-color: #fff!important;
+}
+.main-panel .main .container .rounded-3 .text-blue{
+    color: #003972 !important;
+ }
+.table.table-bordered.table-striped caption.top{
+  caption-side: top;
+} 

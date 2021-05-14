@@ -1,390 +1,539 @@
 <template>
-    <main class="main col-12">
-        <!-- Breadcrumb -->
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item" v-for="ruta in arrayRuta" :key="ruta">
-                <router-link :to="{name:ruta.componente}">
-                    <span v-if="ruta.nombre != ''">{{ruta.nombre}}</span>
-                    <span v-else>{{ruta.componente}}</span>
-                </router-link>
-            </li>
-        </ol>
-
-        <div class="container-fluid">
-                <!-- Ejemplo de tabla Listado -->
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Departamentos
-                        <button type="button" @click="abrirModal('departamento','registrar')" class="btn btn-secondary">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <select class="form-control col-md-3" v-model="criterio">
-                                      <option value="nombre">Nombre</option>
-                                    </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarDepartamento(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarDepartamento(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                                </div>
-                            </div>
-                        </div>
-                        <table class="table table-bordered table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th style="width: 140px;">Opciones</th>
-                                    <th>Nombre</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="departamento in arrayDepartamento" :key="departamento.id">
-                                    <td>
-                                        <button type="button" @click="abrirModal('departamento','actualizar',departamento)" class="btn btn-warning btn-sm">
-                                          <i class="typcn typcn-edit" style="color:white"></i>
-                                        </button> &nbsp;
-                                        <template v-if="departamento.estado">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarDepartamento(departamento.id)">
-                                                <i class="typcn typcn-trash"></i>
-                                            </button>
-                                        </template>
-                                        <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarDepartamento(departamento.id)">
-                                                <i class="typcn typcn-tick-outline"></i>
-                                            </button>
-                                        </template>
-                                    </td>
-                                    <td v-text="departamento.nombre"></td>
-                                    <td>
-                                        <div v-if="departamento.estado">
-                                            <span class="badge badge-success">Activo</span>
-                                        </div>
-                                        <div v-else>
-                                            <span class="badge badge-danger">Inactivo</span>
-                                        </div>
-                                        
-                                    </td>
-                                </tr>                                
-                            </tbody>
-                        </table>
-                        <nav>
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscar,criterio)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
-                                </li>
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+  <div>
+    <template v-if="pantalla == 'lista'">
+      <div class="main col-12">
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+          crossorigin="anonymous"
+        />
+        <template v-if="action == 0">
+          <div class="container mt-5">
+            <label for="" class="p-2">Tribunales/Listado de Actividades </label>
+            <div class="row p-2 text-center border shadow rounded-3 bg-white">
+              <div class="row">
+                <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+                  <h1 class="text-blue"><b>LISTADO DE PQRS</b></h1>
                 </div>
-                <!-- Fin ejemplo de tabla Listado -->
-                    <!--Inicio del modal agregar/actualizar-->
-            <div class="modal fade" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-primary modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" v-text="tituloModal"></h4>
-                            <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de Departamento">                                        
-                                    </div>
-                                </div>
-                                <div v-show="errorDepartamento" class="form-group row div-error">
-                                    <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjDepartamento" :key="error" v-text="error">
 
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarDepartamento()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarDepartamento()">Actualizar</button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
+              </div>
             </div>
-            <!--Fin del modal-->
+            <form @submit.prevent="filter">
+              <div class="row mt-5">
+                <div class="mb-3 col-3">
+                  <label for="" class="form-label"><b>Tipo de Trámite</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="nombre_tema"
+                    name="nombre_tema"
+                    v-model="dataFilter.nombre_tema"
+                  />
+                </div>
+                <div class="mb-3 col-3">
+                  <label for="" class="form-label"><b>Fecha de Recibido </b></label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="fecha_realizacion"
+                    v-model="dataFilter.fecha_realizacion"
+                  />
+                </div>
+                <div class="mb-3 col-3">
+                  <label for="" class="form-label"><b>Departamento</b></label>
+                  <select
+                    v-model="dataFilter.dep_id"
+                    class="form-select"
+                    name="dep_id"
+                    id="dep_id"
+                  >
+                    <option value="">Selecciona</option>
+                    <option
+                      v-for="(i, index) in departament"
+                      :key="index"
+                      v-text="i.nombre"
+                      :value="i.id"
+                    ></option>
+                  </select>
+                </div>
+
+                <div class="mb-3 col-3">
+                  <label for="" class="form-label"><b>Estado</b></label>
+                  <select
+                    v-model="dataFilter.dep_id"
+                    class="form-select"
+                    name="dep_id"
+                    id="dep_id"
+                  >
+                    <option value="">Selecciona</option>
+                    <option
+                      v-for="(i, index) in departament"
+                      :key="index"
+                      v-text="i.nombre"
+                      :value="i.id"
+                    ></option>
+                  </select>
+                </div>
+
+                <div class="row">
+                  <div class="mb-3 col-3">
+                    <button
+                      type="submit"
+                      class="btn-primary btn w-80 btn_search w-100"
+                    >
+                      Buscar
+                    </button>
+                  </div>
+                  <div class="mb-5 col-9"></div>
+                  <!-- <div class="mb-3 col-1">
+                <button
+                  style="color: white"
+                  class="btn btn-info"
+                  id="btn_exece"
+                  type="button"
+                  @click="export_exel()"
+                >
+                  <i class="typcn typcn-database"></i>
+                </button>
+              </div> -->
+                </div>
+              </div>
+            </form>
+          </div>
+          <table class="table table-bordered table-striped table-sm" id="datos">
+            <thead>
+              <th style="width: 195px">Opciones</th>
+              <th>Tipo de Trámite</th>
+              <th>Prioridad</th>
+              <th>Fecha de Recibido</th>
+              <th>Departamento</th>
+              <th>Municipio</th>
+              <th>Solicitante</th>
+              <th>Estado</th>
+              <th>Usuario Asignado</th>
+            </thead>
+            <tbody>
+              <tr v-for="(i, index) in cabildos" :key="index">
+                <td class="aling_btn_options">
+                  <button
+                    type="button"
+                    @click="modal_export(i.id)"
+                    class="btn btn-info btn-sm"
+                  >
+                    <i
+                      class="typcn typcn-document-text"
+                      style="color: white"
+                    ></i>
+                  </button>
+                  <button
+                    type="button"
+                    @click="editSession(i.id)"
+                    class="btn btn-warning btn-sm"
+                  >
+                    <i class="typcn typcn-edit" style="color: white"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    @click="deleteSesion(i.id)"
+                  >
+                    <i class="typcn typcn-trash"></i>
+                  </button>
+
+                  <!-- <button
+                data-id=""
+                type="button"
+                class="btn download_parameterization download_btn"
+              >
+                <i class="fa fa-download"></i>
+              </button> -->
+                </td>
+                <td>{{ i.nombre_tema }}</td>
+                <td>{{ i.description }}</td>
+                <td>{{ i.nombre_dep }}</td>
+                <td>{{ i.nombre_ciu }}</td>
+                <td>{{ i.nombre_dep }}</td>
+                <td>{{ i.nombre_ciu }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </template>
+
+        <template v-if="action == 1">
+          <div>
+            <div class="container mt-5">
+              <label for="" class="p-2"
+                >Cabildos/Listado de cabildos/Editar sesión</label
+              >
+              <div class="row p-2 text-center border shadow">
+                <h1 class="text-blue"><b>EDITAR SESIÓN</b></h1>
+              </div>
+              <form @submit.prevent="saveEdit">
+                <!-- @include('modals.edit-file') -->
+                <input type="hidden" name="id_record" />
+                <div class="row">
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
+                    <div class="row">
+                      <div class="mb-3">
+                        <label for="" class="form-label"><b>Tema *</b></label>
+                        <input
+                          v-model="datos_edit.nombre_tema"
+                          type="text"
+                          class="form-control"
+                          maxlength="250"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="mb-3">
+                        <label for="" class="form-label"
+                          ><b>Descripción *</b></label
+                        >
+                        <textarea
+                          class="form-control"
+                          style="height: 150px"
+                          maxlength="1000"
+                          v-text="datos_edit.description"
+                          v-model="datos_edit.description"
+                        >
+                        </textarea>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="mb-3">
+                        <label for="" class="form-label"
+                          ><b>Departamento *</b></label
+                        >
+                        <select
+                          class="form-select"
+                          aria-label="Default select example"
+                          v-model="datos_edit.dep_id"
+                          v-on:change="changeCity()"
+                          id="departamento_id"
+                        >
+                          <option
+                            v-for="(i, index) in departament"
+                            :key="index"
+                            v-text="i.nombre"
+                            :value="i.id"
+                          ></option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="mb-3">
+                        <label for="" class="form-label"><b>Ciudad *</b></label>
+                        <select
+                          class="form-select"
+                          name="municipality"
+                          id="municipio"
+                          v-model="datos_edit.ciu_id"
+                        >
+                          <option>Seleccione ...</option>
+                          <option
+                            v-for="(i, index) in ciudades"
+                            :key="index"
+                            :value="i.id"
+                          >
+                            {{ i.nombre }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="mb-3">
+                        <label for="" class="form-label"
+                          ><b>Fecha de agendamiento *</b>
+                        </label>
+                        <div class="input-group">
+                          <input
+                            type="date"
+                            class="form-control"
+                            v-model="datos_edit.fecha_realizacion"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
+                    <div class="row">
+                      <label for="" class="form-label"
+                        ><b>Tipo de documento *</b>
+                      </label>
+                      <select class="form-select">
+                        <option
+                          v-for="(i, index) in type_file"
+                          :key="index"
+                          :value="i.id"
+                          v-text="i.nombre"
+                        ></option>
+                      </select>
+                    </div>
+                    <div class="row mt-3">
+                      <label for="" class="form-label"
+                        ><b>Radicado CNE *</b></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        maxlength="30"
+                        v-model="datos_edit.radicado_CNE"
+                      />
+                    </div>
+                    <div class="row mt-5">
+                      <div
+                        class="form-group files border"
+                        role="button"
+                        id="box_file"
+                      >
+                        <div class="row mt-5">
+                          <img class="img_file mx-auto d-block" src="" alt="" />
+                        </div>
+                        <div class="row mt-1 mb-5">
+                          <p class="text_file text-center">
+                            Edita tus documentos aquí
+                          </p>
+                        </div>
+                      </div>
+                      <input
+                        id="file"
+                        type="file"
+                        class="form-control d-none"
+                      />
+                    </div>
+                    <div class="row mt-5">
+                      <button class="btn-primary btn">Editar sesión</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </template>
+
+        <div
+          class="modal fade bd-example-modal-lg"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="myLargeModalLabel"
+          aria-hidden="true"
+          id="modal_export"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Generar reporte
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form @submit.prevent="exportPdf">
+                <input
+                  type="hidden"
+                  name=""
+                  id="cabildos_id"
+                  v-model="dataPdf.cabildo_id"
+                />
+                <div class="modal-body">
+                  <div class="mb-3 col-12">
+                    <label for="" class="form-label">Radicado</label>
+                    <input
+                      type="text"
+                      required
+                      class="form-control"
+                      v-model="dataPdf.radicado"
+                    />
+                  </div>
+                  <div class="mb-3 col-12">
+                    <label for="" class="form-label">Ciudadano</label>
+                    <input
+                      type="text"
+                      required
+                      class="form-control"
+                      v-model="dataPdf.ciudadano"
+                    />
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    Generar PDF
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-        
-    </main>
+      </div>
+    </template>
+
+    <template v-if="pantalla == 'nuevo'">
+      <div>
+        <tribunales-nuevo></tribunales-nuevo>
+      </div>
+    </template>
+  </div>
 </template>
 
-<script>   
-    export default {
-        props : ['ruta'],
-        data (){
-            return {
-                departamento_id: 0,
-                nombre : '',
-                arrayDepartamento : [],
-                modal : 0,
-                tituloModal : '',
-                tipoAccion : 0,
-                errorDepartamento : 0,
-                errorMostrarMsjDepartamento : [],
-                pagination : {
-                    'total' : 0,
-                    'current_page' : 0,
-                    'per_page' : 0,
-                    'last_page' : 0,
-                    'from' : 0,
-                    'to' : 0,
-                },
-                offset : 3,
-                criterio : 'nombre',
-                buscar : '',
-                arrayPais :[],
-                arrayRuta: [], 
-            }
-        },
-        components: {
+<script>
+export default {
+  data() {
+    return {
+      dataPdf: { cabildo_id: "", radicado: "", ciudadano: "" },
+      departament: [],
+      ciudades: [],
+      type_file: [],
+      cabildos: [],
+      dataFilter: {},
+      action: 0,
+      idEditar: 0,
+      datos_edit: {},
+      pantalla: 'lista',
+    };
+  },
+  created() {
+    const url = "/data-list-cabildos";
+    axios.get(url).then((r) => {
+      this.cabildos = r.data.cabildos;
+      //   this.ciudades = r.data.municipios;
+      this.departament = r.data.departments;
+      console.log(this.cabildos);
+    });
+  },
+  methods: {
+      pantallaNuevo(){
+          this.pantalla = 'nuevo'
+      },
+    modal_export(id) {
+      $("#cabildos_id").val(id);
+      this.dataPdf.cabildo_id = id;
+      this.dataPdf.radicado = "";
+      this.dataPdf.ciudadano = "";
+      $("#modal_export").modal("show");
     },
-        computed:{
-            isActived: function(){
-                return this.pagination.current_page;
-            },
-            //Calcula los elementos de la paginación
-            pagesNumber: function() {
-                if(!this.pagination.to) {
-                    return [];
-                }
-                
-                var from = this.pagination.current_page - this.offset; 
-                if(from < 1) {
-                    from = 1;
-                }
+    exportPdf() {
+      window.open(
+        "/download?id=" +
+          this.dataPdf.cabildo_id +
+          "&radicado=" +
+          this.dataPdf.radicado +
+          "&ciudadano=" +
+          this.dataPdf.ciudadano
+      );
+      $("#modal_export").modal("hide");
+    },
+    export_exel() {
+      let url = "/excel-cabildos";
+      let filtros = this.dataFilter;
+      axios.post(url, filtros).then((res) => {
+        let blob = new Blob([res.data]);
+        let link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "ReporteCabildos.xls";
+        link.click();
+      });
+    },
+    changeCity() {
+      var id = $("#departamento_id").val();
+      axios.post("/changeCity", { id: id }).then((r) => {
+        this.ciudades = r.data;
+      });
+    },
+    filter() {
+      let filtros = this.dataFilter;
+      axios.post("/filter-list-cabildos", filtros).then((r) => {
+        console.log(r.data.cabildos);
+        this.cabildos = r.data.cabildos;
+      });
+    },
 
-                var to = from + (this.offset * 2); 
-                if(to >= this.pagination.last_page){
-                    to = this.pagination.last_page;
-                }  
+    report() {
+      var form = new FormData();
+      form.append("nombre_tema", $("#nombre_tema").val());
+      form.append("dep_id", $("#dep_id").val());
+      form.append("fecha_realizacion", $("#fecha_realizacion").val());
+      form.append("fecha_final", $("#fecha_final").val());
+      axios.post("/excel-cabildos", form).then((r) => {});
+    },
 
-                var pagesArray = [];
-                while(from <= to) {
-                    pagesArray.push(from);
-                    from++;
-                }
-                return pagesArray;             
-
-            }
-        },
-        methods : {
-            listarDepartamento (page,buscar,criterio){
-                var url= this.ruta + '/departamento?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
-                axios.get(url).then((response) => {
-                    var respuesta= response.data;
-                    this.arrayDepartamento = respuesta.departamentos.data;
-                    this.pagination        = respuesta.pagination;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            },
-            cambiarPagina(page,buscar,criterio){
-                //Actualiza la página actual
-                this.pagination.current_page = page;
-                //Envia la petición para visualizar la data de esa página
-                this.listarDepartamento(page,buscar,criterio);
-            },
-            registrarDepartamento(){
-                if (this.validarDepartamento()){
-                    return;
-                }
-                
-                axios.post(this.ruta + '/departamento/store',{
-                    'nombre': this.nombre
-                }).then( (response) => {
-                    this.cerrarModal();
-                    Swal.fire(
-                                'Agregado!',
-                                'Agrego el departamento exitosamente.',
-                                'success'
-                                )
-                    this.listarDepartamento(1,'','nombre');
-
-                }).catch(function (error) {
-                    console.log(error);
-                });
-            },
-            actualizarDepartamento(){
-               if (this.validarDepartamento()){
-                    return;
-                }              
-
-                axios.put(this.ruta + '/departamento/update',{
-                    'idpais': this.idpais,
-                    'nombre': this.nombre,
-                    'id'    : this.departamento_id
-                }).then((response) => {
-                    this.cerrarModal();
-                    this.listarDepartamento(1,'','nombre');
-                }).catch(function (error) {
-                    console.log(error);
-                }); 
-            },
-            desactivarDepartamento(id){
-               swal.fire({
-                title: 'Esta seguro de desactivar este Departamento?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar!',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-                }).then((result) => {
-                if (result.value) {
-
-                    axios.put(this.ruta + '/departamento/inactivar',{
-                        'id': id
-                    }).then((response) => {
-                        this.listarDepartamento(1,'','nombre');
-                        swal.fire(
-                        'Desactivado!',
-                        'El registro ha sido desactivado con éxito.',
-                        'success'
-                        )
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                    
-                    
-                } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                ) {
-                    
-                }
-                }) 
-            },
-            activarDepartamento(id){
-               swal.fire({
-                title: 'Esta seguro de activar este Departamento?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar!',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-                }).then((result) => {
-                if (result.value) {
-
-                    axios.put(this.ruta + '/departamento/activar',{
-                        'id': id
-                    }).then((response) => {
-                        this.listarDepartamento(1,'','nombre');
-                        swal.fire(
-                        'Activado!',
-                        'El registro ha sido activado con éxito.',
-                        'success'
-                        )
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                    
-                    
-                } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                ) {
-                    
-                }
-                }) 
-            },
-            validarDepartamento(){
-                this.errorDepartamento=0;
-                this.errorMostrarMsjDepartamento =[];
-
-                if (!this.nombre) this.errorMostrarMsjDepartamento.push("El nombre del Departamento no puede estar vacío.");
-                
-                if (this.errorMostrarMsjDepartamento.length) this.errorDepartamento = 1;
-
-                return this.errorDepartamento;
-            },
-            cerrarModal(){
-                this.modal=0;
-                this.tituloModal='';
-                this.nombre = '';
-                this.errorDepartamento=0;
-            },
-            abrirModal(modelo, accion, data = []){
-                switch(modelo){
-                    case "departamento":
-                    {
-                        switch(accion){
-                            case 'registrar':
-                            {
-                                this.modal = 1;
-                                this.tituloModal = 'Registrar Departamento';
-                                this.nombre= '';
-                                this.tipoAccion = 1;
-                                break;
-                            }
-                            case 'actualizar':
-                            {
-                                //console.log(data);
-                                this.modal=1;
-                                this.tituloModal='Actualizar Departamento';
-                                this.tipoAccion=2;
-                                this.departamento_id=data['id'];
-                                this.nombre = data['nombre'];
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        mounted() {
-            this.listarDepartamento(1,this.buscar,this.criterio);
-            axios.get(this.ruta +'/menus/getRutaRelativa?ruta='+this.$route.name).then((response) => { this.arrayRuta = response.data; });         
+    deleteSesion(id) {
+      Swal.fire({
+        title: "¿Eliminar registro?",
+        text: "Esta acción no se puede revertir",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#757575",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        console.log(result);
+        if (result.value) {
+          const url = "/delete-session/" + id;
+          axios.get(url).then((r) => {
+            this.cabildos = r.data.cabildos;
+            Swal.fire(
+              "¡Perfecto!",
+              "Datos eliminados correctamente",
+              "success"
+            );
+          });
         }
-    }
+      });
+    },
+    editSession(id) {
+      this.action = 1;
+      this.idEditar = id;
+      axios
+        .get("/edit-sesion/" + id)
+        .then((r) => {
+          this.datos_edit = r.data.datos;
+          this.departament = r.data.departament;
+          this.ciudades = r.data.ciudades;
+          this.type_file = r.data.type_file;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    saveEdit() {
+      let datos = this.datos_edit;
+      let url = "/editSesion";
+      axios.post(url, datos).then((res) => {
+        if (res.data.status == 406) {
+          Swal.fire({
+            icon: "error",
+            title: "¡Error!",
+            text: res.data.msg,
+          });
+        } else {
+          this.action = 0;
+          this.cabildos = res.data.table;
+          // console.log(r.data);
+          // return false;
+          Swal.fire({
+            icon: "success",
+            title: "¡Perfercto!",
+            text: "Datos guardados exitosamente",
+          });
+        }
+      });
+    },
+  },
+};
 </script>
-<style>    
-    .modal-content{
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .mostrar{
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute !important;
-        background-color: #3c29297a !important;
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
-</style>
