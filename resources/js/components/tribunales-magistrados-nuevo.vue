@@ -1,5 +1,5 @@
 <template>
-  <div id="sesion">
+  <div id="form">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -9,7 +9,7 @@
 
     <div class="container mt-5">
       <label for="" class="p-2"
-        >Cabildos/Listado de cabildos/Nuevo magistrados
+        >Cabildos/Listado de cabildos/Nuevo magistrado
       </label>
       <div class="row p-2 text-center border shadow">
         <div class="row">
@@ -26,7 +26,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  v-model="sesion.theme"
+                  v-model="form.n"
                   maxlength="250"
                   name="theme"
                 />
@@ -38,7 +38,7 @@
                 <select
                   class="form-select"
                   name="department"
-                  v-model="sesion.department"
+                  v-model="form.department"
                   id="departamento_id"
                   v-on:change="changeCity()"
                 >
@@ -60,7 +60,7 @@
                 <label for="" class="form-label"><b>Ciudad *</b></label>
                 <select
                   class="form-select"
-                  v-model="sesion.municipality"
+                  v-model="form.municipality"
                   name="municipality"
                   id="municipio"
                 >
@@ -82,7 +82,7 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                    v-model="form.date"
                     type="date"
                     class="form-control"
                   />
@@ -96,7 +96,7 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                    v-model="form.date"
                     type="date"
                     class="form-control"
                   />
@@ -113,7 +113,7 @@
               <select
                 class="form-select"
                 name="type_file"
-                v-model="sesion.type_file"
+                v-model="form.type_file"
               >
                 <option
                   v-for="(i, index) in type_file"
@@ -130,7 +130,7 @@
               <select
                 class="form-select"
                 name="type_file"
-                v-model="sesion.type_file"
+                v-model="form.type_file"
               >
                 <option
                   v-for="(i, index) in type_file"
@@ -237,7 +237,7 @@ export default {
       type_file: [],
       ciudades: [],
       departament: [],
-      sesion: {},
+      form: {},
       documentos: [],
       index: 0,
       // department = 0,
@@ -249,7 +249,7 @@ export default {
     };
   },
   created() {
-    const url = "/data-new-sesion";
+    const url = "/data-new-form";
     axios.get(url).then((r) => {
       this.type_file = r.data.tipo;
       this.ciudades = r.data.municipios;
@@ -292,8 +292,8 @@ export default {
       });
     },
     save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
+      let datos = this.form;
+      let url = "saveform";
       axios.post(url, datos).then((r) => {
         if (r.data.status == 406) {
           Swal.fire("Error", r.data.msg, "error");
@@ -303,7 +303,7 @@ export default {
             title: "¡Perfercto!",
             text: "Datos guardados exitosamente",
           }).then(function () {
-            window.location = "/main#/listarSesiones";
+            window.location = "/main#/listarformes";
           });
         }
 

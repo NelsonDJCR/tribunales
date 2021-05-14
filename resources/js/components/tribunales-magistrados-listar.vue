@@ -8,19 +8,20 @@
           integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
           crossorigin="anonymous"
         />
-        <template v-if="action == 0">
+        <!-- <template v-if="action == 0"> -->
           <div class="container mt-5">
             <label for="" class="p-2">Cabildos/Listado de magistrados </label>
             <div class="row p-2 text-center border shadow">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                  <h1 class="text-blue"><b>LISTADO DE MAGISTRADO</b></h1>
+                  <h1 class="text-blue"><b>LISTADO DE MAGISTRADOS</b></h1>
                 </div>
                 <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
                   <button
                     @click="pantallaNuevo"
                     class="btn btn-warning text-white w-100 mt-2"
                   >
+
                     Nuevo magistrado
                   </button>
                 </div>
@@ -29,7 +30,7 @@
             <form @submit.prevent="filter">
               <div class="row mt-5">
                 <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Tema</b></label>
+                  <label for="" class="form-label"><b>Nombre</b></label>
                   <input
                     type="text"
                     class="form-control"
@@ -101,13 +102,13 @@
           </div>
           <table class="table table-bordered table-striped table-sm" id="datos">
             <thead>
-              <th style="width: 130px">Opciones</th>
+              <th style="width: 195px">Opciones</th>
               <th>Nombre</th>
               <th>Departamento</th>
               <th>Municipio</th>
               <th>Dirección</th>
-              <th>Fecha inicio</th>
-              <th>Fecha fin</th>
+              <th>Teléfono</th>
+              <th>Correo electrónico</th>
               <th>Estado</th>
             </thead>
             <tbody>
@@ -116,35 +117,33 @@
                 <td class="aling_btn_options">
                   <button
                     type="button"
-                    @click="data_edit()"
+                    @click="editar()"
                     class="btn btn-info btn-sm"
                   >
                     <i class="typcn typcn-edit" style="color: white"></i>
                   </button>
-
                   <button
                     type="button"
                     class="btn btn-danger btn-sm"
-                    @click="deleteSesion(i.id)"
+                    @click="deleteSesion()"
                   >
                     <i class="typcn typcn-trash"></i>
                   </button>
-
-                  <!-- <button
-                data-id=""
-                type="button"
-                class="btn download_parameterization download_btn"
-              >
-                <i class="fa fa-download"></i>
-              </button> -->
+                  <button
+                    type="button"
+                    class="btn btn-success btn-sm"
+                    @click="view()"
+                  >
+                    <i class="typcn typcn-eye"></i>
+                  </button>
                 </td>
-                <td>asd5</td>
-                <td>868</td>
-                <td>645</td>
-                <td>654654</td>
-                <td>6546546</td>
-                <td>6546546</td>
-                <td>6546546</td>
+                <td>j</td>
+                <td>hjkhhjk</td>
+                <td>h</td>
+                <td>jkhjkh</td>
+                <td>jkhjkh</td>
+                <td>jkhjkh</td>
+                <td>kjh kl</td>
                 <!-- <td>{{ i.nombre_tema }}</td>
                 <td>{{ i.description }}</td>
                 <td>{{ i.nombre_dep }}</td>
@@ -153,159 +152,7 @@
               </tr>
             </tbody>
           </table>
-        </template>
-
-        <template v-if="action == 1">
-          <div>
-            <div class="container mt-5">
-              <label for="" class="p-2"
-                >Cabildos/Listado de cabildos/Editar sesión</label
-              >
-              <div class="row p-2 text-center border shadow">
-                <h1 class="text-blue"><b>EDITAR SESIÓN</b></h1>
-              </div>
-              <form @submit.prevent="saveEdit">
-                <!-- @include('modals.edit-file') -->
-                <input type="hidden" name="id_record" />
-                <div class="row">
-                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-                    <div class="row">
-                      <div class="mb-3">
-                        <label for="" class="form-label"><b>Tema *</b></label>
-                        <input
-                          v-model="datos_edit.nombre_tema"
-                          type="text"
-                          class="form-control"
-                          maxlength="250"
-                        />
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="mb-3">
-                        <label for="" class="form-label"
-                          ><b>Descripción *</b></label
-                        >
-                        <textarea
-                          class="form-control"
-                          style="height: 150px"
-                          maxlength="1000"
-                          v-text="datos_edit.description"
-                          v-model="datos_edit.description"
-                        >
-                        </textarea>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="mb-3">
-                        <label for="" class="form-label"
-                          ><b>Departamento *</b></label
-                        >
-                        <select
-                          class="form-select"
-                          aria-label="Default select example"
-                          v-model="datos_edit.dep_id"
-                          v-on:change="changeCity()"
-                          id="departamento_id"
-                        >
-                          <option
-                            v-for="(i, index) in departament"
-                            :key="index"
-                            v-text="i.nombre"
-                            :value="i.id"
-                          ></option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="mb-3">
-                        <label for="" class="form-label"><b>Ciudad *</b></label>
-                        <select
-                          class="form-select"
-                          name="municipality"
-                          id="municipio"
-                          v-model="datos_edit.ciu_id"
-                        >
-                          <option>Seleccione ...</option>
-                          <option
-                            v-for="(i, index) in ciudades"
-                            :key="index"
-                            :value="i.id"
-                          >
-                            {{ i.nombre }}
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="mb-3">
-                        <label for="" class="form-label"
-                          ><b>Fecha de agendamiento *</b>
-                        </label>
-                        <div class="input-group">
-                          <input
-                            type="date"
-                            class="form-control"
-                            v-model="datos_edit.fecha_realizacion"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-                    <div class="row">
-                      <label for="" class="form-label"
-                        ><b>Tipo de documento *</b>
-                      </label>
-                      <select class="form-select">
-                        <option
-                          v-for="(i, index) in type_file"
-                          :key="index"
-                          :value="i.id"
-                          v-text="i.nombre"
-                        ></option>
-                      </select>
-                    </div>
-                    <div class="row mt-3">
-                      <label for="" class="form-label"
-                        ><b>Radicado CNE *</b></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        maxlength="30"
-                        v-model="datos_edit.radicado_CNE"
-                      />
-                    </div>
-                    <div class="row mt-5">
-                      <div
-                        class="form-group files border"
-                        role="button"
-                        id="box_file"
-                      >
-                        <div class="row mt-5">
-                          <img class="img_file mx-auto d-block" src="" alt="" />
-                        </div>
-                        <div class="row mt-1 mb-5">
-                          <p class="text_file text-center">
-                            Edita tus documentos aquí
-                          </p>
-                        </div>
-                      </div>
-                      <input
-                        id="file"
-                        type="file"
-                        class="form-control d-none"
-                      />
-                    </div>
-                    <div class="row mt-5">
-                      <button class="btn-primary btn">Editar sesión</button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </template>
+        <!-- </template> -->
 
         <div
           class="modal fade bd-example-modal-lg"
@@ -375,26 +222,27 @@
         </div>
       </div>
     </template>
-
     <template v-if="pantalla == 'nuevo'">
       <div>
         <tribunales-magistrados-nuevo></tribunales-magistrados-nuevo>
       </div>
+      
     </template>
-
-
-    
-
-
-
-
+    <template v-if="pantalla == 'editar'">
+      <div>
+        <tribunales-magistrados-editar></tribunales-magistrados-editar>
+      </div>
+    </template>
+    <template v-if="pantalla == 'ver'">
+      <div>
+        <tribunales-magistrados-ver></tribunales-magistrados-ver>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-import tribunalesMagistradosNuevo from "./tribunales-magistrados-nuevo.vue";
 export default {
-  components: { tribunalesMagistradosNuevo },
   data() {
     return {
       dataPdf: { cabildo_id: "", radicado: "", ciudadano: "" },
@@ -419,9 +267,16 @@ export default {
     });
   },
   methods: {
-    // pantallaNuevo() {
-    //   this.pantalla = "nuevo";
-    // },
+    editar() {
+      this.pantalla = "editar";
+    },
+    view() {
+      this.pantalla = "ver";
+    },
+    pantallaNuevo(){
+      this.pantalla = "nuevo";
+        
+    },
     // modal_export(id) {
     //   $("#cabildos_id").val(id);
     //   this.dataPdf.cabildo_id = id;
@@ -464,7 +319,6 @@ export default {
     //     this.cabildos = r.data.cabildos;
     //   });
     // },
-
     // report() {
     //   var form = new FormData();
     //   form.append("nombre_tema", $("#nombre_tema").val());
@@ -473,7 +327,6 @@ export default {
     //   form.append("fecha_final", $("#fecha_final").val());
     //   axios.post("/excel-cabildos", form).then((r) => {});
     // },
-
     // deleteSesion(id) {
     //   Swal.fire({
     //     title: "¿Eliminar registro?",
@@ -499,46 +352,44 @@ export default {
     //     }
     //   });
     // },
-
-
-    data_edit(id) {
-      this.action = 1;
-      this.idEditar = id;
-      axios
-        .get("/edit-sesion/" + id)
-        .then((r) => {
-          this.datos_edit = r.data.datos;
-          this.departament = r.data.departament;
-          this.ciudades = r.data.ciudades;
-          this.type_file = r.data.type_file;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-    saveEdit() {
-      let datos = this.datos_edit;
-      let url = "/editSesion";
-      axios.post(url, datos).then((res) => {
-        if (res.data.status == 406) {
-          Swal.fire({
-            icon: "error",
-            title: "¡Error!",
-            text: res.data.msg,
-          });
-        } else {
-          this.action = 0;
-          this.cabildos = res.data.table;
-          // console.log(r.data);
-          // return false;
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          });
-        }
-      });
-    },
+    // editSession(id) {
+    //   this.action = 1;
+    //   this.idEditar = id;
+    //   axios
+    //     .get("/edit-sesion/" + id)
+    //     .then((r) => {
+    //       this.datos_edit = r.data.datos;
+    //       this.departament = r.data.departament;
+    //       this.ciudades = r.data.ciudades;
+    //       this.type_file = r.data.type_file;
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
+    // },
+    // saveEdit() {
+    //   let datos = this.datos_edit;
+    //   let url = "/editSesion";
+    //   axios.post(url, datos).then((res) => {
+    //     if (res.data.status == 406) {
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "¡Error!",
+    //         text: res.data.msg,
+    //       });
+    //     } else {
+    //       this.action = 0;
+    //       this.cabildos = res.data.table;
+    //       // console.log(r.data);
+    //       // return false;
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "¡Perfercto!",
+    //         text: "Datos guardados exitosamente",
+    //       });
+    //     }
+    //   });
+    // },
   },
 };
 </script>
