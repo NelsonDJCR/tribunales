@@ -122,20 +122,6 @@
                 <td class="aling_btn_options">
                   <button
                     type="button"
-                    @click="editar()"
-                    class="btn btn-info btn-sm"
-                  >
-                    <i class="typcn typcn-edit" style="color: white"></i>
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm"
-                    @click="deleteSesion()"
-                  >
-                    <i class="typcn typcn-trash"></i>
-                  </button>
-                  <button
-                    type="button"
                     class="btn btn-success btn-sm"
                     @click="view()"
                   >
@@ -143,10 +129,24 @@
                   </button>
                   <button
                     type="button"
+                    @click="editar()"
+                    class="btn btn-info btn-sm"
+                  >
+                    <i class="typcn typcn-edit cl-white"></i>
+                  </button>
+                  <button
+                    type="button"
                     class="btn btn-warning btn-sm"
                     @click="openModalFile()"
                   >
-                    <i class="typcn typcn-upload"></i>
+                    <i class="typcn typcn-upload cl-white"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    @click="deleteSesion()"
+                  >
+                    <i class="typcn typcn-trash"></i>
                   </button>
                   <!-- <button
                 data-id=""
@@ -235,7 +235,7 @@
                 <div class="d-grid gap-2 col-6 mx-auto">
                     <button type="submit"  class="btn btn-primary">Guardar</button>
                 </div>
-                
+
                 </div>
                 <div class="col-12" id="box_files"></div>
               </div>
@@ -251,7 +251,7 @@
             </div>
           </div>
         </div>
-        
+
       </div>
     </template>
     <template v-if="pantalla == 'nuevo'">
@@ -306,12 +306,12 @@ export default {
     },
     pantallaNuevo(){
       this.pantalla = "nuevo";
-        
+
     },
     openModalFile() {
       $("#modal_file").modal("show");
     },
-    
+
     delete_file() {
       $(this).parent().parent().remove();
     },

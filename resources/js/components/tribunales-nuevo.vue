@@ -1,5 +1,5 @@
 <template>
-  <div id="form">
+  <div class="main col-12" id="form">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -8,12 +8,18 @@
     />
 
     <div class="container mt-5">
-      <label for="" class="p-2"
-        >Cabildos/Listado de cabildos/Nuevo tribunal
-      </label>
-      <div class="row p-2 text-center border shadow">
+        <!-- Breadcrumb -->
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Tribunales / Nuevo </label></li>
+      </ol>
+      <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-          <h1 class="text-blue"><b>NUEVO TRIBUNAL</b></h1>
+            <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+                <h1 class="text-blue"><b>NUEVO TRIBUNAL</b></h1>
+            </div>
+            <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+                <router-link :to='`/tribunales-listar`' @click.native="$router.go()" class="btn btn-danger text-white w-100 mt-2">Cancelar</router-link>
+            </div>
         </div>
       </div>
 
@@ -22,7 +28,7 @@
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Nombre *</b></label>
+                <label for="" class="form-label"><b>Nombre</b></label>
                 <input
                   type="text"
                   class="form-control"
@@ -34,7 +40,7 @@
             </div>
              <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Departamento *</b></label>
+                <label for="" class="form-label"><b>Departamento</b></label>
                 <select
                   class="form-select"
                   name="department"
@@ -54,10 +60,10 @@
               </div>
             </div>
 
-           
+
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Ciudad *</b></label>
+                <label for="" class="form-label"><b>Municipio</b></label>
                 <select
                   class="form-select"
                   v-model="form.ciu_id"
@@ -75,10 +81,24 @@
                 </select>
               </div>
             </div>
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Dirección</b></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="form.nombre"
+                  maxlength="250"
+                  name="theme"
+                />
+              </div>
+            </div>
+
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"
-                  ><b>Fecha de inicio *</b>
+                  ><b>Fecha de inicio</b>
                 </label>
                 <div class="input-group">
                   <input
@@ -91,9 +111,7 @@
             </div>
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"
-                  ><b>Fecha de final *</b>
-                </label>
+                <label for="" class="form-label"><b>Fecha fin estimada</b></label>
                 <div class="input-group">
                   <input
                     v-model="form.fecha_final"
@@ -107,43 +125,47 @@
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
-              <label for="" class="form-label"
-                ><b>Estado *</b></label
-              >
-              <select
-                class="form-select"
-                name="type_file"
-                v-model="form.estado"
-              >
-                <option
-                  v-for="(i, index) in estado"
-                  :key="index"
-                  :value="i.id"
-                  v-text="i.nombre"
-                ></option>
-              </select>
+                <div class="mb-3">
+                    <label for="" class="form-label"
+                        ><b>Estado</b></label
+                    >
+                    <select
+                        class="form-select"
+                        name="type_file"
+                        v-model="form.estado"
+                    >
+                        <option
+                        v-for="(i, index) in estado"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
+                    </select>
+                </div>
             </div>
             <div class="row">
-              <label for="" class="form-label"
-                ><b>Tipo de archivo *</b></label
-              >
-              <select
-                class="form-select"
-                name="type_file"
-                v-model="form.type_file"
-              >
-                <option
-                  v-for="(i, index) in tipo_documento"
-                  :key="index"
-                  :value="i.id"
-                  v-text="i.nombre"
-                ></option>
-              </select>
+                <div class="mb-3">
+                    <label for="" class="form-label"
+                        ><b>Tipo de archivo</b></label
+                    >
+                    <select
+                        class="form-select"
+                        name="type_file"
+                        v-model="form.type_file"
+                    >
+                        <option
+                        v-for="(i, index) in tipo_documento"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
+                    </select>
+                </div>
             </div>
-           
+
             <div class="row mt-5">
               <div
-                class="form-group files border"
+                class="form-group files border opacity-2 opacity-2h"
                 role="button"
                 id="box_file"
                 @click="box_file()"
@@ -164,22 +186,22 @@
               </div>
             </div>
             <input type="file" class="d-none" @change="archivo($event)" id="file">
-            <div class="row mt-5">
-              <button type="submit"  class="btn btn-primary">Crear tribunal</button>
+            <div class="d-grid gap-2 col-6 mx-auto">
+              <button type="submit"  class="btn btn-success">Crear Tribunal</button>
             </div>
           </div>
         </div>
       </form>
     </div>
 
- 
+
   </div>
 </template>
 <script>
 
 export default {
   data() {
-    
+
     return {
       tipo_documento: [],
       ciudades: [],
@@ -201,7 +223,7 @@ export default {
   methods: {
     archivo(event){
       this.archivo = event.file[0]
-      
+
     },
     uploadFile(event) {
       this.archivo = event.target.files[0];

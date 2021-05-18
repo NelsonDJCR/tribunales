@@ -14,7 +14,12 @@
       </ol>
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-          <h1 class="text-blue"><b>NUEVA CUENTA DE COBRO</b></h1>
+            <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+                <h1 class="text-blue"><b>NUEVA CUENTA DE COBRO</b></h1>
+            </div>
+            <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+                <router-link :to='`/tribunales/listado-cuentas-de-cobro`' @click.native="$router.go()" class="btn btn-danger text-white w-100 mt-2">Cancelar</router-link>
+            </div>
         </div>
       </div>
 
@@ -25,7 +30,7 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
                   <select
-                    
+
                     class="form-select"
                     name="tribu_id"
                     id="tribu_id"
@@ -44,7 +49,7 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Magistrado</b></label>
                   <select
-                    
+
                     class="form-select"
                     name="tribu_id"
                     id="tribu_id"
@@ -231,7 +236,7 @@
               </div>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button type="submit"  class="btn btn-primary">Crear Cuenta de Cobro</button>
+                <button type="submit"  class="btn btn-success">Crear Cuenta de Cobro</button>
             </div>
           </div>
         </div>

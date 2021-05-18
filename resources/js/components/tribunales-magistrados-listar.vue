@@ -10,19 +10,22 @@
         />
         <!-- <template v-if="action == 0"> -->
           <div class="container mt-5">
-            <label for="" class="p-2">Cabildos/Listado de magistrados </label>
-            <div class="row p-2 text-center border shadow">
+            <!-- Breadcrumb -->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Magistrados</label></li>
+            </ol>
+            <div class="row p-2 text-center border shadow rounded-3">
               <div class="row">
-                <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+                <div class="col-12 col-md-12 col-lg-9 col-xl-9 p-2">
                   <h1 class="text-blue"><b>LISTADO DE MAGISTRADOS</b></h1>
                 </div>
-                <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+                <div class="col-12 col-md-12 col-lg-3 col-xl-3 p-2">
                   <button
                     @click="pantallaNuevo"
                     class="btn btn-warning text-white w-100 mt-2"
                   >
 
-                    Nuevo magistrado
+                    Nuevo Magistrado
                   </button>
                 </div>
               </div>
@@ -66,17 +69,19 @@
                   />
                 </div>
                 <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Fecha final</b></label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="fecha_final"
-                    v-model="dataFilter.fecha_end"
-                  />
+                  <label for="" class="form-label"><b>Estado</b></label>
+                  <select
+                    class="form-select"
+                    name=""
+                    id=""
+                  >
+                    <option value="">Selecciona</option>
+                    <option>Status</option>
+                  </select>
                 </div>
 
                 <div class="row">
-                  <div class="mb-3 col-3">
+                  <div class="d-grid gap-2 col-4 mx-auto">
                     <button
                       type="submit"
                       class="btn-primary btn w-80 btn_search w-100"
@@ -85,28 +90,18 @@
                     </button>
                   </div>
                   <div class="mb-5 col-9"></div>
-                  <!-- <div class="mb-3 col-1">
-                <button
-                  style="color: white"
-                  class="btn btn-info"
-                  id="btn_exece"
-                  type="button"
-                  @click="export_exel()"
-                >
-                  <i class="typcn typcn-database"></i>
-                </button>
-              </div> -->
+
                 </div>
               </div>
             </form>
           </div>
           <table class="table table-bordered table-striped table-sm" id="datos">
             <thead>
-              <th style="width: 195px">Opciones</th>
+              <th>Opciones</th>
               <th>Nombre</th>
+              <th>Documento</th>
               <th>Departamento</th>
               <th>Municipio</th>
-              <th>Dirección</th>
               <th>Teléfono</th>
               <th>Correo electrónico</th>
               <th>Estado</th>
@@ -115,6 +110,14 @@
               <!-- v-for="(i, index) in cabildos" :key="index" -->
               <tr>
                 <td class="aling_btn_options">
+
+                  <button
+                    type="button"
+                    class="btn btn-success btn-sm"
+                    @click="view()"
+                  >
+                    <i class="typcn typcn-eye"></i>
+                  </button>
                   <button
                     type="button"
                     @click="editar()"
@@ -129,21 +132,15 @@
                   >
                     <i class="typcn typcn-trash"></i>
                   </button>
-                  <button
-                    type="button"
-                    class="btn btn-success btn-sm"
-                    @click="view()"
-                  >
-                    <i class="typcn typcn-eye"></i>
-                  </button>
+
                 </td>
-                <td>j</td>
-                <td>hjkhhjk</td>
-                <td>h</td>
-                <td>jkhjkh</td>
-                <td>jkhjkh</td>
-                <td>jkhjkh</td>
-                <td>kjh kl</td>
+                <td>Nombre ejemplo</td>
+                <td>123456</td>
+                <td>Departamento</td>
+                <td>Municipio</td>
+                <td>123456789</td>
+                <td>correo@correo.com</td>
+                <td>Activo</td>
                 <!-- <td>{{ i.nombre_tema }}</td>
                 <td>{{ i.description }}</td>
                 <td>{{ i.nombre_dep }}</td>
@@ -226,7 +223,7 @@
       <div>
         <tribunales-magistrados-nuevo></tribunales-magistrados-nuevo>
       </div>
-      
+
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
@@ -275,7 +272,7 @@ export default {
     },
     pantallaNuevo(){
       this.pantalla = "nuevo";
-        
+
     },
     // modal_export(id) {
     //   $("#cabildos_id").val(id);

@@ -1,5 +1,5 @@
 <template>
-  <div id="form">
+  <div class="main col-12" id="form">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -8,12 +8,18 @@
     />
 
     <div class="container mt-5">
-      <label for="" class="p-2"
-        >Cabildos/Listado de cabildos/Nuevo magistrado
-      </label>
-      <div class="row p-2 text-center border shadow">
+      <!-- Breadcrumb -->
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Magistrados / Nuevo </label></li>
+      </ol>
+      <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-          <h1 class="text-blue"><b>NUEVO MAGISTRADO</b></h1>
+            <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+                <h1 class="text-blue"><b>NUEVO MAGISTRADO</b></h1>
+            </div>
+            <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+                <router-link :to='`/tribunales-magistrados-listar`' @click.native="$router.go()" class="btn btn-danger text-white w-100 mt-2">Cancelar</router-link>
+            </div>
         </div>
       </div>
 
@@ -22,19 +28,43 @@
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Nombre *</b></label>
+                <label for="" class="form-label"><b>Nombre</b></label>
                 <input
                   type="text"
                   class="form-control"
                   v-model="form.n"
                   maxlength="250"
-                  name="theme"
+                  name=""
                 />
               </div>
             </div>
-             <div class="row">
+            <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Departamento *</b></label>
+                <label for="" class="form-label"><b>Tipo de Identificación</b></label>
+                <select
+                  class="form-select"
+                  name=""
+
+                >
+                  <option>Seleccione ...</option>
+
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Número de Identificación</b></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  maxlength="15"
+                  name=""
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Departamento</b></label>
                 <select
                   class="form-select"
                   name="department"
@@ -42,7 +72,7 @@
                   id="departamento_id"
                   v-on:change="changeCity()"
                 >
-                  <option disabled>Seleccione ...</option>
+                  <option>Seleccione ...</option>
                   <option
                     v-for="(i, index) in departament"
                     :key="index"
@@ -54,17 +84,16 @@
               </div>
             </div>
 
-           
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Ciudad *</b></label>
+                <label for="" class="form-label"><b>Municipio</b></label>
                 <select
                   class="form-select"
                   v-model="form.municipality"
                   name="municipality"
                   id="municipio"
                 >
-                  <option disabled>Seleccione ...</option>
+                  <option>Seleccione ...</option>
                   <option
                     v-for="(i, index) in ciudades"
                     :key="index"
@@ -75,29 +104,40 @@
                 </select>
               </div>
             </div>
+
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"
-                  ><b>Fecha de inicio *</b>
-                </label>
-                <div class="input-group">
-                  <input
-                    v-model="form.date"
-                    type="date"
-                    class="form-control"
-                  />
-                </div>
+                <label for="" class="form-label"><b>Dirección</b></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  maxlength="250"
+                  name=""
+                />
               </div>
             </div>
+
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"
-                  ><b>Fecha de final *</b>
+                  ><b>Correo Electrónico</b>
+                </label>
+                  <input
+                    type="email"
+                    class="form-control"
+
+                  />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Teléfono</b>
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="form.date"
-                    type="date"
+                    type="number"
                     class="form-control"
                   />
                 </div>
@@ -106,65 +146,136 @@
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
+
             <div class="row">
-              <label for="" class="form-label"
-                ><b>Estado *</b></label
-              >
-              <select
-                class="form-select"
-                name="type_file"
-                v-model="form.type_file"
-              >
-                <option
-                  v-for="(i, index) in type_file"
-                  :key="index"
-                  :value="i.id"
-                  v-text="i.nombre"
-                ></option>
-              </select>
-            </div>
-            <div class="row">
-              <label for="" class="form-label"
-                ><b>Tipo de archivo *</b></label
-              >
-              <select
-                class="form-select"
-                name="type_file"
-                v-model="form.type_file"
-              >
-                <option
-                  v-for="(i, index) in type_file"
-                  :key="index"
-                  :value="i.id"
-                  v-text="i.nombre"
-                ></option>
-              </select>
-            </div>
-           
-            <div class="row mt-5">
-              <div
-                class="form-group files border"
-                role="button"
-                id="box_file"
-                @click="openModalFile()"
-              >
-                <div class="row mt-5">
-                  <img
-                    class="img_file mx-auto d-block"
-                    alt=""
-                    style="width: 100px"
-                    src="https://img.icons8.com/ios/452/google-docs.png"
-                  />
+                <div class="mb-3">
+                    <label for="" class="form-label"><b>Banco</b></label>
+                    <select
+                    class="form-select"
+                    name=""
+                    >
+                        <option>Seleccione ...</option>
+                    </select>
                 </div>
-                <div class="row mt-1 mb-5">
-                  <p class="text_file text-center">
-                    Ingresa aquí tus documentos .pdf .png .jpg
-                  </p>
+            </div>
+
+            <div class="row">
+                <div class="mb-3">
+                    <label for="" class="form-label"><b>Tipo de Cuenta</b></label>
+                    <select
+                    class="form-select"
+                    name=""
+                    >
+                        <option>Seleccione ...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Número de Cuenta</b>
+                </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                  />
+              </div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3">
+                    <label for="" class="form-label"
+                        ><b>Estado</b></label
+                    >
+                    <select
+                        class="form-select"
+                        name="type_file"
+                        v-model="form.type_file"
+                    >
+                        <option
+                        v-for="(i, index) in type_file"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3">
+                    <label for="" class="form-label"
+                        ><b>Tipo de archivo</b></label
+                    >
+                    <select
+                        class="form-select"
+                        name="type_file"
+                        v-model="form.type_file"
+                    >
+                        <option
+                        v-for="(i, index) in type_file"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="mb-3">
+                    <div
+                        class="form-group files border opacity-2 opacity-2h"
+                        role="button"
+                        id="box_file"
+                        @click="openModalFile()"
+                    >
+                        <div class="row mt-5">
+                        <img
+                            class="img_file mx-auto d-block"
+                            alt=""
+                            style="width: 100px"
+                            src="https://img.icons8.com/ios/452/google-docs.png"
+                        />
+                        </div>
+                        <div class="row mt-1 mb-5">
+                        <p class="text_file text-center">
+                            Ingresa aquí tus documentos .pdf .png .jpg
+                        </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-1">
+                <label for="" class="form-label"><b>Archivos</b></label>
+                <div class="row">
+                  <div class="btns-block d-grid gap-2">
+                    <ul class="list-group btn-group-vertical">
+                      <li class="list-group-item">
+                        <button class="btn btn-light btn-sm mt-2">
+                          <span class="text-start float-start mt-1">Nombre de Archivo 1</span>
+                          <a href="#" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
+                          <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a>
+                        </button>
+                      </li>
+                      <li class="list-group-item">
+                        <button class="btn btn-light btn-sm mt-2">
+                          <span class="text-start float-start mt-1">Nombre de Archivo 2</span>
+                          <a href="#" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
+                          <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="row mt-5">
-              <button type="submit"  class="btn btn-primary">Crear sesión</button>
+
+            <div class="d-grid gap-2 col-6 mx-auto">
+              <button type="submit"  class="btn btn-success">Crear Magistrado</button>
             </div>
           </div>
         </div>

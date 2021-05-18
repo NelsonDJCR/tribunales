@@ -10,19 +10,22 @@
         />
         <template v-if="action == 0">
           <div class="container mt-5">
-            <label for="" class="p-2">Cabildos/Listado de casos </label>
-            <div class="row p-2 text-center border shadow">
+            <!-- Breadcrumb -->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de PQRS</label></li>
+            </ol>
+            <div class="row p-2 text-center border shadow rounded-3">
               <div class="row">
-                <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                  <h1 class="text-blue"><b>LISTADO DE CASOS</b></h1>
+                <div class="col-12 col-md-12 col-lg-12 col-xl-12 p-2">
+                  <h1 class="text-blue"><b>LISTADO DE PQRS</b></h1>
                 </div>
-                
+
               </div>
             </div>
             <form @submit.prevent="filter">
               <div class="row mt-5">
                 <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Tema</b></label>
+                  <label for="" class="form-label"><b>Tipo de Trámite</b></label>
                   <input
                     type="text"
                     class="form-control"
@@ -31,6 +34,16 @@
                     v-model="dataFilter.nombre_tema"
                   />
                 </div>
+                <div class="mb-3 col-3">
+                  <label for="" class="form-label"><b>Fecha recibido</b></label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="fecha_realizacion"
+                    v-model="dataFilter.fecha_realizacion"
+                  />
+                </div>
+
                 <div class="mb-3 col-3">
                   <label for="" class="form-label"><b>Departamento</b></label>
                   <select
@@ -48,23 +61,17 @@
                     ></option>
                   </select>
                 </div>
+
                 <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Fecha inicio</b></label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="fecha_realizacion"
-                    v-model="dataFilter.fecha_realizacion"
-                  />
-                </div>
-                <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Fecha final</b></label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="fecha_final"
-                    v-model="dataFilter.fecha_end"
-                  />
+                  <label for="" class="form-label"><b>Estado</b></label>
+                  <select
+                    class="form-select"
+                    name=""
+                    id=""
+                  >
+                    <option value="">Selecciona</option>
+                    <option>Status</option>
+                  </select>
                 </div>
 
                 <div class="row">
@@ -92,221 +99,60 @@
               </div>
             </form>
           </div>
-          <table class="table table-bordered table-striped table-sm" id="datos">
-            <thead>
-              <th style="width: 195px">Opciones</th>
-              <th>Tema</th>
+          <table class="table table-bordered table-striped table-sm fnt-hd-sm" id="datos">
+            <thead class="text-center align-middle">
+              <th>Opciones</th>
+              <th>Tipo de Trámite</th>
+              <th>Prioridad</th>
+              <th>Fecha recibido</th>
               <th>Departamento</th>
               <th>Municipio</th>
-              <th>Dirección</th>
-              <th>Fecha inicio</th>
-              <th>Fecha fin</th>
+              <th>Solicitante</th>
               <th>Estado</th>
+              <th>Usuario Asignado</th>
             </thead>
             <tbody>
               <!-- v-for="(i, index) in cabildos" :key="index" -->
               <tr >
                 <td class="aling_btn_options">
+
                   <button
                     type="button"
-                    @click="modal_export(i.id)"
-                    class="btn btn-info btn-sm"
+                    @click="modal_export(5)"
+                    class="btn btn-secondary btn-sm"
                   >
                     <i
-                      class="typcn typcn-document-text"
-                      style="color: white"
+                      class="typcn typcn-cog cl-white"
                     ></i>
                   </button>
                   <button
                     type="button"
-                    @click="editSession(i.id)"
-                    class="btn btn-warning btn-sm"
+                    class="btn btn-success btn-sm"
+                    @click="view()"
                   >
-                    <i class="typcn typcn-edit" style="color: white"></i>
+                    <i class="typcn typcn-eye"></i>
                   </button>
 
                   <button
                     type="button"
-                    class="btn btn-danger btn-sm"
-                    @click="deleteSesion(i.id)"
+                    class="btn btn-warning btn-sm"
                   >
-                    <i class="typcn typcn-trash"></i>
+                    <i class="typcn typcn-download cl-white"></i>
                   </button>
 
-                  <!-- <button
-                data-id=""
-                type="button"
-                class="btn download_parameterization download_btn"
-              >
-                <i class="fa fa-download"></i>
-              </button> -->
                 </td>
-                <td>asd</td>
-                <td>dd</td>
-                <td>d</td>
-                <td>d</td>
-                <td>ddd </td>
-<!--                 
-                <td>{{ i.nombre_tema }}</td>
-                <td>{{ i.description }}</td>
-                <td>{{ i.nombre_dep }}</td>
-                <td>{{ i.nombre_ciu }}</td>
-                <td>{{ i.fecha_realizacion }}</td> -->
+                <td>Queja</td>
+                <td>Alta</td>
+                <td>20/20/20</td>
+                <td>Cundinamarca</td>
+                <td>Chía</td>
+                <td>Camilo Avendaño</td>
+                <td>En proceso</td>
+                <td>Pepito Perez</td>
+                <!-- <td>{{ i.nombre_tema }}}</td> -->
               </tr>
             </tbody>
           </table>
-        </template>
-
-        <template v-if="action == 1">
-          <div>
-            <div class="container mt-5">
-              <label for="" class="p-2"
-                >Cabildos/Listado de cabildos/Editar sesión</label
-              >
-              <div class="row p-2 text-center border shadow">
-                <h1 class="text-blue"><b>EDITAR SESIÓN</b></h1>
-              </div>
-              <form @submit.prevent="saveEdit">
-                <!-- @include('modals.edit-file') -->
-                <input type="hidden" name="id_record" />
-                <div class="row">
-                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-                    <div class="row">
-                      <div class="mb-3">
-                        <label for="" class="form-label"><b>Tema *</b></label>
-                        <input
-                          v-model="datos_edit.nombre_tema"
-                          type="text"
-                          class="form-control"
-                          maxlength="250"
-                        />
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="mb-3">
-                        <label for="" class="form-label"
-                          ><b>Descripción *</b></label
-                        >
-                        <textarea
-                          class="form-control"
-                          style="height: 150px"
-                          maxlength="1000"
-                          v-text="datos_edit.description"
-                          v-model="datos_edit.description"
-                        >
-                        </textarea>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="mb-3">
-                        <label for="" class="form-label"
-                          ><b>Departamento *</b></label
-                        >
-                        <select
-                          class="form-select"
-                          aria-label="Default select example"
-                          v-model="datos_edit.dep_id"
-                          v-on:change="changeCity()"
-                          id="departamento_id"
-                        >
-                          <option
-                            v-for="(i, index) in departament"
-                            :key="index"
-                            v-text="i.nombre"
-                            :value="i.id"
-                          ></option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="mb-3">
-                        <label for="" class="form-label"><b>Ciudad *</b></label>
-                        <select
-                          class="form-select"
-                          name="municipality"
-                          id="municipio"
-                          v-model="datos_edit.ciu_id"
-                        >
-                          <option>Seleccione ...</option>
-                          <option
-                            v-for="(i, index) in ciudades"
-                            :key="index"
-                            :value="i.id"
-                          >
-                            {{ i.nombre }}
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="mb-3">
-                        <label for="" class="form-label"
-                          ><b>Fecha de agendamiento *</b>
-                        </label>
-                        <div class="input-group">
-                          <input
-                            type="date"
-                            class="form-control"
-                            v-model="datos_edit.fecha_realizacion"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-                    <div class="row">
-                      <label for="" class="form-label"
-                        ><b>Tipo de documento *</b>
-                      </label>
-                      <select class="form-select">
-                        <option
-                          v-for="(i, index) in type_file"
-                          :key="index"
-                          :value="i.id"
-                          v-text="i.nombre"
-                        ></option>
-                      </select>
-                    </div>
-                    <div class="row mt-3">
-                      <label for="" class="form-label"
-                        ><b>Radicado CNE *</b></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        maxlength="30"
-                        v-model="datos_edit.radicado_CNE"
-                      />
-                    </div>
-                    <div class="row mt-5">
-                      <div
-                        class="form-group files border"
-                        role="button"
-                        id="box_file"
-                      >
-                        <div class="row mt-5">
-                          <img class="img_file mx-auto d-block" src="" alt="" />
-                        </div>
-                        <div class="row mt-1 mb-5">
-                          <p class="text_file text-center">
-                            Edita tus documentos aquí
-                          </p>
-                        </div>
-                      </div>
-                      <input
-                        id="file"
-                        type="file"
-                        class="form-control d-none"
-                      />
-                    </div>
-                    <div class="row mt-5">
-                      <button class="btn-primary btn">Editar sesión</button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
         </template>
 
         <div
@@ -320,9 +166,9 @@
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                  Generar reporte
-                </h5>
+                <h3 class="modal-title" id="exampleModalLabel">
+                  Gestionar caso asignado
+                </h3>
                 <button
                   type="button"
                   class="close"
@@ -341,35 +187,86 @@
                 />
                 <div class="modal-body">
                   <div class="mb-3 col-12">
-                    <label for="" class="form-label">Radicado</label>
-                    <input
+                    <label for="" class="form-label"><b>Estado</b></label>
+                    <!--input
                       type="text"
                       required
                       class="form-control"
                       v-model="dataPdf.radicado"
-                    />
+                    /-->
+                    <select
+                        class="form-select"
+                    >
+                        <option>Estado 1</option>
+                        <option>Estado 2</option>
+                        <option>Estado 3</option>
+                    </select>
                   </div>
-                  <div class="mb-3 col-12">
-                    <label for="" class="form-label">Ciudadano</label>
-                    <input
-                      type="text"
-                      required
-                      class="form-control"
-                      v-model="dataPdf.ciudadano"
-                    />
-                  </div>
+
+                    <div class="mb-3 col-12">
+                        <label for="" class="form-label"><b>Observaciones</b></label>
+                        <!--input
+                        type="text"
+                        required
+                        class="form-control"
+                        v-model="dataPdf.ciudadano"
+                        /-->
+                        <textarea class="form-control" id="" rows="5"></textarea>
+                    </div>
+
+                    <div class="mb-3 col-12">
+                        <label for="" class="form-label"
+                            ><b>Tipo de archivo</b></label
+                        >
+                        <select
+                            class="form-select"
+                            name="type_file"
+                        >
+                            <option
+                            v-for="(i, index) in type_file"
+                            :key="index"
+                            :value="i.id"
+                            v-text="i.nombre"
+                            ></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3 col-12">
+                        <div class="form-group files border opacity-2 opacity-2h"
+                            role="button"
+                            id="box_file"
+                        >
+                            <div class="row mt-5">
+                            <img
+                                class="img_file mx-auto d-block"
+                                alt=""
+                                style="width: 100px"
+                                src="https://img.icons8.com/ios/452/google-docs.png"
+                            />
+                            </div>
+                            <div class="row mt-1 mb-5">
+                            <p class="text_file text-center">
+                                Ingresa aquí tus documentos .pdf .png .jpg
+                            </p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
                 <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button type="submit" class="btn btn-primary">
-                    Generar PDF
-                  </button>
+                    <div class="d-grid gap-2 d-md-block mx-auto">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-secondary active">
+                            Guardar
+                        </button>
+                    </div>
                 </div>
               </form>
             </div>
