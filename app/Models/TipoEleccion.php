@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TipoIdentificacion extends Model
+class TipoEleccion extends Model
 {
-    protected $table = 'tipo_identificacion';
+    protected $table = 'tipo_eleccion';
     use HasFactory;
 }

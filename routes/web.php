@@ -21,10 +21,12 @@ use App\Http\Middleware\ValidateSesion;
 
 // ----------INICIO IMPORTACIÓN CONTROLADORES CABILDOS-----------
 use App\Http\Controllers\CabildosController;
+use App\Http\Controllers\ParametrosController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TipoDocumentoController;
 use App\Http\Controllers\TribunalesController;
 use App\Models\CabildoAbierto;
+use App\Models\Departamentos;
 use App\Models\TipoDocumento;
 use Illuminate\Support\Facades\App;
 
@@ -116,13 +118,42 @@ Route::middleware('auth')->group(function () {
         Route::put('/ciudad/update', [CiudadController::class, 'update']);
         Route::put('/ciudad/inactivar', [CiudadController::class, 'inactivar']);
         Route::put('/ciudad/activar', [CiudadController::class, 'activar']);
-
+        
         Route::get('/departamento', [DepartamentoController::class, 'index']);
         Route::post('/departamento/store', [DepartamentoController::class, 'store']);
         Route::put('/departamento/update', [DepartamentoController::class, 'update']);
         Route::put('/departamento/inactivar', [DepartamentoController::class, 'inactivar']);
         Route::put('/departamento/activar', [DepartamentoController::class, 'activar']);
         Route::get('/departamento/selectDepartamento', [DepartamentoController::class, 'seleccioneDepartamento']);
+
+
+
+
+
+
+
+        Route::get('/tipo-archivo', [ParametrosController::class, 'indexArchivo']);
+        Route::get('/tipo-identificacion', [ParametrosController::class, 'indexIdentificacion']);
+        Route::get('/prioridad', [ParametrosController::class, 'indexPrioridad']);
+        Route::get('/tipo-eleccion', [ParametrosController::class, 'indexEleccion']);
+        Route::get('/tipo-tramite', [ParametrosController::class, 'indexTramite']);
+        Route::get('/medio-recepcion', [ParametrosController::class, 'indexRecepcion']);
+        Route::get('/estado', [ParametrosController::class, 'indexEstado']);
+        Route::get('/banco', [ParametrosController::class, 'indexBanco']);
+        Route::get('/tipo-cuenta', [ParametrosController::class, 'indexTipoCuenta']);
+
+        Route::post('/actualizar-parametro/{id}/{tabla}/{data}', [ParametrosController::class, 'actualizar']);
+        Route::post('/inactivar-estado/{id}/{tabla}/{estado}', [ParametrosController::class, 'estadoInactivar']);
+        Route::post('/nuevo', [ParametrosController::class, 'nuevo']);
+
+
+
+
+
+
+
+
+
 
         Route::get('/tipoDocumento', [TipoDocumento2Controller::class, 'index']);
         Route::post('/tipoDocumento/create', [TipoDocumento2Controller::class, 'store']);

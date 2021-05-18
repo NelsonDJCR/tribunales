@@ -2,8 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banco;
 use Illuminate\Http\Request;
-use App\Models\Departamento;
+use App\Models\Departamentos;
+use App\Models\Estado;
+use App\Models\MedioRecepcion;
+use App\Models\Prioridad;
+use App\Models\TipoArchivo;
+use App\Models\TipoCuenta;
+use App\Models\TipoEleccion;
+use App\Models\TipoIdentificacion;
+use App\Models\TipoTramite;
 use Illuminate\Support\Facades\Session;
 
 
@@ -17,10 +26,10 @@ class DepartamentoController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $departamentos = Departamento::orderBy('id', 'desc')->paginate(10);
+            $departamentos = Departamentos::orderBy('id', 'desc')->paginate(10);
         }
         else{
-            $departamentos = Departamento::where($criterio, 'like', '%'. $buscar . '%')
+            $departamentos = Departamentos::where($criterio, 'like', '%'. $buscar . '%')
                                             ->orderBy('id', 'desc')->paginate(10);
         }
         
@@ -39,7 +48,7 @@ class DepartamentoController extends Controller
 
     public function selectDepartamento(Request $request){
         if (!$request->ajax()) return redirect('/');
-        $departamentos = Departamento::select('id','nombre as nom_departamento')
+        $departamentos = Departamentos::select('id','nombre as nom_departamento')
                         ->where('nombre',Session::get('conexion'))
                         ->orderBy('nombre', 'asc')->get()->toArray();
        
@@ -49,7 +58,7 @@ class DepartamentoController extends Controller
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $departamento = new Departamento();
+        $departamento = new Departamentos();
         $departamento->nombre = $request->nombre;
         $departamento->estado = '1';
         $departamento->save();
@@ -57,7 +66,7 @@ class DepartamentoController extends Controller
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $departamento = Departamento::findOrFail($request->id);
+        $departamento = Departamentos::findOrFail($request->id);
         $departamento->nombre = $request->nombre;
         $departamento->estado = '1';
         $departamento->save();
@@ -67,7 +76,7 @@ class DepartamentoController extends Controller
         
         if (!$request->ajax()) return redirect('/');
 
-            $departamentos = Departamento::where('estado','=','1')
+            $departamentos = Departamentos::where('estado','=','1')
             ->select('id','nombre')->orderBy('nombre', 'asc')->get();
 
         return ['departamentos' => $departamentos];
@@ -77,7 +86,7 @@ class DepartamentoController extends Controller
     public function inactivar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $departamento = Departamento::findOrFail($request->id);
+        $departamento = Departamentos::findOrFail($request->id);
         $departamento->estado = '0';
         $departamento->save();
     }
@@ -85,8 +94,10 @@ class DepartamentoController extends Controller
     public function activar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $departamento = Departamento::findOrFail($request->id);
+        $departamento = Departamentos::findOrFail($request->id);
         $departamento->estado = '1';
         $departamento->save();
     }
+
+	
 }
