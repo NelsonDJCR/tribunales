@@ -31138,6 +31138,33 @@ a#color_icocno:active i{
   background: initial;
 }
 
+.opacity-0 {
+  opacity:0!important;
+}
+.opacity-1 {
+  opacity:0.2!important;
+}
+.opacity-2 {
+  opacity:0.4!important;
+}
+.opacity-3 {
+  opacity:0.6!important;
+}
+.opacity-4 {
+  opacity:.8!important;
+}
+.opacity-5 {
+  opacity:1!important;
+}
+.opacity-2h {
+  opacity:0.4!important;
+  transition: opacity .25s ease-in-out!important;
+  -moz-transition: opacity .25s ease-in-out!important;
+  -webkit-transition: opacity .25s ease-in-out!important;
+}
+.opacity-2h:hover {
+  opacity:1!important;
+}
  #app .main-panel, #app .main-panel .content-wrapper{
   background: #fff !important;
 }
@@ -31151,6 +31178,17 @@ a#color_icocno:active i{
 .table.table-bordered.table-striped caption.top{
   caption-side: top;
 } 
+.main.col-12 .container.mt-5{ 
+  margin-top: -1rem !important; 
+}
+.content-wrapper .main .container .breadcrumb{ 
+  border: none; 
+  border: 0 !important; 
+  margin-bottom: 0;
+}
+.btns-block .list-group .btn, .btns-block .list-group .list-group-item{
+  width: 100%;
+}
 /*------------------------------------------------------------------
  [Master Stylesheet]
 
