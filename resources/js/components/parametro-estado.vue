@@ -14,7 +14,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Departamentos
+                        <i class="fa fa-align-justify"></i> Estado
                         <button type="button" @click="abrirModal('departamento','registrar')" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
@@ -190,7 +190,7 @@
         },
         methods : {
             listarDepartamento (page,buscar,criterio){
-                var url= this.ruta + '/departamento?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+                var url= this.ruta + '/estado?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then((response) => {
                     var respuesta= response.data;
                     this.arrayDepartamento = respuesta.departamentos.data;
@@ -211,8 +211,9 @@
                     return;
                 }
                 
-                axios.post(this.ruta + '/departamento/store',{
-                    'nombre': this.nombre
+                axios.post(this.ruta + '/nuevo',{
+                    'nombre': this.nombre,
+                    'tabla': 'estado'
                 }).then( (response) => {
                     this.cerrarModal();
                     Swal.fire(
@@ -231,10 +232,9 @@
                     return;
                 }              
 
-                axios.put(this.ruta + '/departamento/update',{
-                    'idpais': this.idpais,
+                axios.post(this.ruta + `/actualizar-parametro/${this.departamento_id}/estado/${this.nombre}`,{
+            
                     'nombre': this.nombre,
-                    'id'    : this.departamento_id
                 }).then((response) => {
                     this.cerrarModal();
                     this.listarDepartamento(1,'','nombre');
@@ -258,7 +258,7 @@
                 }).then((result) => {
                 if (result.value) {
 
-                    axios.put(this.ruta + '/departamento/inactivar',{
+                    axios.post(this.ruta + `/inactivar-estado/${id}/estado/0`,{
                         'id': id
                     }).then((response) => {
                         this.listarDepartamento(1,'','nombre');
@@ -296,7 +296,7 @@
                 }).then((result) => {
                 if (result.value) {
 
-                    axios.put(this.ruta + '/departamento/activar',{
+                    axios.post(this.ruta + `/inactivar-estado/${id}/estado/1`,{
                         'id': id
                     }).then((response) => {
                         this.listarDepartamento(1,'','nombre');
@@ -342,7 +342,7 @@
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Departamento';
+                                this.tituloModal = 'Registrar Estado';
                                 this.nombre= '';
                                 this.tipoAccion = 1;
                                 break;
@@ -351,7 +351,7 @@
                             {
                                 //console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar Departamento';
+                                this.tituloModal='Actualizar Estado';
                                 this.tipoAccion=2;
                                 this.departamento_id=data['id'];
                                 this.nombre = data['nombre'];

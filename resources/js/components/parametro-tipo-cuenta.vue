@@ -14,8 +14,8 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Departamentos
-                        <button type="button" @click="abrirModal('departamento','registrar')" class="btn btn-secondary">
+                        <i class="fa fa-align-justify"></i> Tipo de cuenta
+                        <button type="button" @click="abrirModal('tipo-cuenta','registrar')" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                     </div>
@@ -42,7 +42,7 @@
                             <tbody>
                                 <tr v-for="departamento in arrayDepartamento" :key="departamento.id">
                                     <td>
-                                        <button type="button" @click="abrirModal('departamento','actualizar',departamento)" class="btn btn-warning btn-sm">
+                                        <button type="button" @click="abrirModal('tipo-cuenta','actualizar',departamento)" class="btn btn-warning btn-sm">
                                           <i class="typcn typcn-edit" style="color:white"></i>
                                         </button> &nbsp;
                                         <template v-if="departamento.estado">
@@ -190,7 +190,7 @@
         },
         methods : {
             listarDepartamento (page,buscar,criterio){
-                var url= this.ruta + '/departamento?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+                var url= this.ruta + '/tipo-cuenta?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then((response) => {
                     var respuesta= response.data;
                     this.arrayDepartamento = respuesta.departamentos.data;
@@ -211,8 +211,9 @@
                     return;
                 }
                 
-                axios.post(this.ruta + '/departamento/store',{
-                    'nombre': this.nombre
+                axios.post(this.ruta + '/nuevo',{
+                    'nombre': this.nombre,
+                    'tabla': 'tipo_cuenta'
                 }).then( (response) => {
                     this.cerrarModal();
                     Swal.fire(
@@ -231,10 +232,8 @@
                     return;
                 }              
 
-                axios.put(this.ruta + '/departamento/update',{
-                    'idpais': this.idpais,
+                axios.post(this.ruta + `/actualizar-parametro/${this.departamento_id}/tipo_cuenta/${this.nombre}`,{
                     'nombre': this.nombre,
-                    'id'    : this.departamento_id
                 }).then((response) => {
                     this.cerrarModal();
                     this.listarDepartamento(1,'','nombre');
@@ -258,7 +257,7 @@
                 }).then((result) => {
                 if (result.value) {
 
-                    axios.put(this.ruta + '/departamento/inactivar',{
+                    axios.post(this.ruta + `/inactivar-estado/${id}/tipo_cuenta/0`,{
                         'id': id
                     }).then((response) => {
                         this.listarDepartamento(1,'','nombre');
@@ -296,7 +295,7 @@
                 }).then((result) => {
                 if (result.value) {
 
-                    axios.put(this.ruta + '/departamento/activar',{
+                    axios.post(this.ruta + `/inactivar-estado/${id}/tipo_cuenta/1`,{
                         'id': id
                     }).then((response) => {
                         this.listarDepartamento(1,'','nombre');
@@ -335,31 +334,28 @@
                 this.errorDepartamento=0;
             },
             abrirModal(modelo, accion, data = []){
-                switch(modelo){
-                    case "departamento":
-                    {
-                        switch(accion){
-                            case 'registrar':
-                            {
-                                this.modal = 1;
-                                this.tituloModal = 'Registrar Departamento';
-                                this.nombre= '';
-                                this.tipoAccion = 1;
-                                break;
-                            }
-                            case 'actualizar':
-                            {
-                                //console.log(data);
-                                this.modal=1;
-                                this.tituloModal='Actualizar Departamento';
-                                this.tipoAccion=2;
-                                this.departamento_id=data['id'];
-                                this.nombre = data['nombre'];
-                                break;
-                            }
-                        }
-                    }
+             switch(accion){
+                case 'registrar':
+                {
+                    this.modal = 1;
+                    this.tituloModal = 'Registrar tipo de cuenta';
+                    this.nombre= '';
+                    this.tipoAccion = 1;
+                    break;
                 }
+                case 'actualizar':
+                {
+                    //console.log(data);
+                    this.modal=1;
+                    this.tituloModal='Actualizar tipo de cuenta';
+                    this.tipoAccion=2;
+                    this.departamento_id=data['id'];
+                    this.nombre = data['nombre'];
+                    break;
+                }
+            }
+                    
+                
             }
         },
         mounted() {
