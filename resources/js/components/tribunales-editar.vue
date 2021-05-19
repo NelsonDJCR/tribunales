@@ -28,10 +28,10 @@
                 <input
                   type="text"
                   class="form-control"
-                  v-model="sesion.theme"
+                  v-model="datos.nombre"
                   maxlength="250"
                   name="theme"
-                  placeholder="Nombre Ejemplo"
+                  placeholder=""
                 />
               </div>
             </div>
@@ -86,7 +86,7 @@
                   class="form-control"
                   maxlength="250"
                   name="theme"
-                  placeholder="Dirección Ejemplo"
+                  placeholder=""
                 />
               </div>
             </div>
@@ -256,45 +256,24 @@ export default {
       ciudades: [],
       departament: [],
       sesion: {},
+      data: {},
       documentos: [],
       index: 0,
     };
   },
   created() {
-    x_id = this.id
-    const url = "/data-edit";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
+    axios.get(`/data-rercord/${this.id}/tribunal`).then((r) => {
+      this.type_file = r.data.tipo_archivo;
+      this.ciudades = r.data.ciudades;
+      this.departament = r.data.departamentos;
+      // this.data = r.data.datos;
+      console.log(this.data);
+      return false;
     });
   },
   methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
-    },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
+    
+    
     closeAddFile() {
       $("#modal_file").modal("hide");
     },

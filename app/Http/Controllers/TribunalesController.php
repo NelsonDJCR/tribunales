@@ -59,4 +59,14 @@ class TribunalesController extends Controller
             'tabla' => DB::table($tabla)->get()
         ]);
 	}
+
+	public function dataRecord($id,$table)
+	{
+		return response()->json([
+            'datos' =>DB::table($table)->where('id', $id)->first(),
+            'departamentos'=>Departamentos::all()->where('estado',1),
+            'ciudades'=>Ciudades::all()->where('estado',1),
+            'tipo_archivo'=>TipoArchivo::all()->where('estado',1)
+        ]);
+	}
 }

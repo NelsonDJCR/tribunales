@@ -137,17 +137,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/listar-tribunales', [TribunalesController::class, 'listar_ ']);
         Route::get('/listar/{tabla}', [TribunalesController::class, 'listar']);
         Route::post('/modificar-estado/{id}/{tabla}/{estado}', [TribunalesController::class, 'estadoInactivar']);
+        Route::get('/data-rercord/{id}/{table}', [TribunalesController::class, 'dataRecord']);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         Route::post('/saveCourt', [TribunalesController::class, 'store']);
-
-
-
-
-
-
-
-
-
-
         Route::get('/tipoDocumento', [TipoDocumento2Controller::class, 'index']);
         Route::post('/tipoDocumento/create', [TipoDocumento2Controller::class, 'store']);
         Route::put('/tipoDocumento/update', [TipoDocumento2Controller::class, 'update']);
