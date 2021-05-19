@@ -216,11 +216,7 @@
                     'tabla': 'tipo_cuenta'
                 }).then( (response) => {
                     this.cerrarModal();
-                    Swal.fire(
-                                'Agregado!',
-                                'Agrego el departamento exitosamente.',
-                                'success'
-                                )
+                    Swal.fire('Agregado!','Agrego el departamento exitosamente.','success')
                     this.listarDepartamento(1,'','nombre');
 
                 }).catch(function (error) {
@@ -243,7 +239,7 @@
             },
             desactivarDepartamento(id){
                swal.fire({
-                title: 'Esta seguro de desactivar este Departamento?',
+                title: 'Esta seguro de desactivar este registro?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

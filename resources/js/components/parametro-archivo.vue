@@ -245,7 +245,7 @@
             },
             desactivarDepartamento(id){
                swal.fire({
-                title: 'Esta seguro de desactivar este Departamento?',
+                title: 'Esta seguro de desactivar este registro?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

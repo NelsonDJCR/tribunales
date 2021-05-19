@@ -50,24 +50,6 @@ Route::middleware('auth')->group(function () {
     Route::group(["middleware" => ["CheckDepto", "ChangeDb", "validateSesion"]], function () {
 
 
-
-
-
-        // Rutas para tribunales
-        Route::get('/departament-city', [TribunalesController::class, 'data']);
-
-
-
-
-        Route::post('/saveCourt', [TribunalesController::class, 'store']);
-
-
-
-
-
-
-
-
         Route::get('/main', [MainController::class, 'index'])->name('main');
         Route::get('/rol', [RolController::class, 'index']);
         Route::post('/rol/create', [RolController::class, 'store']);
@@ -145,6 +127,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/actualizar-parametro/{id}/{tabla}/{data}', [ParametrosController::class, 'actualizar']);
         Route::post('/inactivar-estado/{id}/{tabla}/{estado}', [ParametrosController::class, 'estadoInactivar']);
         Route::post('/nuevo', [ParametrosController::class, 'nuevo']);
+        
+        Route::post('/guardarTribunal', [TribunalesController::class, 'store']);
+
+
+
+        // Rutas para tribunales
+        Route::get('/departament-city', [TribunalesController::class, 'data']);
+        Route::get('/listar-tribunales', [TribunalesController::class, 'listar_ ']);
+        Route::get('/listar/{tabla}', [TribunalesController::class, 'listar']);
+        Route::post('/modificar-estado/{id}/{tabla}/{estado}', [TribunalesController::class, 'estadoInactivar']);
+        Route::post('/saveCourt', [TribunalesController::class, 'store']);
 
 
 
