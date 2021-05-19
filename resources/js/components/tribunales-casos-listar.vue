@@ -12,12 +12,12 @@
           <div class="container mt-5">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de PQRS</label></li>
+                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de casos</label></li>
             </ol>
             <div class="row p-2 text-center border shadow rounded-3">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12 col-xl-12 p-2">
-                  <h1 class="text-blue"><b>LISTADO DE PQRS</b></h1>
+                  <h1 class="text-blue"><b>LISTADO DE CASOS</b></h1>
                 </div>
 
               </div>
@@ -128,7 +128,7 @@
                   <button
                     type="button"
                     class="btn btn-success btn-sm"
-                    @click="view()"
+                    @click="pantallaVer()"
                   >
                     <i class="typcn typcn-eye"></i>
                   </button>
@@ -275,9 +275,9 @@
       </div>
     </template>
 
-    <template v-if="pantalla == 'nuevo'">
+    <template v-if="pantalla == 'ver'">
       <div>
-        <tribunales-nuevo></tribunales-nuevo>
+        <tribunales-casos-ver></tribunales-casos-ver>
       </div>
     </template>
   </div>
@@ -309,8 +309,8 @@ export default {
     });
   },
   methods: {
-      pantallaNuevo(){
-          this.pantalla = 'nuevo'
+      pantallaVer(){
+          this.pantalla = 'ver'
       },
     modal_export(id) {
       $("#cabildos_id").val(id);

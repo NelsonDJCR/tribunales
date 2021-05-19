@@ -31186,6 +31186,9 @@ a#color_icocno:active i{
   border: 0 !important;
   margin-bottom: 0;
 }
+.list-group.btn-group-vertical .list-group-item .btn .badge{
+    top: 2px;
+}
 .btns-block .list-group .btn, .btns-block .list-group .list-group-item{
   width: 100%;
 }
@@ -31194,10 +31197,18 @@ a#color_icocno:active i{
     background-color: #E3E3E3;
     border-color: #bdbdbd;
 }
+.table td.aling_btn_options .typcn:before{
+    width: .8em;
+    height: .45em;
+    font-size: 1.6em;
+    margin-top: -3px;
+}
 .btns-block .list-group.btn-group-vertical li:last-child{ padding-bottom: 20px; }
 .typcn.cl-white{ color: #fff; }
 .typcn.typcn-download.cl-white{ color: #fff; }
 .table.table-sm.fnt-hd-sm thead th{ font-size: 0.88rem; }
+.row-toggle{ margin: 0; padding: 0 !important; }
+
 
 /*------------------------------------------------------------------
  [Master Stylesheet]
