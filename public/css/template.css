@@ -31060,21 +31060,21 @@ a#color_icocno:active i{
   .dropdown-menu {
     position: absolute;
   }
-  
+
 }
 
 @media (min-width: 768px) {
   .dropdown-menu {
     position: absolute;
   }
- 
+
 }
 
 @media (min-width: 992px) {
   .dropdown-menu {
     position: absolute;
   }
- 
+
 }
 
 @media (min-width: 1200px) {
@@ -31103,7 +31103,7 @@ a#color_icocno:active i{
 .dropdown-menu > li > a:hover:after {
   text-decoration: underline;
   transform: rotate(-90deg);
-} 
+}
 
 /* Dropdowns */
 .dropdown .dropdown-toggle:after {
@@ -31177,18 +31177,28 @@ a#color_icocno:active i{
  }
 .table.table-bordered.table-striped caption.top{
   caption-side: top;
-} 
-.main.col-12 .container.mt-5{ 
-  margin-top: -1rem !important; 
 }
-.content-wrapper .main .container .breadcrumb{ 
-  border: none; 
-  border: 0 !important; 
+.main.col-12 .container.mt-5{
+  margin-top: -1rem !important;
+}
+.content-wrapper .main .container .breadcrumb{
+  border: none;
+  border: 0 !important;
   margin-bottom: 0;
 }
 .btns-block .list-group .btn, .btns-block .list-group .list-group-item{
   width: 100%;
 }
+.btns-block .list-group .btn-light{
+    color: #000;
+    background-color: #E3E3E3;
+    border-color: #bdbdbd;
+}
+.btns-block .list-group.btn-group-vertical li:last-child{ padding-bottom: 20px; }
+.typcn.cl-white{ color: #fff; }
+.typcn.typcn-download.cl-white{ color: #fff; }
+.table.table-sm.fnt-hd-sm thead th{ font-size: 0.88rem; }
+
 /*------------------------------------------------------------------
  [Master Stylesheet]
 

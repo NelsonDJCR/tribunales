@@ -11,7 +11,9 @@
         />
         <template v-if="action == 0">
           <div class="container mt-5">
-            <label for="" class="p-2">Tribunales/Informe de Actividades </label>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Informe de Actividades  </label></li>
+            </ol>
             <div class="row p-2 text-center border shadow rounded-3 bg-white">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12 col-xl-12 p-2">
@@ -32,7 +34,7 @@
                     v-model="dataFilter.nombre_tema"
                   />
 
-                  
+
                 </div>
                 <div class="mb-3 col-3">
                   <label for="" class="form-label"><b>Fecha </b></label>
@@ -113,7 +115,7 @@
               <div class="container">
                 <div class="row align-items-start">
                   <div class="col">
-                    
+
                   </div>
                   <div class="col text-end">
                     <button type="button" class="btn btn-labeled btn-primary">
@@ -174,7 +176,7 @@
                 <td>{{ i.nombre_dep }}</td>
               </tr>
             </tbody>
-            
+
           </table>
         </template>
 

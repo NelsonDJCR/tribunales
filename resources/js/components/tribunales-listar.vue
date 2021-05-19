@@ -9,22 +9,24 @@
           crossorigin="anonymous"
         />
         <!-- <template v-if="action == 0"> -->
-        <div class="container mt-5">
-          <label for="" class="p-2"
-            >Tribunales de Garantía / Listado de tribunales
-          </label>
-          <div class="row p-2 text-center border shadow">
-            <div class="row">
-              <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                <h1 class="text-blue"><b>LISTADO DE TRIBUNALES</b></h1>
-              </div>
-              <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-                <button
-                  @click="pantallaNuevo"
-                  class="btn btn-warning text-white w-100 mt-2"
-                >
-                  Nuevo tribunal
-                </button>
+          <div class="container mt-5">
+            <!-- Breadcrumb -->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de tribunales </label></li>
+            </ol>
+            <div class="row p-2 text-center border shadow rounded-3">
+              <div class="row">
+                <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+                  <h1 class="text-blue"><b>LISTADO DE TRIBUNALES</b></h1>
+                </div>
+                <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+                  <button
+                    @click="pantallaNuevo"
+                    class="btn btn-warning text-white w-100 mt-2" >
+
+                    Nuevo Tribunal
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -218,6 +220,7 @@ export default {
     },
     pantallaNuevo() {
       this.pantalla = "nuevo";
+
     },
     inacive(id) {
       Swal.fire({

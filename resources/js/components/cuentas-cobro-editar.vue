@@ -25,7 +25,7 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
                   <select
-                    
+
                     class="form-select"
                     name="tribu_id"
                     id="tribu_id"
@@ -44,7 +44,7 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Magistrado</b></label>
                   <select
-                    
+
                     class="form-select"
                     name="tribu_id"
                     id="tribu_id"
@@ -123,7 +123,7 @@
                   />
               </div>
             </div>
-            
+
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
@@ -215,9 +215,10 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="d-grid gap-2 col-6 mx-auto">
                 <button type="submit"  class="btn btn-primary">Guardar</button>
+                <router-link :to='`/tribunales/listado-cuentas-de-cobro`' @click.native="$router.go()" class="btn btn-danger text-white w-100 mt-2">Cancelar</router-link>
             </div>
           </div>
         </div>

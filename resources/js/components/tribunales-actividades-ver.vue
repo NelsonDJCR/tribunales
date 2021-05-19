@@ -14,8 +14,14 @@
       </ol>
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-          <h1 class="text-blue"><b>VISUALIZACIÓN DE LA ACTIVIDAD</b></h1>
+            <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+                <h2 class="text-blue"><b>VISUALIZACIÓN DE LA ACTIVIDAD</b></h2>
+            </div>
+            <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+                <router-link :to='`/tribunales/listado-de-actividades`' @click.native="$router.go()" class="btn btn-secondary active text-white w-100 mt-2">Volver al listado</router-link>
+            </div>
         </div>
+
       </div>
 
       <form @submit.prevent="save">
@@ -57,7 +63,7 @@
                 <textarea class="form-control" id="" rows="5" placeholder="Descripción ejemplo" disabled></textarea>
               </div>
             </div>
-            
+
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
@@ -145,7 +151,11 @@
                 </div>
               </div>
             </div>
-                        
+
+            <div class="d-grid gap-2 col-6 mx-auto">
+              <button type="submit"  class="btn btn-danger">Eliminar Actividad</button>
+            </div>
+
           </div>
         </div>
       </form>

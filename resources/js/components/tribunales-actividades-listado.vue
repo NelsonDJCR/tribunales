@@ -126,13 +126,7 @@
                   >
                     <i class="typcn typcn-edit" style="color: white"></i>
                   </button>
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm"
-                    @click="deleteSesion()"
-                  >
-                    <i class="typcn typcn-trash"></i>
-                  </button>
+
                   <button
                     type="button"
                     class="btn btn-success btn-sm"
@@ -141,6 +135,13 @@
                     <i class="typcn typcn-eye"></i>
                   </button>
 
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    @click="deleteSesion()"
+                  >
+                    <i class="typcn typcn-trash"></i>
+                  </button>
                   <!-- <button
                 data-id=""
                 type="button"
@@ -285,7 +286,7 @@ export default {
     },
     pantallaNuevo(){
       this.pantalla = "nuevo";
-        
+
     },
     // modal_export(id) {
     //   $("#cabildos_id").val(id);
