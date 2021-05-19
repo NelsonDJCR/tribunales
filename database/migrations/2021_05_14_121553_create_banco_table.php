@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBacnoTable extends Migration
+class CreateBancoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateBacnoTable extends Migration
      */
     public function up()
     {
-        Schema::create('bacno', function (Blueprint $table) {
+        Schema::create('banco', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
             $table->integer('estado');
@@ -29,6 +29,6 @@ class CreateBacnoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bacno');
+        Schema::dropIfExists('banco');
     }
 }

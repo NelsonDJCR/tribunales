@@ -9,6 +9,7 @@
 
 
     <div class="container mt-5">
+      {{ id }}
       <label for="" class="p-2"
         >Cabildos/Listado de cabildos/Editar tribunal
       </label>
@@ -232,10 +233,9 @@
   </div>
 </template>
 <script>
-// $('body').on('click', '.delete_file', function() {
-//   $(this).parent().parent().remove();
-// });
+
 export default {
+  props: ['id'],
   data() {
     return {
       type_file: [],
@@ -244,16 +244,11 @@ export default {
       sesion: {},
       documentos: [],
       index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
     };
   },
   created() {
-    const url = "/data-new-sesion";
+    x_id = this.id
+    const url = "/data-edit";
     axios.get(url).then((r) => {
       this.type_file = r.data.tipo;
       this.ciudades = r.data.municipios;

@@ -19,9 +19,11 @@ class CreateTribunalTable extends Migration
             $table->string('direccion');
             $table->foreignId('dep_id')->nullable()->constrained('departamentos');
             $table->foreignId('ciu_id')->nullable()->constrained('ciudades');
-            $table->foreignId('estado')->nullable()->constrained('estado');
             $table->date('fecha_inicio');
             $table->date('fecha_final');
+            $table->foreignId('tipo_archivo')->nullable()->constrained('tipo_archivo');
+            $table->string('archivo');
+            $table->integer('estado')->default(1);
             $table->timestamps();
         });
     }

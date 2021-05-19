@@ -17,7 +17,7 @@
         </div>
       </div>
 
-      <form @submit.prevent="saveCourt">
+      <form @submit.prevent="save">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
@@ -32,7 +32,19 @@
                 />
               </div>
             </div>
-             <div class="row">
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Dirección *</b></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="form.direccion"
+                  maxlength="250"
+                  name="theme"
+                />
+              </div>
+            </div>
+            <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Departamento *</b></label>
                 <select
@@ -54,7 +66,6 @@
               </div>
             </div>
 
-           
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Ciudad *</b></label>
@@ -107,30 +118,11 @@
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
-              <label for="" class="form-label"
-                ><b>Estado *</b></label
-              >
+              <label for="" class="form-label"><b>Tipo de archivo *</b></label>
               <select
                 class="form-select"
                 name="type_file"
-                v-model="form.estado"
-              >
-                <option
-                  v-for="(i, index) in estado"
-                  :key="index"
-                  :value="i.id"
-                  v-text="i.nombre"
-                ></option>
-              </select>
-            </div>
-            <div class="row">
-              <label for="" class="form-label"
-                ><b>Tipo de archivo *</b></label
-              >
-              <select
-                class="form-select"
-                name="type_file"
-                v-model="form.type_file"
+                v-model="form.tipo_archivo"
               >
                 <option
                   v-for="(i, index) in tipo_documento"
@@ -140,7 +132,7 @@
                 ></option>
               </select>
             </div>
-           
+
             <div class="row mt-5">
               <div
                 class="form-group files border"
@@ -163,23 +155,26 @@
                 </div>
               </div>
             </div>
-            <input type="file" class="d-none" @change="archivo($event)" id="file">
+            <input
+              type="file"
+              class="d-none"
+              @change="uploadFile($event)"
+              id="file"
+            />
             <div class="row mt-5">
-              <button type="submit"  class="btn btn-primary">Crear tribunal</button>
+              <button type="submit" class="btn btn-primary">
+                Crear tribunal
+              </button>
             </div>
           </div>
         </div>
       </form>
     </div>
-
- 
   </div>
 </template>
 <script>
-
 export default {
   data() {
-    
     return {
       tipo_documento: [],
       ciudades: [],
@@ -199,15 +194,14 @@ export default {
     });
   },
   methods: {
-    archivo(event){
-      this.archivo = event.file[0]
-      
+    archivo(event) {
+      this.archivo = event.file[0];
     },
     uploadFile(event) {
       this.archivo = event.target.files[0];
     },
-    box_file(){
-      $("#file").trigger('click')
+    box_file() {
+      $("#file").trigger("click");
     },
     changeCity() {
       var id = $("#departamento_id").val();
@@ -215,10 +209,22 @@ export default {
         this.ciudades = r.data;
       });
     },
-    saveCourt() {
-      let form = new FormData
-      axios.post('/saveCourt', form).then((res) => {
-        console.log(res.data);
+    save() {
+      var datos = new FormData();
+      datos.append("archivo", this.archivo);
+      datos.append("nombre", this.form.nombre);
+      datos.append("direccion", this.form.direccion);
+      datos.append("dep_id", this.form.dep_id);
+      datos.append("ciu_id", this.form.ciu_id);
+      datos.append("tipo_archivo", this.form.tipo_archivo);
+      datos.append("fecha_inicio", this.form.fecha_inicio);
+      datos.append("fecha_final", this.form.fecha_final);
+      axios.post("/guardarTribunal", datos).then((res) => {
+        if (res.data.code == 200) {
+          Swal.fire("¡Perfecto!", res.data.msg, "success").then(function () {
+            location.reload();
+          });
+        }
       });
     },
   },

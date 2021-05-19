@@ -260,7 +260,7 @@ class ParametrosController extends Controller
 
     public function estadoInactivar($id, $tabla, $estado)
     {
-        DB::table($tabla)->where('id', $id)->update(['estado' => $estado,]);
+        DB::table($tabla)->where('id', $id)->update(['estado' => $estado]);
     }
 
 	public function actualizar($id,$tabla,$data)
