@@ -196,16 +196,6 @@
                 </div>
               </div>
             </div>
-            <input
-              type="file"
-              class="d-none"
-              @change="uploadFile($event)"
-              id="file"
-            />
-            <div class="row mt-5">
-              <button type="submit" class="btn btn-primary">
-                Crear tribunal
-              </button>
             <input type="file" class="d-none" @change="archivo($event)" id="file">
             <div class="d-grid gap-2 col-6 mx-auto">
               <button type="submit"  class="btn btn-success">Crear Tribunal</button>
@@ -214,11 +204,14 @@
         </div>
       </form>
     </div>
+
+
   </div>
 </template>
 <script>
 export default {
   data() {
+
     return {
       tipo_documento: [],
       ciudades: [],
@@ -238,8 +231,9 @@ export default {
     });
   },
   methods: {
-    archivo(event) {
-      this.archivo = event.file[0];
+    archivo(event){
+      this.archivo = event.file[0]
+
     },
     uploadFile(event) {
       this.archivo = event.target.files[0];
