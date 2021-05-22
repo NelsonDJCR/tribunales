@@ -16,7 +16,7 @@ class CreateMedioRecepcionTable extends Migration
         Schema::create('medio_recepcion', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->integer('estado');
+            $table->integer('estado')->default(1);
             $table->integer('idAsesorRegistra');
             $table->timestamps();
         });

@@ -32,7 +32,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  v-model="form.n"
+                  v-model="form.nombre"
                   maxlength="250"
                   name=""
                 />
@@ -44,9 +44,16 @@
                 <select
                   class="form-select"
                   name=""
+                   v-model="form.id_tipo_identificacion"
 
                 >
                   <option>Seleccione ...</option>
+                  <option
+                        v-for="(i, index) in tipo_identificacion"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
 
                 </select>
               </div>
@@ -56,6 +63,7 @@
                 <label for="" class="form-label"><b>Número de Identificación</b></label>
                 <input
                   type="number"
+                   v-model="form.numero_identificacion"
                   class="form-control"
                   maxlength="15"
                   name=""
@@ -68,7 +76,7 @@
                 <select
                   class="form-select"
                   name="department"
-                  v-model="form.department"
+                  v-model="form.dep_id"
                   id="departamento_id"
                   v-on:change="changeCity()"
                 >
@@ -86,10 +94,10 @@
 
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Municipio</b></label>
+                <label for="" class="form-label"><b>Ciudad</b></label>
                 <select
                   class="form-select"
-                  v-model="form.municipality"
+                  v-model="form.ciu_id"
                   name="municipality"
                   id="municipio"
                 >
@@ -109,6 +117,7 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Dirección</b></label>
                 <input
+                  v-model="form.direccion"
                   type="text"
                   class="form-control"
                   maxlength="250"
@@ -123,6 +132,7 @@
                   ><b>Correo Electrónico</b>
                 </label>
                   <input
+                  v-model="form.correo"
                     type="email"
                     class="form-control"
 
@@ -137,36 +147,52 @@
                 </label>
                 <div class="input-group">
                   <input
+                  v-model="form.telefono"
                     type="number"
                     class="form-control"
                   />
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-
-            <div class="row">
+               <div class="row">
                 <div class="mb-3">
                     <label for="" class="form-label"><b>Banco</b></label>
                     <select
+                    v-model="form.id_banco"
                     class="form-select"
                     name=""
                     >
                         <option>Seleccione ...</option>
+                        <option
+                        v-for="(i, index) in bancos"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
                     </select>
                 </div>
             </div>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
+
+         
 
             <div class="row">
                 <div class="mb-3">
                     <label for="" class="form-label"><b>Tipo de Cuenta</b></label>
                     <select
                     class="form-select"
+                    v-model="form.id_tipo_cuenta"
                     name=""
                     >
                         <option>Seleccione ...</option>
+                        <option
+                        v-for="(i, index) in tipo_cuentas"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
                     </select>
                 </div>
             </div>
@@ -177,31 +203,14 @@
                   ><b>Número de Cuenta</b>
                 </label>
                   <input
+                    v-model="form.numero_cuenta"
                     type="number"
                     class="form-control"
                   />
               </div>
             </div>
 
-            <div class="row">
-                <div class="mb-3">
-                    <label for="" class="form-label"
-                        ><b>Estado</b></label
-                    >
-                    <select
-                        class="form-select"
-                        name="type_file"
-                        v-model="form.type_file"
-                    >
-                        <option
-                        v-for="(i, index) in type_file"
-                        :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                        ></option>
-                    </select>
-                </div>
-            </div>
+          
 
             <div class="row">
                 <div class="mb-3">
@@ -211,10 +220,11 @@
                     <select
                         class="form-select"
                         name="type_file"
-                        v-model="form.type_file"
+                        v-model="form.id_tipo_archivo"
                     >
+                    <option>Seleccione ...</option>
                         <option
-                        v-for="(i, index) in type_file"
+                        v-for="(i, index) in tipo_archivos"
                         :key="index"
                         :value="i.id"
                         v-text="i.nombre"
@@ -339,9 +349,6 @@
   </div>
 </template>
 <script>
-// $('body').on('click', '.delete_file', function() {
-//   $(this).parent().parent().remove();
-// });
 export default {
   data() {
     return {
@@ -351,75 +358,35 @@ export default {
       form: {},
       documentos: [],
       index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
-    };
-  },
+  }},
   created() {
-    const url = "/data-new-form";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
+     axios.get("/data-select").then((r) => {
+      this.tipo_documentos = r.data.tipo_documento;
+      this.ciudades = r.data.ciudades;
+      this.departament = r.data.departamentos;
+      this.bancos = r.data.bancos;
+      this.tipo_cuentas = r.data.tipo_cuentas;
+      this.tipo_archivos = r.data.tipo_archivos;
+      this.tipo_identificacion = r.data.tipo_identificacion;
     });
   },
   methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
-    },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
+    
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
         this.ciudades = r.data;
       });
     },
-    save() {
-      let datos = this.form;
-      let url = "saveform";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarformes";
+    save(){
+      axios.post("/editar-magistrado", this.form).then((res) => {
+        if (res.data.code == 200) {
+          Swal.fire("¡Perfecto!", res.data.msg, "success").then(function () {
+            location.reload();
           });
         }
-
       });
-    },
+    }
   },
 };
 </script>

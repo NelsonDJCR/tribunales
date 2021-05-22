@@ -21,12 +21,14 @@ use App\Http\Middleware\ValidateSesion;
 
 // ----------INICIO IMPORTACIÓN CONTROLADORES CABILDOS-----------
 use App\Http\Controllers\CabildosController;
+use App\Http\Controllers\MagistradosController;
 use App\Http\Controllers\ParametrosController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TipoDocumentoController;
 use App\Http\Controllers\TribunalesController;
 use App\Models\CabildoAbierto;
 use App\Models\Departamentos;
+use App\Models\Magistrado;
 use App\Models\TipoDocumento;
 use Illuminate\Support\Facades\App;
 
@@ -133,12 +135,20 @@ Route::middleware('auth')->group(function () {
 
 
         // Rutas para tribunales
-        Route::get('/departament-city', [TribunalesController::class, 'data']);
+        Route::get('/data-select', [TribunalesController::class, 'data']);
         Route::get('/listar-tribunales', [TribunalesController::class, 'listar_ ']);
         Route::get('/listar/{tabla}', [TribunalesController::class, 'listar']);
         Route::post('/modificar-estado/{id}/{tabla}/{estado}', [TribunalesController::class, 'estadoInactivar']);
+        Route::post('/editar-tibunal', [TribunalesController::class, 'editar']);
         Route::get('/data-rercord/{id}/{table}', [TribunalesController::class, 'dataRecord']);
         
+        // Magistrados
+        
+        Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
+        Route::post('/editar-magistrado', [MagistradosController::class, 'editar']);
+        
+        Route::post('/filtros-magistrados', [MagistradosController::class, 'filtrar']);
+        Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
         
         
         

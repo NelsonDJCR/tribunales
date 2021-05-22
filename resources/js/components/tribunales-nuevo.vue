@@ -93,18 +93,6 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="mb-3">
-                <label for="" class="form-label"><b>Dirección</b></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="form.nombre"
-                  maxlength="250"
-                  name="theme"
-                />
-              </div>
-            </div>
 
             <div class="row">
               <div class="mb-3">
@@ -135,25 +123,7 @@
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-            <div class="row">
-                <div class="mb-3">
-                    <label for="" class="form-label"
-                        ><b>Estado</b></label
-                    >
-                    <select
-                        class="form-select"
-                        name="type_file"
-                        v-model="form.estado"
-                    >
-                        <option
-                        v-for="(i, index) in estado"
-                        :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                        ></option>
-                    </select>
-                </div>
-            </div>
+          
             <div class="row">
                 <div class="mb-3">
                     <label for="" class="form-label"
@@ -162,7 +132,7 @@
                     <select
                         class="form-select"
                         name="type_file"
-                        v-model="form.type_file"
+                        v-model="form.tipo_archivo"
                     >
                         <option
                         v-for="(i, index) in tipo_documento"
@@ -196,7 +166,7 @@
                 </div>
               </div>
             </div>
-            <input type="file" class="d-none" @change="archivo($event)" id="file">
+            <input type="file" class="d-none" @change="uploadFile($event)" id="file">
             <div class="d-grid gap-2 col-6 mx-auto">
               <button type="submit"  class="btn btn-success">Crear Tribunal</button>
             </div>
@@ -217,13 +187,14 @@ export default {
       ciudades: [],
       departamentos: [],
       estado: [],
+     
       form: {},
       documentos: [],
       index: 0,
     };
   },
   created() {
-    axios.get("/departament-city").then((r) => {
+    axios.get("/data-select").then((r) => {
       this.tipo_documento = r.data.tipo_documento;
       this.ciudades = r.data.municipios;
       this.departamentos = r.data.departamentos;
