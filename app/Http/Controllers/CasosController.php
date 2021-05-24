@@ -72,6 +72,9 @@ class CasosController extends Controller
         // return Response()->json($result);
     }
 
+
+
+    
     /**
      * Show the form for creating a new resource.
      *

@@ -165,6 +165,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/tribunales/casos-listar',[CasosController::class,'index']);
 
 
+        
+
         //--------------------------------------------------------------------------------------
         // Rutas para reportes
         //--------------------------------------------------------------------------------------
