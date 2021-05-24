@@ -34,7 +34,7 @@
                   class="form-control"
                   maxlength="250"
                   name=""
-                  placeholder="Nombre de Magistrado"
+                  v-model="data_record.nombre"
                   disabled
                 />
               </div>
@@ -43,10 +43,16 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tipo de Identificación</b></label>
                 <select disabled
+                v-model="data_record.id_tipo_identificacion"
                   class="form-select"
                   name=""
                 >
-                  <option selected>Cedula de Ciudadania</option>
+                  <option
+                        v-for="(i, index) in tipo_identificacion"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
                 </select>
               </div>
             </div>
@@ -57,8 +63,7 @@
                   type="number"
                   class="form-control"
                   maxlength="15"
-                  name=""
-                  placeholder="123456789"
+                  v-model="data_record.numero_identificacion"
                   disabled
                 />
               </div>
@@ -69,21 +74,33 @@
                 <select disabled
                   class="form-select"
                   name=""
+                  v-model="data_record.dep_id"
                 >
-                  <option selected>Cundinamarca</option>
+                <option
+                        v-for="(i, index) in departament"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
                 </select>
               </div>
             </div>
 
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Municipio</b></label>
+                <label for="" class="form-label"><b>Ciudad</b></label>
                 <select disabled
+                v-model="data_record.ciu_id"
                   class="form-select"
                   name="municipality"
                   id="municipio"
                 >
-                  <option selected>Chia</option>
+                <option
+                        v-for="(i, index) in ciudades"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
                 </select>
               </div>
             </div>
@@ -96,7 +113,7 @@
                   class="form-control"
                   maxlength="250"
                   name=""
-                  placeholder="Calle 123"
+                  v-model="data_record.direccion"
                   disabled
                 />
               </div>
@@ -112,6 +129,7 @@
                     class="form-control"
                     placeholder="correo@correo.com"
                     disabled
+                    v-model="data_record.correo"
                   />
               </div>
             </div>
@@ -125,7 +143,7 @@
                   <input
                     type="number"
                     class="form-control"
-                    placeholder="3152584785"
+                    v-model="data_record.telefono"
                     disabled
                   />
                 </div>
@@ -140,9 +158,15 @@
                     <label for="" class="form-label"><b>Banco</b></label>
                     <select disabled
                     class="form-select"
+                    v-model="data_record.id_banco"
                     name=""
                     >
-                        <option selected >Davividenda</option>
+                        <option
+                        v-for="(i, index) in bancos"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
                     </select>
                 </div>
             </div>
@@ -152,9 +176,15 @@
                     <label for="" class="form-label"><b>Tipo de Cuenta</b></label>
                     <select disabled
                     class="form-select"
+                    v-model="data_record.id_tipo_cuenta"
                     name=""
                     >
-                        <option selected>Ahorros</option>
+                        <option
+                        v-for="(i, index) in tipo_cuentas"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
                     </select>
                 </div>
             </div>
@@ -165,28 +195,14 @@
                   ><b>Número de Cuenta</b>
                 </label>
                   <input
+
                     type="number"
                     class="form-control"
-                    placeholder="3152584785"
+                    v-model="data_record.numero_cuenta"
                     disabled
                   />
               </div>
             </div>
-
-            <div class="row">
-                <div class="mb-3">
-                    <label for="" class="form-label"
-                        ><b>Estado</b></label
-                    >
-                    <select disabled
-                    class="form-select"
-                    name=""
-                    >
-                        <option selected>Activo</option>
-                    </select>
-                </div>
-            </div>
-
             <div class="row">
               <div class="mb-1">
                 <label for="" class="form-label"><b>Archivos</b></label>
@@ -283,83 +299,42 @@
 //   $(this).parent().parent().remove();
 // });
 export default {
+  props: ['id'],
   data() {
     return {
       type_file: [],
       ciudades: [],
       departament: [],
       sesion: {},
+      data_record: {},
       documentos: [],
       index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
     };
   },
   created() {
-    const url = "/data-new-sesion";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
+    axios.get(`/data-rercord/${this.id}/magistrados`).then((r) => {
+      this.data_record = r.data.formulario;
     });
+    axios.get("/data-select").then((r) => {
+      this.tipo_documentos = r.data.tipo_documento;
+      this.ciudades = r.data.ciudades;
+      this.departament = r.data.departamentos;
+      this.bancos = r.data.bancos;
+      this.tipo_cuentas = r.data.tipo_cuentas;
+      this.tipo_archivos = r.data.tipo_archivos;
+      this.tipo_identificacion = r.data.tipo_identificacion;
+    });
+    
   },
   methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
-    },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
+    
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
         this.ciudades = r.data;
       });
     },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
-          });
-        }
-
-      });
-    },
+    
   },
 };
 </script>

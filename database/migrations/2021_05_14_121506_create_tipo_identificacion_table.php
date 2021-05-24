@@ -16,7 +16,7 @@ class CreateTipoIdentificacionTable extends Migration
         Schema::create('tipo_identificacion', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->integer('estado');
+            $table->integer('estado')->default(1);
             $table->integer('idAsesorRegistra');
             $table->timestamps();
         });

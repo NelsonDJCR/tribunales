@@ -6,53 +6,41 @@
       integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
       crossorigin="anonymous"
     />
-
     <div class="container mt-5">
       <!-- Breadcrumb -->
       <ol class="breadcrumb">
-          <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Tribunales / Ver Tribunal </label></li>
+          <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Tribunales / Editar tribunal </label></li>
       </ol>
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-            <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                <h1 class="text-blue"><b>VISUALIZACIÓN DE TRIBUNAL</b></h1>
-            </div>
-            <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-                <!--button
-                @click="$router.go(0)"
-                class="btn btn-warning text-white w-100 mt-2" >
-                    Volver al listado
-                </button-->
-                <router-link :to='`/tribunales-listar`' @click.native="$router.go()" class="btn btn-secondary active text-white w-100 mt-2">Volver al listado</router-link>
-                <!--router-link class="btn btn-warning text-white w-100 mt-2" to="/tribunales-listar">Volver al listado 2</router-link-->
-            </div>
+          <h1 class="text-blue" ><b>VER TRIBUNAL</b></h1>
         </div>
       </div>
-
-      <form @submit.prevent="save">
+      <form >
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Nombre</b></label>
                 <input
+
                   type="text"
                   class="form-control"
-                  v-model="sesion.theme"
+                  v-model="data_record.nombre"
                   maxlength="250"
                   name="theme"
-                  placeholder="Nombre Ejemplo"
                   disabled
+                  placeholder=""
                 />
               </div>
             </div>
              <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Departamento</b></label>
-                <select disabled
+                <select
                   class="form-select"
                   name="department"
-                  v-model="sesion.department"
+                  v-model="data_record.dep_id"
                   id="departamento_id"
                   v-on:change="changeCity()"
                 >
@@ -67,14 +55,12 @@
                 </select>
               </div>
             </div>
-
-
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Municipio</b></label>
-                <select disabled
+                <label for="" class="form-label"><b>Ciudad</b></label>
+                <select
                   class="form-select"
-                  v-model="sesion.municipality"
+                  v-model="data_record.ciu_id"
                   name="municipality"
                   id="municipio"
                 >
@@ -89,22 +75,20 @@
                 </select>
               </div>
             </div>
-
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Dirección</b></label>
                 <input
+                disabled
                   type="text"
                   class="form-control"
                   maxlength="250"
+                   v-model="data_record.direccion"
                   name="theme"
-                  placeholder="Dirección Ejemplo"
-                  disabled
+                  placeholder=""
                 />
               </div>
             </div>
-
-
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"
@@ -112,62 +96,38 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                  disabled
+                    v-model="data_record.fecha_inicio"
                     type="date"
                     class="form-control"
-                    disabled
                   />
                 </div>
               </div>
             </div>
-
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"
-                  ><b>Fecha fin estimada</b>
-                </label>
+                <label for="" class="form-label"><b>Fecha fin estimada</b></label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                  disabled
+                    v-model="data_record.fecha_final"
                     type="date"
                     class="form-control"
-                    disabled
                   />
                 </div>
               </div>
             </div>
           </div>
-
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-            <div class="row">
-                <div class="mb-3">
-                    <label for="" class="form-label"
-                        ><b>Estado</b></label
-                    >
-                    <select disabled
-                        class="form-select"
-                        name="type_file"
-                        v-model="sesion.type_file"
-                    >
-                        <option
-                        v-for="(i, index) in type_file"
-                        :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                        ></option>
-                    </select>
-                </div>
-            </div>
-
             <div class="row">
                 <div class="mb-3">
                     <label for="" class="form-label"
                         ><b>Tipo de archivo</b></label
                     >
-                    <select disabled
+                    <select
                         class="form-select"
                         name="type_file"
-                        v-model="sesion.type_file"
+                        v-model="data_record.tipo_archivo"
                     >
                         <option
                         v-for="(i, index) in type_file"
@@ -178,34 +138,6 @@
                     </select>
                 </div>
             </div>
-
-            <!--div class="row mt-5">
-              <div
-                class="form-group files  opacity-2 opacity-2h"
-                role="button"
-                id="box_file"
-                @click="openModalFile()"
-              >
-                <div class="row mt-5">
-                  <img
-                    class="img_file mx-auto d-block"
-                    alt=""
-                    style="width: 100px"
-                    src="https://img.icons8.com/ios/452/google-docs.png"
-                  />
-                </div>
-                <div class="row mt-1 mb-5">
-                  <p class="text_file text-center">
-                    Ingresa aquí tus documentos .pdf .png .jpg
-                  </p>
-                </div>
-              </div>
-            </div-->
-
-            <div class="d-grid gap-2 col-6 mx-auto">
-              <button type="submit"  class="btn btn-danger">Eliminar Tribunal</button>
-            </div>
-
           </div>
         </div>
       </form>
@@ -268,87 +200,37 @@
   </div>
 </template>
 <script>
-// $('body').on('click', '.delete_file', function() {
-//   $(this).parent().parent().remove();
-// });
+
 export default {
+  props: ['id'],
   data() {
     return {
       type_file: [],
       ciudades: [],
       departament: [],
-      sesion: {},
+      data_record: {},
+      data: {},
       documentos: [],
       index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
     };
   },
   created() {
-    const url = "/data-new-sesion";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
+    axios.get(`/data-rercord/${this.id}/tribunal`).then((r) => {
+      this.data_record = r.data.formulario;
+      this.departament = r.data.departamentos;
+      this.ciudades = r.data.ciudades;
+      this.type_file = r.data.tipo_archivos;
     });
   },
   methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
-    },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
         this.ciudades = r.data;
       });
     },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
-          });
-        }
-
-      });
-    },
+    
+   
   },
 };
 </script>

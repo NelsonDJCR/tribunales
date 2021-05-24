@@ -21,6 +21,7 @@ use App\Http\Middleware\ValidateSesion;
 
 // ----------INICIO IMPORTACIÓN CONTROLADORES CABILDOS-----------
 use App\Http\Controllers\CabildosController;
+use App\Http\Controllers\MagistradosController;
 use App\Http\Controllers\ParametrosController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TipoDocumentoController;
@@ -29,6 +30,7 @@ use App\Models\CabildoAbierto;
 use App\Models\Caso;
 use App\Http\Controllers\CasosController;
 use App\Models\Departamentos;
+use App\Models\Magistrado;
 use App\Models\TipoDocumento;
 use Illuminate\Support\Facades\App;
 
@@ -135,11 +137,13 @@ Route::middleware('auth')->group(function () {
 
 
         // Rutas para tribunales
-        Route::get('/departament-city', [TribunalesController::class, 'data']);
+        Route::get('/data-select', [TribunalesController::class, 'data']);
         Route::get('/listar-tribunales', [TribunalesController::class, 'listar_ ']);
         Route::get('/listar/{tabla}', [TribunalesController::class, 'listar']);
         Route::post('/modificar-estado/{id}/{tabla}/{estado}', [TribunalesController::class, 'estadoInactivar']);
+        Route::post('/editar-tibunal', [TribunalesController::class, 'editar']);
         Route::get('/data-rercord/{id}/{table}', [TribunalesController::class, 'dataRecord']);
+<<<<<<< HEAD
 
 
 
@@ -150,6 +154,25 @@ Route::middleware('auth')->group(function () {
 
 
 
+=======
+        
+        // Magistrados
+        
+        Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
+        Route::post('/editar-magistrado', [MagistradosController::class, 'editar']);
+        
+        Route::post('/filtros-magistrados', [MagistradosController::class, 'filtrar']);
+        Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+>>>>>>> d4a608fdc79cb694fb59b8b5fabb8220d90ebd33
         Route::post('/saveCourt', [TribunalesController::class, 'store']);
         Route::get('/tipoDocumento', [TipoDocumento2Controller::class, 'index']);
         Route::post('/tipoDocumento/create', [TipoDocumento2Controller::class, 'store']);

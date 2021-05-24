@@ -37,7 +37,7 @@
                   class="form-control"
                   id="nombre_tema"
                   name="nombre_tema"
-                  v-model="dataFilter.nombre_tema"
+                  v-model="dataFilter.nombre"
                 />
               </div>
               <div class="mb-3 col-3">
@@ -63,7 +63,7 @@
                   type="date"
                   class="form-control"
                   id="fecha_realizacion"
-                  v-model="dataFilter.fecha_realizacion"
+                  v-model="dataFilter.fecha_inicio"
                 />
               </div>
               <div class="mb-3 col-3">
@@ -128,7 +128,7 @@
                 <button
                   type="button"
                   class="btn btn-success btn-sm"
-                  @click="view()"
+                  @click="view(i.id)"
                 >
                   <i class="typcn typcn-eye"></i>
                 </button>
@@ -180,7 +180,7 @@
     </template>
     <template v-if="pantalla == 'ver'">
       <div>
-        <tribunales-ver></tribunales-ver>
+        <tribunales-ver :id="idEditar"></tribunales-ver>
       </div>
     </template>
   </div>
@@ -209,11 +209,17 @@ export default {
     });
   },
   methods: {
+    filter(){
+      axios.post('/filtros-tribunales', this.dataFilter).then((r)=>{
+        this.tabla = r.data.tabla;
+      })
+    },
     editar(i) {
       this.idEditar = i.id
       this.pantalla = "editar";
     },
-    view() {
+    view(x) {
+      this.idEditar = x
       this.pantalla = "ver";
     },
     pantallaNuevo() {

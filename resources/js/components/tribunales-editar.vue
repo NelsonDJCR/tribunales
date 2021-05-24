@@ -6,8 +6,6 @@
       integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
       crossorigin="anonymous"
     />
-
-
     <div class="container mt-5">
       <!-- Breadcrumb -->
       <ol class="breadcrumb">
@@ -18,17 +16,17 @@
           <h1 class="text-blue"><b>EDITAR TRIBUNAL</b></h1>
         </div>
       </div>
-
-      <form @submit.prevent="save">
+      <form @submit.prevent="edit">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Nombre</b></label>
                 <input
+
                   type="text"
                   class="form-control"
-                  v-model="datos.nombre"
+                  v-model="form_edit.nombre"
                   maxlength="250"
                   name="theme"
                   placeholder=""
@@ -41,7 +39,7 @@
                 <select
                   class="form-select"
                   name="department"
-                  v-model="sesion.department"
+                  v-model="form_edit.dep_id"
                   id="departamento_id"
                   v-on:change="changeCity()"
                 >
@@ -56,13 +54,12 @@
                 </select>
               </div>
             </div>
-
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Municipio</b></label>
+                <label for="" class="form-label"><b>Ciudad</b></label>
                 <select
                   class="form-select"
-                  v-model="sesion.municipality"
+                  v-model="form_edit.ciu_id"
                   name="municipality"
                   id="municipio"
                 >
@@ -77,7 +74,6 @@
                 </select>
               </div>
             </div>
-
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Dirección</b></label>
@@ -85,12 +81,13 @@
                   type="text"
                   class="form-control"
                   maxlength="250"
+                   v-model="form_edit.direccion"
                   name="theme"
                   placeholder=""
                 />
               </div>
             </div>
-
+            <input class="form-control" type="hidden" v-model="form_edit.tipo_archivo">
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"
@@ -98,7 +95,7 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                    v-model="form_edit.fecha_inicio"
                     type="date"
                     class="form-control"
                   />
@@ -110,7 +107,7 @@
                 <label for="" class="form-label"><b>Fecha fin estimada</b></label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                    v-model="form_edit.fecha_final"
                     type="date"
                     class="form-control"
                   />
@@ -118,27 +115,7 @@
               </div>
             </div>
           </div>
-
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-            <div class="row">
-              <div class="mb-3">
-                <label for="" class="form-label"
-                    ><b>Estado</b></label
-                >
-                <select
-                    class="form-select"
-                    name="type_file"
-                    v-model="sesion.type_file"
-                >
-                    <option
-                    v-for="(i, index) in type_file"
-                    :key="index"
-                    :value="i.id"
-                    v-text="i.nombre"
-                    ></option>
-                </select>
-              </div>
-            </div>
             <div class="row">
                 <div class="mb-3">
                     <label for="" class="form-label"
@@ -147,7 +124,7 @@
                     <select
                         class="form-select"
                         name="type_file"
-                        v-model="sesion.type_file"
+                        v-model="form_edit.tipo_archivo"
                     >
                         <option
                         v-for="(i, index) in type_file"
@@ -255,7 +232,7 @@ export default {
       type_file: [],
       ciudades: [],
       departament: [],
-      sesion: {},
+      form_edit: {},
       data: {},
       documentos: [],
       index: 0,
@@ -266,41 +243,25 @@ export default {
       this.type_file = r.data.tipo_archivo;
       this.ciudades = r.data.ciudades;
       this.departament = r.data.departamentos;
-      // this.data = r.data.datos;
-      console.log(this.data);
-      return false;
+      this.form_edit = r.data.formulario;
+      console.log(r)
     });
   },
   methods: {
-    
-    
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
         this.ciudades = r.data;
       });
     },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
+    edit(){
+      axios.post("/editar-tibunal",  this.form_edit ).then((r) => {
+        Swal.fire("¡Perfecto!", 'Datos editados correctamente', "success").then(function () {
+            location.reload();
           });
-        }
-
       });
-    },
+    }
+   
   },
 };
 </script>
