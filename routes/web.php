@@ -26,6 +26,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TipoDocumentoController;
 use App\Http\Controllers\TribunalesController;
 use App\Models\CabildoAbierto;
+use App\Models\Caso;
+use App\Http\Controllers\CasosController;
 use App\Models\Departamentos;
 use App\Models\TipoDocumento;
 use Illuminate\Support\Facades\App;
@@ -89,7 +91,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/menus/getRutasVue', [ParametrizarMenusController::class, 'getRutasVue']);
         Route::get('/menus/getRutasVueMenu', [ParametrizarMenusController::class, 'getRutasVueMenu']);
 
-        Route::put('/permisos/asignarPermisos',  [PermisoController::class, 'asignarPermisos']);
+        //Route::put('/permisos/asignarPermisos',  [PermisoController::class, 'asignarPermisos']);
 
         Route::get('/departamentos/selectDepartamento', [DepartamentoController::class, 'selectDepartamento']);
         Route::get('/ciudades/selectCiudad/{id}', [CiudadController::class, 'selectCiudad']);
@@ -100,7 +102,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/ciudad/update', [CiudadController::class, 'update']);
         Route::put('/ciudad/inactivar', [CiudadController::class, 'inactivar']);
         Route::put('/ciudad/activar', [CiudadController::class, 'activar']);
-        
+
         Route::get('/departamento', [DepartamentoController::class, 'index']);
         Route::post('/departamento/store', [DepartamentoController::class, 'store']);
         Route::put('/departamento/update', [DepartamentoController::class, 'update']);
@@ -127,7 +129,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/actualizar-parametro/{id}/{tabla}/{data}', [ParametrosController::class, 'actualizar']);
         Route::post('/inactivar-estado/{id}/{tabla}/{estado}', [ParametrosController::class, 'estadoInactivar']);
         Route::post('/nuevo', [ParametrosController::class, 'nuevo']);
-        
+
         Route::post('/guardarTribunal', [TribunalesController::class, 'store']);
 
 
@@ -138,16 +140,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/listar/{tabla}', [TribunalesController::class, 'listar']);
         Route::post('/modificar-estado/{id}/{tabla}/{estado}', [TribunalesController::class, 'estadoInactivar']);
         Route::get('/data-rercord/{id}/{table}', [TribunalesController::class, 'dataRecord']);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
         Route::post('/saveCourt', [TribunalesController::class, 'store']);
         Route::get('/tipoDocumento', [TipoDocumento2Controller::class, 'index']);
         Route::post('/tipoDocumento/create', [TipoDocumento2Controller::class, 'store']);
@@ -155,11 +157,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/tipoDocumento/inactivar', [TipoDocumento2Controller::class, 'inactivar']);
         Route::put('/tipoDocumento/activar', [TipoDocumento2Controller::class, 'activar']);
 
-
         //------------------INICIO RUTAS CALBILDOS----------------------------------------------------------------------------------
-
-
-
+        Route::get('/tribunales/casos-listar',[CasosController::class,'index']);
 
 
         //--------------------------------------------------------------------------------------
@@ -170,8 +169,8 @@ Route::middleware('auth')->group(function () {
         {
             $cabildos = CabildoAbierto::where('cabildo_abierto.id',$r->id)
             ->select('cabildo_abierto.*', 'ciudades.nombre AS city' , 'departamentos.nombre AS departamento')
-            ->leftjoin("ciudades", "ciudades.id", "cabildo_abierto.ciu_id")    
-            ->leftjoin("departamentos", "departamentos.id", "cabildo_abierto.dep_id")        
+            ->leftjoin("ciudades", "ciudades.id", "cabildo_abierto.ciu_id")
+            ->leftjoin("departamentos", "departamentos.id", "cabildo_abierto.dep_id")
             ->first();
             $radicado = $r->radicado;
             $ciudadano = $r->ciudadano;
@@ -180,10 +179,11 @@ Route::middleware('auth')->group(function () {
                 'radicado'=>$radicado,
                 'data'=>$cabildos,
                 ]);
-            return $pdf->download('ffsdf.pdf'); 
+            return $pdf->download('ffsdf.pdf');
         });
     });
 });
+
 
         //--------------------------------------------------------------------------------------
         // Rutas para tipos de documento

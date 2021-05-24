@@ -8,7 +8,7 @@
           integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
           crossorigin="anonymous"
         />
-        <template v-if="action == 0">
+        <!--template v-if="action == 0"-->
           <div class="container mt-5">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
@@ -113,47 +113,13 @@
             </thead>
             <tbody>
               <!-- v-for="(i, index) in cabildos" :key="index" -->
-              <tr >
-                <td class="aling_btn_options">
 
-                  <button
-                    type="button"
-                    @click="modal_export(5)"
-                    class="btn btn-secondary btn-sm"
-                  >
-                    <i
-                      class="typcn typcn-cog cl-white"
-                    ></i>
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-success btn-sm"
-                    @click="pantallaVer()"
-                  >
-                    <i class="typcn typcn-eye"></i>
-                  </button>
-
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-sm"
-                  >
-                    <i class="typcn typcn-download cl-white"></i>
-                  </button>
-
-                </td>
-                <td>Queja</td>
-                <td>Alta</td>
-                <td>20/20/20</td>
-                <td>Cundinamarca</td>
-                <td>Chía</td>
-                <td>Camilo Avendaño</td>
-                <td>En proceso</td>
-                <td>Pepito Perez</td>
-                <!-- <td>{{ i.nombre_tema }}}</td> -->
+              <tr v-for="(i, index) in casos" :key="index">
+                <td>{{ i.asunto }}</td>
               </tr>
             </tbody>
           </table>
-        </template>
+        <!--/template-->
 
         <div
           class="modal fade bd-example-modal-lg"
@@ -178,12 +144,12 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <form @submit.prevent="exportPdf">
+              <form><!-- @submit.prevent="exportPdf" v-model="dataPdf.cabildo_id"-->
                 <input
                   type="hidden"
                   name=""
-                  id="cabildos_id"
-                  v-model="dataPdf.cabildo_id"
+                  id="casos_id"
+
                 />
                 <div class="modal-body">
                   <div class="mb-3 col-12">
@@ -218,7 +184,7 @@
                         <label for="" class="form-label"
                             ><b>Tipo de archivo</b></label
                         >
-                        <select
+                        <!--select
                             class="form-select"
                             name="type_file"
                         >
@@ -228,7 +194,7 @@
                             :value="i.id"
                             v-text="i.nombre"
                             ></option>
-                        </select>
+                        </select-->
                     </div>
 
                     <div class="mb-3 col-12">
@@ -287,146 +253,91 @@
 export default {
   data() {
     return {
-      dataPdf: { cabildo_id: "", radicado: "", ciudadano: "" },
+      idCaso: 0,
+      action: 0,
+      pantalla: "lista",
       departament: [],
       ciudades: [],
       type_file: [],
-      cabildos: [],
       dataFilter: {},
-      action: 0,
+      tabla: [],
+      casos: [],
       idEditar: 0,
       datos_edit: {},
-      pantalla: 'lista',
+      arrayCaso: [],
+      listado: 1,
+      tituloFormulario: "",
+      tipoAccion: 0,
+      errorFormulario: 0,
+      errorMensajesFormularios: [],
+      pagination: {
+        total: 0,
+        current_page: 0,
+        per_page: 0,
+        last_page: 0,
+        from: 0,
+        to: 0,
+      },
     };
   },
-  created() {
-    const url = "/data-list-cabildos";
-    axios.get(url).then((r) => {
-      this.cabildos = r.data.cabildos;
-      //   this.ciudades = r.data.municipios;
-      this.departament = r.data.departments;
-      console.log(this.cabildos);
-    });
-  },
   methods: {
-      pantallaVer(){
+    pantallaVer(){
           this.pantalla = 'ver'
-      },
-    modal_export(id) {
-      $("#cabildos_id").val(id);
-      this.dataPdf.cabildo_id = id;
-      this.dataPdf.radicado = "";
-      this.dataPdf.ciudadano = "";
-      $("#modal_export").modal("show");
     },
-    exportPdf() {
-      window.open(
-        "/download?id=" +
-          this.dataPdf.cabildo_id +
-          "&radicado=" +
-          this.dataPdf.radicado +
-          "&ciudadano=" +
-          this.dataPdf.ciudadano
-      );
-      $("#modal_export").modal("hide");
-    },
-    export_exel() {
-      let url = "/excel-cabildos";
-      let filtros = this.dataFilter;
-      axios.post(url, filtros).then((res) => {
-        let blob = new Blob([res.data]);
-        let link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        link.download = "ReporteCabildos.xls";
-        link.click();
-      });
-    },
-    changeCity() {
+    /*changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
         this.ciudades = r.data;
       });
-    },
+    },*/
     filter() {
-      let filtros = this.dataFilter;
+      /*let filtros = this.dataFilter;
       axios.post("/filter-list-cabildos", filtros).then((r) => {
         console.log(r.data.cabildos);
         this.cabildos = r.data.cabildos;
-      });
+      });*/
     },
+    loadCasos(){
+        //axios.get('/tribunales/casos-listar').then(response => this.casos = response.data);
 
-    report() {
-      var form = new FormData();
-      form.append("nombre_tema", $("#nombre_tema").val());
-      form.append("dep_id", $("#dep_id").val());
-      form.append("fecha_realizacion", $("#fecha_realizacion").val());
-      form.append("fecha_final", $("#fecha_final").val());
-      axios.post("/excel-cabildos", form).then((r) => {});
-    },
-
-    deleteSesion(id) {
-      Swal.fire({
-        title: "¿Eliminar registro?",
-        text: "Esta acción no se puede revertir",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#757575",
-        confirmButtonText: "Aceptar",
-        cancelButtonText: "Cancelar",
-      }).then((result) => {
-        console.log(result);
-        if (result.value) {
-          const url = "/delete-session/" + id;
-          axios.get(url).then((r) => {
-            this.cabildos = r.data.cabildos;
-            Swal.fire(
-              "¡Perfecto!",
-              "Datos eliminados correctamente",
-              "success"
-            );
-          });
+        /*try {
+            // This will wait until promise resolve
+            const response = await axios.get('/tribunales/casos-listar');
+            this.casos = response.casos.data;
+            console.log(this.casos);
+        } catch(error) {
+            console.log(error)
         }
-      });
-    },
-    editSession(id) {
-      this.action = 1;
-      this.idEditar = id;
-      axios
-        .get("/edit-sesion/" + id)
-        .then((r) => {
-          this.datos_edit = r.data.datos;
-          this.departament = r.data.departament;
-          this.ciudades = r.data.ciudades;
-          this.type_file = r.data.type_file;
-        })
-        .catch(function (error) {
-          console.log(error);
+        */
+        if (axios == null) {
+            console.log(('NULL RESULT'));
+            return;
+        }
+
+        axios.get('/tribunales/casos-listar').then((res)=>{
+            alert(res);
+            // this.casos=res.casos.data;
+
+            if(res.status === 200){
+                alert('working');
+                this.casos=res.data;
+                alert(this.casos);
+            }
+
+        }).catch(err=>{
+            console.log('error');
+            console.log(err);
         });
-    },
-    saveEdit() {
-      let datos = this.datos_edit;
-      let url = "/editSesion";
-      axios.post(url, datos).then((res) => {
-        if (res.data.status == 406) {
-          Swal.fire({
-            icon: "error",
-            title: "¡Error!",
-            text: res.data.msg,
-          });
-        } else {
-          this.action = 0;
-          this.cabildos = res.data.table;
-          // console.log(r.data);
-          // return false;
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          });
-        }
-      });
-    },
+
+    }
+  },
+  created() {
+      /*  axios.get(`/tribunales/casos-listar`).then((r) => {
+            this.casos = r.casos;
+            console.log(this.casos);
+        });
+        */
+    this.loadCasos();
   },
 };
 </script>

@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <form @submit.prevent="save">
+      <form @submit.prevent="save" enctype="multipart/form-data">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
@@ -33,18 +33,6 @@
                   type="text"
                   class="form-control"
                   v-model="form.nombre"
-                  maxlength="250"
-                  name="theme"
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="mb-3">
-                <label for="" class="form-label"><b>Dirección *</b></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="form.direccion"
                   maxlength="250"
                   name="theme"
                 />
@@ -99,7 +87,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  v-model="form.nombre"
+                  v-model="form.direccion"
                   maxlength="250"
                   name="theme"
                 />
@@ -196,7 +184,7 @@
                 </div>
               </div>
             </div>
-            <input type="file" class="d-none" @change="archivo($event)" id="file">
+            <input type="file" class="d-none" @change="archivo($event)" id="file" >
             <div class="d-grid gap-2 col-6 mx-auto">
               <button type="submit"  class="btn btn-success">Crear Tribunal</button>
             </div>
