@@ -21,7 +21,7 @@ class CasosController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
 
-        if ($buscar=='') {
+        // if ($buscar=='') {
             $casos = Caso::with('caso')->orderBy('id', 'desc')->paginate(10);
             //Log::info($casos);
             // $casos = Caso::join('casos_seguimientos', 'casos_seguimientos.id_caso','=','casos.id')
@@ -29,12 +29,13 @@ class CasosController extends Controller
             // ->orderBy('id', 'desc')->paginate(10);
             // var_dump("sin buscando");
             // print_r($buscar);
-        }else{
-            $casos = Caso::join('casos_seguimientos','casos.id','=','casos_seguimientos.id_caso')
-            ->select('casos.*','casos_seguimientos.id_caso')
-            /*->where('casos.'.$criterio, 'like', '%'. $buscar . '%')*/->orderBy('id', 'desc')->paginate(10);
-        }
-        /*return response()->json([
+        // }else{
+        //     $casos = Caso::join('casos_seguimientos','casos.id','=','casos_seguimientos.id_caso')
+        //     ->select('casos.*','casos_seguimientos.id_caso')
+            /*->where('casos.'.$criterio, 'like', '%'. $buscar . '%')*/
+            // ->orderBy('id', 'desc')->paginate(10);
+        // }
+        return response()->json([
             'pagination' => [
                 'total'        => $casos->total(),
                 'current_page' => $casos->currentPage(),
@@ -43,9 +44,8 @@ class CasosController extends Controller
                 'from'         => $casos->firstItem(),
                 'to'           => $casos->lastItem(),
             ],
-            'casos' => $casos['data'],
-            'status' => 200
-        ]);*/
+            'casos' => $casos
+        ]);
         /*return response()->json([
             'casos' => $casos,
             'status' => 200
@@ -67,9 +67,9 @@ class CasosController extends Controller
             'casos' => $casos,
             'status' => 200
         ]);*/
-        $result = array('success'=>true,'casos'=>$casos);
+        // $result = array('success'=>true,'casos'=>$casos);
 
-        return Response()->json($result);
+        // return Response()->json($result);
     }
 
     /**

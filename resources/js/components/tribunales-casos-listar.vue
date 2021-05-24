@@ -116,6 +116,14 @@
 
               <tr v-for="(i, index) in casos" :key="index">
                 <td>{{ i.asunto }}</td>
+                <td>{{ i.asunto }}</td>
+                <td>{{ i.asunto }}</td>
+                <td>{{ i.asunto }}</td>
+                <td>{{ i.asunto }}</td>
+                <td>{{ i.asunto }}</td>
+                <td>{{ i.apellidos_solicitante }}</td>
+                <td>{{ i.asunto }}</td>
+                <td>{{ i.asunto }}</td>
               </tr>
             </tbody>
           </table>
@@ -315,17 +323,19 @@ export default {
         }
 
         axios.get('/tribunales/casos-listar').then((res)=>{
-            alert(res);
+            // alert(res);
             // this.casos=res.casos.data;
 
             if(res.status === 200){
-                alert('working');
-                this.casos=res.data;
-                alert(this.casos);
+                // alert('working');
+                this.casos=res.data.casos.data;
+                console.log('Data = ');
+                console.log(res.data.casos.data);
+                // alert(this.casos);
             }
 
         }).catch(err=>{
-            console.log('error');
+            // console.log('error');
             console.log(err);
         });
 
