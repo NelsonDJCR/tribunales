@@ -29,6 +29,10 @@ use App\Http\Controllers\TribunalesController;
 use App\Models\CabildoAbierto;
 use App\Models\Caso;
 use App\Http\Controllers\CasosController;
+use App\Http\Resources\EstadosResource;
+use App\Models\Estado;
+use App\Http\Resources\TipoTramitesResource;
+use App\Models\TipoTramite;
 use App\Models\Departamentos;
 use App\Models\Magistrado;
 use App\Models\TipoDocumento;
@@ -163,9 +167,28 @@ Route::middleware('auth')->group(function () {
 
         //------------------INICIO RUTAS CALBILDOS----------------------------------------------------------------------------------
         Route::get('/tribunales/casos-listar',[CasosController::class,'index']);
+        /*Route::post('/tribunales/casos-listar',[CasosController::class,'index']);*/
+        Route::get('/tribunales/casos-listar/{id}', [CasosController::class, 'show']);
+        Route::post('/tribunales/casos-asignar/{id}', [CasosController::class, 'assign']);
 
 
-        
+        /*Recursos externos*/
+        Route::get('/resources/estados/{id}', function(Estado $id) {
+            return new EstadosResource($id);
+        });
+
+        Route::get('/resources/estados', function() {
+            //return new EstadosResource(Estado::all());
+            return EstadosResource::collection(Estado::all());
+        });
+
+        Route::get('/resources/tipotramites/{id}', function(TipoTramite $id) {
+            return new TipoTramitesResource($id);
+        });
+
+        Route::get('/resources/tipotramites', function() {
+            return TipoTramitesResource::collection(TipoTramite::all());
+        });
 
         //--------------------------------------------------------------------------------------
         // Rutas para reportes
