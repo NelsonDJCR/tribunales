@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Caso;
+use App\Models\CasoSeguimiento;
+use App\Models\Ciudades;
+use App\Models\Departamentos;
+use App\Models\Estado;
+use App\Models\TipoIdentificacion;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 //use Log;
 
 class CasosController extends Controller
@@ -19,22 +26,47 @@ class CasosController extends Controller
         if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
-        $criterio = $request->criterio;
 
-        // if ($buscar=='') {
-            $casos = Caso::with('caso')->orderBy('id', 'desc')->paginate(10);
+        if ($buscar !== null && $buscar !== 0) {
+
+            $casos = new Caso();
+            $buscarFiltro = array();
+
+            if($request->tramite_id){
+                $buscarFiltro['id_tramite'] = $request->tramite_id;
+            }
+            if($request->fecha_recibido){
+                $buscarFiltro['fecha_recibido'] = $request->fecha_recibido;
+            }
+            if($request->departamento_id){
+                $buscarFiltro['id_departamento'] = $request->departamento_id;
+            }
+            if($request->estado_id){
+                $buscarFiltro['id_estado'] = $request->estado_id;
+            }
+
+            //$casos = Caso::with('caso')->orderBy('id', 'desc')->paginate(10);
             //Log::info($casos);
+            //$buscarFiltro = ['id_tramite','fecha_recibido','id_departamento', 'id_estado'];
+            //$filtro = [ $request->tramite_id, $request->fecha_recibido, $request->departamento_id, $request->estado_id ];
+
+            $casos = $casos->searchListOfCasos($buscarFiltro);
+
             // $casos = Caso::join('casos_seguimientos', 'casos_seguimientos.id_caso','=','casos.id')
             // ->select('casos.*','casos_seguimientos.id_caso')
+            // ->where('casos.id_departamento', 'departamentos.id')
             // ->orderBy('id', 'desc')->paginate(10);
             // var_dump("sin buscando");
             // print_r($buscar);
-        // }else{
-        //     $casos = Caso::join('casos_seguimientos','casos.id','=','casos_seguimientos.id_caso')
-        //     ->select('casos.*','casos_seguimientos.id_caso')
-            /*->where('casos.'.$criterio, 'like', '%'. $buscar . '%')*/
-            // ->orderBy('id', 'desc')->paginate(10);
-        // }
+
+        }else{
+
+            $casos = new Caso();
+            $casos = $casos->getListOfCasos();
+
+        }
+
+
         return response()->json([
             'pagination' => [
                 'total'        => $casos->total(),
@@ -44,37 +76,48 @@ class CasosController extends Controller
                 'from'         => $casos->firstItem(),
                 'to'           => $casos->lastItem(),
             ],
-            'casos' => $casos
-        ]);
-        /*return response()->json([
             'casos' => $casos,
-            'status' => 200
-          ],200);*/
+            'departamentos' => Departamentos::all()->where('estado',1),
+            'ciudades'=> Ciudades::all()->where('estado',1),
+            'estado' => Estado::all()->where('estado',1),
+            'status' => 200,
+            'success'=> true
+        ]);
+
         /*$casos->map(function($caso) {
             $data = collect($caso);
             //$data->put('owner', $caso->user);
             return $data->all();
-        });
-        return response()->json([
-            'pagination' => [
-                'total'        => $casos->total(),
-                'current_page' => $casos->currentPage(),
-                'per_page'     => $casos->perPage(),
-                'last_page'    => $casos->lastPage(),
-                'from'         => $casos->firstItem(),
-                'to'           => $casos->lastItem(),
-            ],
-            'casos' => $casos,
-            'status' => 200
-        ]);*/
-        // $result = array('success'=>true,'casos'=>$casos);
+        });*/
 
+        // $result = array('success'=>true,'casos'=>$casos);
         // return Response()->json($result);
     }
 
+    /**
+     * Store a new assignement request for creating a new casos log.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function assign(Request $request)
+    {
+        $this->validate($request,[
+            'caso' => 'required'
+        ]);
 
+        //
+        $case = new CasoSeguimiento();
 
-    
+        $case->id_estado = $request->estado_caso;
+        $case->id_caso = $request->caso;
+        $case->gestion = $request->gestion;
+        $case->fecha_gestion = Carbon::now()->toDateTimeString();
+        $case->id_asesor_asignado = $request->asesor_asignado;
+
+        $case->save();
+
+        return response()->json('Caso asignado');
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -104,7 +147,17 @@ class CasosController extends Controller
      */
     public function show($id)
     {
-        //
+        $caso = new Caso();
+        $casos = $caso->getWithLogOfCasos($id);
+        //$casos = $this->caso->getWithLogOfCasos($id);
+
+        /*$casos->makeHidden(['id','id_estado','id_tramite', 'id_asesor_asignado', 'id_departamento', 'id_departamento_residencia', 'id_eleccion', 'id_identificacion', 'id_municipio', 'id_municipio_residencia', 'id_prioridad', 'id_recepcion', 'id_tribunal', 'identificacion','created_at','updated_at' ]);*/
+
+        return response()->json([
+            'data'=>$casos,
+            'status' => 200
+        ]);
+
     }
 
     /**
@@ -139,5 +192,11 @@ class CasosController extends Controller
     public function destroy($id)
     {
         //
+        /*return response()->json([
+            'info' =>DB::table('casos')->where('id', $id)->first(),
+            'departamentos'=>Departamentos::all()->where('estado',1),
+            'ciudades'=>Ciudades::all()->where('estado',1),
+            'tipo_identificacion' => TipoIdentificacion::all()->where('estado',1),
+        ]);*/
     }
 }

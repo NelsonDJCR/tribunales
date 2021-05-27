@@ -25,7 +25,7 @@
       </div>
 
       <form @submit.prevent="save">
-
+        <section v-if="!loading">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <h3 class="mb-2 text-secondary"><b>Detalles del caso</b></h3>
@@ -37,7 +37,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Queja"
+                    :placeholder="dataCaso.data.tramite"
                     disabled
                   />
               </div>
@@ -49,9 +49,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
                     type="date"
                     class="form-control"
+                    :value="dataCaso.data.fecha_eleccion"
                     disabled
                   />
                 </div>
@@ -65,8 +65,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    v-model="sesion.theme"
-                    placeholder="Ordinaria"
+                    :placeholder="dataCaso.data.eleccion"
                     disabled
                   />
               </div>
@@ -79,7 +78,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Alta"
+                    :placeholder="dataCaso.data.prioridad"
                     disabled
                   />
               </div>
@@ -91,9 +90,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
                     type="date"
                     class="form-control"
+                    :value="dataCaso.data.fecha_recibido"
                     disabled
                   />
                 </div>
@@ -107,7 +106,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Correo electrónico"
+                    :placeholder="dataCaso.data.recepcion"
                     disabled
                   />
               </div>
@@ -120,7 +119,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="correo@correo.com"
+                    :placeholder="dataCaso.data.correo_notificacion"
                     disabled
                   />
               </div>
@@ -133,7 +132,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Si"
+                    :placeholder="[[ dataCaso.data.informante_anonimo === 0 ? 'Anónimo' : dataCaso.data.informante_anonimo ]]"
                     disabled
                   />
               </div>
@@ -147,13 +146,7 @@
                     name="dep_id"
                     id="dep_id"
                   >
-                    <option value="" selected>Cundinamarca</option>
-                    <option
-                      v-for="(i, index) in departament"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option>
+                    <option value="" selected>{{ dataCaso.data.departamento }}</option>
                   </select>
               </div>
             </div>
@@ -166,13 +159,7 @@
                     name=""
                     id=""
                   >
-                    <option value="" selected>Chía</option>
-                    <option
-                      v-for="(i, index) in departament"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option>
+                    <option value="" selected>{{ dataCaso.data.ciudad }}</option>
                   </select>
               </div>
             </div>
@@ -191,7 +178,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Calle falsa 123"
+                    :placeholder="dataCaso.data.direccion"
                     disabled
                   />
               </div>
@@ -204,7 +191,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Kennnedy"
+                    :placeholder="dataCaso.data.barrio"
                     disabled
                   />
               </div>
@@ -216,9 +203,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
                     type="date"
                     class="form-control"
+                    :value="dataCaso.data.fecha_inicio"
                     disabled
                   />
                 </div>
@@ -231,9 +218,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
                     type="date"
                     class="form-control"
+                    :value="dataCaso.data.fecha_fin"
                     disabled
                   />
                 </div>
@@ -247,7 +234,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Escuela patria"
+                    :placeholder="dataCaso.data.puesto_votacion"
                     disabled
                   />
               </div>
@@ -260,7 +247,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Escuela patria"
+                    :placeholder="dataCaso.data.mesa_votacion"
                     disabled
                   />
               </div>
@@ -273,7 +260,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="3"
+                    :placeholder="dataCaso.data.asunto"
                     disabled
                   />
               </div>
@@ -281,7 +268,7 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Hechos</b></label>
-                <textarea class="form-control" id="" rows="8" placeholder="Descripción de los hechos" disabled></textarea>
+                <textarea class="form-control" id="" rows="8" :placeholder="dataCaso.data.hechos" disabled></textarea>
               </div>
             </div>
 
@@ -300,7 +287,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Camilo Avendaño"
+                    :placeholder="dataCaso.data.nombres_solicitante+' '+dataCaso.data.apellidos_solicitante"
                     disabled
                   />
               </div>
@@ -314,7 +301,7 @@
                     name=""
                     id=""
                   >
-                    <option value="" selected>CC</option>
+                    <option value="" selected>{{ dataCaso.data.identification  }}</option>
                   </select>
               </div>
             </div>
@@ -326,7 +313,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="10305582574"
+                    :placeholder="dataCaso.data.num_identificacion"
                     disabled
                   />
               </div>
@@ -341,7 +328,7 @@
                     name=""
                     id=""
                   >
-                    <option value="" selected>Cundinamarca</option>
+                    <option value="" selected>{{ dataCaso.data.departamento_residencia }}</option>
                   </select>
                 </div>
               </div>
@@ -365,7 +352,7 @@
                     name=""
                     id=""
                   >
-                    <option value="" selected>Chía</option>
+                    <option value="" selected>{{ dataCaso.data.municipio_residencia }}</option>
                   </select>
                 </div>
               </div>
@@ -378,7 +365,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Calle falsa 123"
+                    :placeholder="dataCaso.data.direccion_residencia"
                     disabled
                   />
               </div>
@@ -391,7 +378,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Calle falsa 123"
+                    :placeholder="dataCaso.data.telefono"
                     disabled
                   />
               </div>
@@ -400,7 +387,12 @@
 
         </div>
 
-        <div class="row">
+
+        <!--div v-for="display in dataCaso.data.caso" :key="display.id">
+            <span v-text="display.caso | ifInArray"></span>
+        </div-->
+
+        <div class="row" v-if="dataCaso.data.caso.length">
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-3">
             <h3 class="mb-2 text-secondary"><b>Gestión</b></h3>
@@ -412,8 +404,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    v-model="sesion.theme"
-                    placeholder="En proceso"
+                    :placeholder="lastStepInfo.estadocaso"
                     disabled
                   />
               </div>
@@ -426,8 +417,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    v-model="sesion.theme"
-                    placeholder="Pepito Perez"
+                    :placeholder="lastStepInfo.asesor"
                     disabled
                   />
               </div>
@@ -437,9 +427,9 @@
                 <label for="" class="form-label"><b>Fecha de asignación</b></label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
                     type="date"
                     class="form-control"
+                    :value="lastStepInfo.fecha_gestion"
                     disabled
                   />
                 </div>
@@ -453,15 +443,15 @@
                 <br/>
             </div>
             <div class="row">
-              <div class="mb-3">
+              <div class="mb-3" v-if="lastStepInfo.updated_at">
                 <label for="" class="form-label"
                   ><b>Fecha de respuesta</b>
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
                     type="date"
                     class="form-control"
+                    :value="lastStepInfo.updated_at"
                     disabled
                   />
                 </div>
@@ -471,14 +461,14 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Respuesta</b></label>
-                <textarea class="form-control" id="" rows="5" placeholder="Respuesta al caso" disabled></textarea>
+                <textarea class="form-control" id="" rows="5" :placeholder="lastStepInfo.gestion" disabled></textarea>
               </div>
             </div>
           </div>
 
         </div>
 
-        <div class="row">
+        <div class="row" v-if="dataCaso.data.caso.length">
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
                <h3 class="mb-2 text-secondary"><b>Trazabilidad</b></h3>
                <div class="row">
@@ -492,17 +482,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
+                            <tr v-for="(i, index) in dataCaso.data.caso" :key="index">
+                                <th scope="row">{{ i.estadocaso }}</th>
+                                <td>{{ i.gestion }}</td>
+                                <td>{{ i.asesor }}</td>
+                                <td>{{ i.fecha_gestion }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -510,7 +494,7 @@
             </div>
 
         </div>
-
+        </section>
       </form>
     </div>
 
@@ -575,83 +559,80 @@
 //   $(this).parent().parent().remove();
 // });
 export default {
+  props: ['id'],
   data() {
     return {
+      idCaso: this.id,
+      dataCaso:[],
       type_file: [],
       ciudades: [],
       departament: [],
-      sesion: {},
+      data_record: {},
+      data: {},
       documentos: [],
+      lastStepInfo: {},
       index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
+      loading: false
     };
   },
-  created() {
-    const url = "/data-new-sesion";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
-    });
+  filters: {
+
   },
   methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
-    },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
         this.ciudades = r.data;
       });
     },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
-          });
+    assignedLastStep() {
+        var lastPosition = this.dataCaso.data.caso.length - 1;
+        if(lastPosition > 0){
+            this.lastStepInfo = this.dataCaso.data.caso[lastPosition];
+        }else{
+            this.lastStepInfo = this.dataCaso.data.caso[0];
         }
-
-      });
+        console.log('in' + this.lastStepInfo);
+        return this.lastStepInfo;
     },
+    ifInArray: function (value) {
+            return this.dataCaso.data.indexOf(value) > -1 ? 'Yes' : 'No';
+    },
+    /*async method function*/
+        /*
+            this.departament = r.data.departamentos;
+            this.ciudades = r.data.ciudades;
+            this.type_file = r.data.tipo_archivos;
+        */
+        /*try {
+            // This will wait until promise resolve
+            const response = await axios.get('/tribunales/casos-listar/${this.idCaso}');
+            this.dataCaso = response.data;
+            console.log(this.dataCaso);
+        } catch(error) {
+            console.log(error)
+        }*/
+
   },
+  created() {
+      this.loading = true;
+        this.idCaso = this.id;
+
+        axios.get(`/tribunales/casos-listar/${this.idCaso}`).then((r) => {
+            this.dataCaso = r.data;
+            console.log(this.dataCaso);
+            this.loading = false;
+
+            /*if(this.dataCaso.includes(r.data.data.caso)){
+                alert("Value exists!")
+                } else{
+                    alert("Value does not exists!")
+            }*/
+
+            this.assignedLastStep();
+        });
+
+      //this.loadCaso(this.idCaso);
+  }
 };
 </script>

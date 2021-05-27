@@ -335,6 +335,10 @@
   background: initial;
 }
 
+.btn-secondary.active{
+    background-color: #003D74 !important;
+}
+
 .opacity-0 {
   opacity:0!important;
 }
