@@ -146,7 +146,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/modificar-estado/{id}/{tabla}/{estado}', [TribunalesController::class, 'estadoInactivar']);
         Route::post('/editar-tibunal', [TribunalesController::class, 'editar']);
         Route::get('/data-rercord/{id}/{table}', [TribunalesController::class, 'dataRecord']);
-<<<<<<< HEAD
         Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
         
         // Magistrados
@@ -181,17 +180,6 @@ Route::middleware('auth')->group(function () {
 
         // Archivos
         Route::post('/nuevo-archivo', [TribunalesController::class, 'nuevaArchivo']);
-=======
-
-
-        // Magistrados
-
-        Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
-        Route::post('/editar-magistrado', [MagistradosController::class, 'editar']);
-
-        Route::post('/filtros-magistrados', [MagistradosController::class, 'filtrar']);
-        Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
->>>>>>> 432f10a237e36b9a6a70771c8e6cf8348a469484
 
 
         Route::post('/saveCourt', [TribunalesController::class, 'store']);
