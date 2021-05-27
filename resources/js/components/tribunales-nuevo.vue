@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <form @submit.prevent="save">
+      <form @submit.prevent="save" enctype="multipart/form-data">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
@@ -33,18 +33,6 @@
                   type="text"
                   class="form-control"
                   v-model="form.nombre"
-                  maxlength="250"
-                  name="theme"
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="mb-3">
-                <label for="" class="form-label"><b>Dirección *</b></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="form.direccion"
                   maxlength="250"
                   name="theme"
                 />
@@ -93,6 +81,18 @@
               </div>
             </div>
 
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Dirección</b></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="form.direccion"
+                  maxlength="250"
+                  name="theme"
+                />
+              </div>
+            </div>
 
             <div class="row">
               <div class="mb-3">
@@ -123,7 +123,7 @@
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-          
+
             <div class="row">
                 <div class="mb-3">
                     <label for="" class="form-label"
@@ -205,14 +205,8 @@ export default {
       ciudades: [],
       departamentos: [],
       estado: [],
-      form: {
-        nombre:'',
-        direccion:'',
-        dep_id:'',
-        ciu_id:'',
-        fecha_inicio:'',
-        fecha_final:'',
-      },
+
+      form: {},
       documentos: [],
       archivos: [],
       index: 0,
