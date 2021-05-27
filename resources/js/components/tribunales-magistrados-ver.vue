@@ -229,10 +229,6 @@
               </div>
             </div>
 
-            <div class="d-grid gap-2 col-6 mx-auto">
-              <button type="submit"  class="btn btn-danger">Eliminar Magistrado</button>
-            </div>
-
           </div>
         </div>
       </form>

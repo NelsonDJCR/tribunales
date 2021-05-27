@@ -34,7 +34,7 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                    v-model="formulario.fecha"
                     type="date"
                     class="form-control"
                     disabled
@@ -50,7 +50,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    v-model="sesion.theme"
+                    v-model="formulario.tema"
                     placeholder="Tema Ejemplo"
                     disabled
                   />
@@ -60,7 +60,7 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Descripción</b></label>
-                <textarea class="form-control" id="" rows="5" placeholder="Descripción ejemplo" disabled></textarea>
+                <textarea class="form-control" id="" v-model="formulario.descripcion" rows="5" placeholder="Descripción ejemplo" disabled></textarea>
               </div>
             </div>
 
@@ -75,8 +75,8 @@
                     class="form-select"
                     name="dep_id"
                     id="dep_id"
+                    v-model="formulario.dep_id"
                   >
-                    <option value="" selected>Cundinamarca</option>
                     <option
                       v-for="(i, index) in departament"
                       :key="index"
@@ -89,17 +89,16 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"
-                  ><b>Municipio</b>
+                  ><b>Ciudad</b>
                 </label>
                 <select
                     class="form-select"
                     name=""
-                    id=""
+                   v-model="formulario.ciu_id"
                     disabled
                   >
-                    <option value="">Bogotá</option>
                     <option
-                      v-for="(i, index) in departament"
+                      v-for="(i, index) in ciudades"
                       :key="index"
                       v-text="i.nombre"
                       :value="i.id"
@@ -116,7 +115,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    v-model="sesion.theme"
+                    v-model="magistrado.magistrado"
                     placeholder="Nombre de Magistrado"
                     disabled
                   />
@@ -137,25 +136,12 @@
                           </a>
                         </button>
                       </li>
-                      <li class="list-group-item">
-                        <button class="btn btn-secondary btn-sm">
-                          <span class="text-start float-start">Nombre de Archivo 2</span>
-                          <span class="badge bg-secondary float-end"><i class="fa fa-download fa-lg"></i></span>
-                          <a class="text-end" href="#">
-                            <span class="badge bg-primary badge-dot"></span>
-                          </a>
-                        </button>
-                      </li>
+                    
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="d-grid gap-2 col-6 mx-auto">
-              <button type="submit"  class="btn btn-danger">Eliminar Actividad</button>
-            </div>
-
           </div>
         </div>
       </form>
@@ -209,7 +195,7 @@
               class="btn btn-primary"
               @click="closeAddFile()"
             >
-              Aceptar
+              Aceptar 
             </button>
           </div>
         </div>
@@ -222,84 +208,24 @@
 //   $(this).parent().parent().remove();
 // });
 export default {
+  props:['id'],
   data() {
     return {
-      type_file: [],
       ciudades: [],
       departament: [],
-      sesion: {},
-      documentos: [],
-      index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
+      formulario: {},
+      magistrado: '',
     };
   },
   created() {
-    const url = "/data-new-sesion";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
+    axios.get(`/data-rercord/${this.id}/actividades`).then((r) => {
+      this.ciudades = r.data.ciudades;
+      this.departament = r.data.departamentos;
+      this.formulario = r.data.formulario;
+      this.magistrado = r.data.magistrado;
     });
   },
-  methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
-    },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
-    changeCity() {
-      var id = $("#departamento_id").val();
-      axios.post("/changeCity", { id: id }).then((r) => {
-        this.ciudades = r.data;
-      });
-    },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
-          });
-        }
 
-      });
-    },
-  },
 };
 </script>
 

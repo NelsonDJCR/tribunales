@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTribunalTable extends Migration
+class CreateActividadesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,16 @@ class CreateTribunalTable extends Migration
      */
     public function up()
     {
-        Schema::create('tribunal', function (Blueprint $table) {
+        Schema::create('actividades', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('direccion');
+            $table->date('fecha');
+            $table->string('tema');
+            $table->text('descripcion');
             $table->foreignId('dep_id')->nullable()->constrained('departamentos');
             $table->foreignId('ciu_id')->nullable()->constrained('ciudades');
-            $table->date('fecha_inicio');
-            $table->date('fecha_final');
-            $table->foreignId('tipo_archivo')->nullable()->constrained('tipo_archivo');
-            $table->string('archivo');
-            $table->integer('asignados')->default(0);
+            $table->foreignId('id_magistrado')->nullable()->constrained('magistrados');
+            $table->foreignId('id_tipo_archivo')->nullable()->constrained('tipo_archivo');
+            $table->integer('token');
             $table->integer('estado')->default(1);
             $table->timestamps();
         });
@@ -36,6 +35,6 @@ class CreateTribunalTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tribunal');
+        Schema::dropIfExists('actividades');
     }
 }

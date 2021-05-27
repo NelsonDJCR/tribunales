@@ -117,44 +117,44 @@
               <th>Neto a pagar</th>
             </thead>
             <tbody>
-              <!-- v-for="(i, index) in cabildos" :key="index" -->
-              <tr>
-                <td class="aling_btn_options">
-                  <button
-                    type="button"
-                    class="btn btn-success btn-sm"
-                    @click="view()"
-                  >
-                    <i class="typcn typcn-eye"></i>
-                  </button>
+              <!--  -->
+              <tr v-for="(i, index) in table" :key="index">
+                <td class="aling_btn_options" style="width:190px;">
+
                   <button
                     type="button"
                     @click="editar()"
                     class="btn btn-info btn-sm"
                   >
-                    <i class="typcn typcn-edit cl-white"></i>
+                    <i class="fa fa-pencil-square-o" style="color:white;" aria-hidden="true"></i>
+
                   </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-sm"
+                    @click="view()"
+                  >
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+
+                  </button>
+                  
                   <button
                     type="button"
                     class="btn btn-warning btn-sm"
                     @click="openModalFile()"
                   >
-                    <i class="typcn typcn-upload cl-white"></i>
+                    <i class="fa fa-download" style="color:white;" aria-hidden="true"></i>
+
                   </button>
                   <button
                     type="button"
-                    class="btn btn-danger btn-sm"
+                    class="btn btn-success btn-sm"
                     @click="deleteSesion()"
                   >
-                    <i class="typcn typcn-trash"></i>
+                    <i class="fa fa-money" aria-hidden="true"></i>
+
                   </button>
-                  <!-- <button
-                data-id=""
-                type="button"
-                class="btn download_parameterization download_btn"
-              >
-                <i class="fa fa-download"></i>
-              </button> -->
                 </td>
                 <td>Tribunal</td>
                 <td>Magister</td>
@@ -276,11 +276,10 @@
 export default {
   data() {
     return {
-      dataPdf: { cabildo_id: "", radicado: "", ciudadano: "" },
       departament: [],
       ciudades: [],
       type_file: [],
-      cabildos: [],
+      table: [],
       dataFilter: {},
       action: 0,
       idEditar: 0,
@@ -289,15 +288,21 @@ export default {
     };
   },
   created() {
-    const url = "/data-list-cabildos";
-    axios.get(url).then((r) => {
-      this.cabildos = r.data.cabildos;
-      //   this.ciudades = r.data.municipios;
-      this.departament = r.data.departments;
-      console.log(this.cabildos);
-    });
+    this.select();
+    this.table();
   },
   methods: {
+    select(){
+      axios.get("/data-select").then((r) => {
+        this.tribunales = r.data.tribunales;
+        this.magistrados = r.data.magistrados;
+      });
+    },
+    table(){
+      axios.post("/tabla-cuentas-cobro").then((r) => {
+        this.table = r.data.table;
+      });
+    },
     editar() {
       this.pantalla = "editar";
     },
@@ -306,25 +311,8 @@ export default {
     },
     pantallaNuevo(){
       this.pantalla = "nuevo";
-
     },
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
-    // modal_export(id) {
-    //   $("#cabildos_id").val(id);
-    //   this.dataPdf.cabildo_id = id;
-    //   this.dataPdf.radicado = "";
-    //   this.dataPdf.ciudadano = "";
-    //   $("#modal_export").modal("show");
-    // },
+    
   },
 };
 </script>

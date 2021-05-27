@@ -31,16 +31,25 @@
                     class="form-control"
                     id="nombre_tema"
                     name="nombre_tema"
-                    v-model="dataFilter.nombre_tema"
+                    v-model="dataFilter.tema"
                   />
                 </div>
                 <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Fecha</b></label>
+                  <label for="" class="form-label"><b>Fecha inicial</b></label>
                   <input
                     type="date"
                     class="form-control"
                     id="fecha_realizacion"
-                    v-model="dataFilter.fecha_realizacion"
+                    v-model="dataFilter.fecha_inicial"
+                  />
+                </div>
+                <div class="mb-3 col-3">
+                  <label for="" class="form-label"><b>Fecha final</b></label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="fecha_realizacion"
+                    v-model="dataFilter.fecha_final"
                   />
                 </div>
 
@@ -57,17 +66,6 @@
                             </button>
                         </div>
                         <div class="mb-5 col-9"></div>
-                        <!-- <div class="mb-3 col-1">
-                                <button
-                                style="color: white"
-                                class="btn btn-info"
-                                id="btn_exece"
-                                type="button"
-                                @click="export_exel()"
-                                >
-                                <i class="typcn typcn-database"></i>
-                                </button>
-                            </div> -->
                     </div>
                 </div>
 
@@ -85,45 +83,36 @@
               <th>Tema</th>
               <th class="w-25">Descripcion</th>
               <th>Departamento</th>
-              <th>Municipio</th>
-              <th>Magistrado</th>
+              <th>Ciudad</th>
             </thead>
             <tbody>
-              <!-- v-for="(i, index) in cabildos" :key="index" -->
-              <tr>
-                <td class="aling_btn_options">
+              <!--  -->
+              <tr v-for="(i, index) in tabla" :key="index">
+                <td class="aling_btn_options" >
 
                   <button
                     type="button"
                     class="btn btn-success btn-sm"
-                    @click="view()"
+                    @click="ver(i.id)"
                   >
                     <i class="typcn typcn-eye"></i>
                   </button>
 
                 </td>
-                <td>20/20/2020</td>
-                <td>Tema</td>
-                <td class="w-25">Descripcion</td>
-                <td>Departamento</td>
-                <td>Municipio</td>
-                <td>Magistrado</td>
-                <!-- <td>{{ i.nombre_tema }}</td>
-                <td>{{ i.description }}</td>
-                <td>{{ i.nombre_dep }}</td>
-                <td>{{ i.nombre_ciu }}</td>
-                <td>{{ i.fecha_realizacion }}</td> -->
+                <td>{{i.fecha}}</td>
+                <td>{{i.tema}}</td>
+                <td class="w-25">{{i.descripcion}}</td>
+                <td>{{i.departamento}}</td>
+                <td>{{i.ciudad}}</td>
               </tr>
             </tbody>
           </table>
-        <!-- </template> -->
-
       </div>
     </template>
 
     <template v-if="pantalla == 'ver'">
       <div>
-        <magistrados-mis-actividades-ver></magistrados-mis-actividades-ver>
+        <magistrados-mis-actividades-ver :id="id_record"></magistrados-mis-actividades-ver>
       </div>
     </template>
 
@@ -134,37 +123,26 @@
 export default {
   data() {
     return {
-      dataPdf: { cabildo_id: "", radicado: "", ciudadano: "" },
-      departament: [],
-      ciudades: [],
-      type_file: [],
-      cabildos: [],
+      tabla: [],
       dataFilter: {},
-      action: 0,
-      idEditar: 0,
-      datos_edit: {},
-      pantalla: "lista",
+      pantalla:'lista',
+      id_record:0
     };
   },
   created() {
-    const url = "/data-list-cabildos";
-    axios.get(url).then((r) => {
-      this.cabildos = r.data.cabildos;
-      //   this.ciudades = r.data.municipios;
-      this.departament = r.data.departments;
-      console.log(this.cabildos);
+     axios.get('/magistrado/mis-actividades').then((r) => {
+      this.tabla = r.data.table;
     });
   },
   methods: {
-    editar() {
-      this.pantalla = "editar";
+    ver(id){
+      this.id_record = id;
+      this.pantalla = 'ver';
     },
-    view() {
-      this.pantalla = "ver";
-    },
-    pantallaNuevo(){
-      this.pantalla = "nuevo";
-
+    filter(){
+      axios.post('/filtros-mis-actividades', this.dataFilter).then((r)=>{
+        this.tabla = r.data.tabla;
+      })  
     },
   },
 };

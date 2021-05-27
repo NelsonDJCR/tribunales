@@ -263,8 +263,16 @@ export default {
   created() {
     axios.get('/listar/magistrados').then((r) => {
       this.tabla = r.data.tabla;
-      this.departament = r.data.departments;
 
+    });
+    axios.get("/data-select").then((r) => {
+      this.tipo_documentos = r.data.tipo_documento;
+      this.ciudades = r.data.ciudades;
+      this.departament = r.data.departamentos;
+      this.bancos = r.data.bancos;
+      this.tipo_cuentas = r.data.tipo_cuentas;
+      this.tipo_archivos = r.data.tipo_archivos;
+      this.tipo_identificacion = r.data.tipo_identificacion;
     });
   },
   methods: {

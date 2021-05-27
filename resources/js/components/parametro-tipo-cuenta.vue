@@ -317,7 +317,7 @@
                 this.errorDepartamento=0;
                 this.errorMostrarMsjDepartamento =[];
 
-                if (!this.nombre) this.errorMostrarMsjDepartamento.push("El nombre del Departamento no puede estar vacío.");
+                if (!this.nombre) this.errorMostrarMsjDepartamento.push("El nombre del registro no puede estar vacío.");
                 
                 if (this.errorMostrarMsjDepartamento.length) this.errorDepartamento = 1;
 

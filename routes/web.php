@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActividadesController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\LoginController;
@@ -21,9 +22,11 @@ use App\Http\Middleware\ValidateSesion;
 
 // ----------INICIO IMPORTACIÓN CONTROLADORES CABILDOS-----------
 use App\Http\Controllers\CabildosController;
+use App\Http\Controllers\CuentaCobroController;
 use App\Http\Controllers\MagistradosController;
 use App\Http\Controllers\ParametrosController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SorteoController;
 use App\Http\Controllers\TipoDocumentoController;
 use App\Http\Controllers\TribunalesController;
 use App\Models\CabildoAbierto;
@@ -141,23 +144,42 @@ Route::middleware('auth')->group(function () {
         Route::post('/modificar-estado/{id}/{tabla}/{estado}', [TribunalesController::class, 'estadoInactivar']);
         Route::post('/editar-tibunal', [TribunalesController::class, 'editar']);
         Route::get('/data-rercord/{id}/{table}', [TribunalesController::class, 'dataRecord']);
-        
-        // Magistrados
-        
-        Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
-        Route::post('/editar-magistrado', [MagistradosController::class, 'editar']);
-        
-        Route::post('/filtros-magistrados', [MagistradosController::class, 'filtrar']);
         Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
         
+        // Magistrados
+        Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
+        Route::post('/editar-magistrado', [MagistradosController::class, 'editar']);
+        Route::post('/filtros-magistrados', [MagistradosController::class, 'filtrar']);
+        
+        // Actividades
+        Route::post('/guardar-actividad', [ActividadesController::class, 'save']);
+        Route::post('/editar-actividad', [ActividadesController::class, 'editar']);
+        Route::post('/filtros-actividad', [ActividadesController::class, 'filtrar']);
+        Route::post('/excel-actividades', [ActividadesController::class, 'reporteExcel']);
         
         
+        // Mis actividades Magistrados
+        Route::get('/magistrado/mis-actividades', [MagistradosController::class, 'misActividades']);
+        Route::get('/magistrado/mis-actividades-ver/{id}', [MagistradosController::class, 'verActividad']);
+        Route::post('/filtros-mis-actividades', [MagistradosController::class, 'filtrarMisActividades']);
         
+        // Sorteo
+        Route::get('/listar-sorteos', [SorteoController::class, 'listarSorteos']);
+        Route::post('/filtro-sorteo', [SorteoController::class, 'filtroSorteo']);
+        Route::post('/nuevo-sorteo', [SorteoController::class, 'nuevoSorteo']);
+
+
+
+        // Cuenta de cobro
+        Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class,'table']);
+
         
-        
-        
-        
-        
+       
+
+        // Archivos
+        Route::post('/nuevo-archivo', [TribunalesController::class, 'nuevaArchivo']);
+
+
         Route::post('/saveCourt', [TribunalesController::class, 'store']);
         Route::get('/tipoDocumento', [TipoDocumento2Controller::class, 'index']);
         Route::post('/tipoDocumento/create', [TipoDocumento2Controller::class, 'store']);

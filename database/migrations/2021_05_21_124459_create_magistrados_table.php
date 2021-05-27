@@ -27,6 +27,7 @@ class CreateMagistradosTable extends Migration
             $table->foreignId('id_tipo_cuenta')->nullable()->constrained('tipo_cuenta');
             $table->string('numero_cuenta');
             $table->foreignId('id_tipo_archivo')->nullable()->constrained('tipo_archivo');
+            $table->integer('asignado')->default(0);
             $table->integer('estado')->default(1);
             $table->timestamps();
         });
