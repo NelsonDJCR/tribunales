@@ -23,7 +23,6 @@
         </div>
 
       </div>
-
       <form @submit.prevent="save">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
@@ -34,10 +33,10 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
-                    type="date"
+                    type="text"
                     class="form-control"
                     disabled
+                    v-model="data.fecha"
                   />
                 </div>
               </div>
@@ -48,77 +47,40 @@
                 <input
                     type="text"
                     class="form-control"
-                    id=""
-                    name=""
-                    v-model="sesion.theme"
-                    placeholder="Tema Ejemplo"
                     disabled
+                    v-model="data.tema"
                   />
               </div>
             </div>
-
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Descripción</b></label>
-                <textarea class="form-control" id="" rows="5" placeholder="Descripción ejemplo" disabled></textarea>
+                <textarea class="form-control" id="" rows="5" v-text="data.descripcion" disabled></textarea>
               </div>
             </div>
-
           </div>
-
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Departamento</b></label>
-                  <select
+                  <input
+                    type="text"
+                    class="form-control"
                     disabled
-                    class="form-select"
-                    name="dep_id"
-                    id="dep_id"
-                  >
-                    <option value="" selected>Cundinamarca</option>
-                    <option
-                      v-for="(i, index) in departament"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option>
-                  </select>
+                    v-model="data.departamento"
+                  />
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"
-                  ><b>Municipio</b>
+                  ><b>Ciudad</b>
                 </label>
-                <select
-                    class="form-select"
-                    name=""
-                    id=""
-                    disabled
-                  >
-                    <option value="">Bogotá</option>
-                    <option
-                      v-for="(i, index) in departament"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option>
-                  </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="mb-3">
-                <label for="" class="form-label"><b>Magistrado</b></label>
                 <input
                     type="text"
                     class="form-control"
-                    id=""
-                    name=""
-                    v-model="sesion.theme"
-                    placeholder="Nombre de Magistrado"
                     disabled
+                    v-model="data.ciudad"
                   />
               </div>
             </div>
@@ -137,169 +99,31 @@
                           </a>
                         </button>
                       </li>
-                      <li class="list-group-item">
-                        <button class="btn btn-secondary btn-sm">
-                          <span class="text-start float-start">Nombre de Archivo 2</span>
-                          <span class="badge bg-secondary float-end"><i class="fa fa-download fa-lg"></i></span>
-                          <a class="text-end" href="#">
-                            <span class="badge bg-primary badge-dot"></span>
-                          </a>
-                        </button>
-                      </li>
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="d-grid gap-2 col-6 mx-auto">
-              <button type="submit"  class="btn btn-danger">Eliminar Actividad</button>
-            </div>
-
           </div>
         </div>
       </form>
     </div>
-
-    <div
-      class="modal fade"
-      id="modal_file"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="staticBackdropLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">
-              Agregar Documentos
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              @click="closeAddFile()"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="row mb-2">
-              <div class="col-11">
-                <label class="form-label">Agrege todos los documentos</label>
-              </div>
-              <div class="col-1">
-                <button
-                  class="btn-more btn"
-                  id="add_file"
-                  @click="add_file()"
-                  type="button"
-                >
-                  <!-- <i class="fas fa-plus"></i> -->
-                  <i class="typcn typcn-document-add" style="color: green"></i>
-                </button>
-              </div>
-            </div>
-            <div class="col-12" id="box_files"></div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="closeAddFile()"
-            >
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 <script>
-// $('body').on('click', '.delete_file', function() {
-//   $(this).parent().parent().remove();
-// });
 export default {
+  props:['id'],
   data() {
     return {
-      type_file: [],
-      ciudades: [],
-      departament: [],
-      sesion: {},
-      documentos: [],
-      index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
+      data:[]
     };
   },
   created() {
-    const url = "/data-new-sesion";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
+     axios.get(`/magistrado/mis-actividades-ver/${this.id}`).then((r) => {
+      this.data = r.data.data;
     });
   },
-  methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
-    },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
-    changeCity() {
-      var id = $("#departamento_id").val();
-      axios.post("/changeCity", { id: id }).then((r) => {
-        this.ciudades = r.data;
-      });
-    },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
-          });
-        }
 
-      });
-    },
-  },
 };
 </script>
 

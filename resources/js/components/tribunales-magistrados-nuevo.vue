@@ -283,7 +283,7 @@
                 </div>
               </div>
             </div>
-
+            
             <div class="d-grid gap-2 col-6 mx-auto">
               <button type="submit"  class="btn btn-success">Crear Magistrado</button>
             </div>
@@ -379,16 +379,25 @@ export default {
       });
     },
     save(){
-      axios.post("/editar-magistrado", this.form).then((res) => {
+      axios.post("/guardarMagistrados", this.form).then((res) => {
         if (res.data.code == 200) {
           Swal.fire("¡Perfecto!", res.data.msg, "success").then(function () {
             location.reload();
           });
+        }else if(res.data.code == 406){
+          Swal.fire(res.data.msg, 'Ingrese todos los campos para continuar', "warning")
+        }else{
+          Swal.fire("¡Perfecto!", res.data.msg, "error")
         }
       });
     }
   },
 };
+
+
+
+
+
 </script>
 
 

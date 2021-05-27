@@ -62,7 +62,7 @@
 
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Municipio</b></label>
+                <label for="" class="form-label"><b>Ciudad</b></label>
                 <select
                   class="form-select"
                   v-model="form.ciu_id"
@@ -166,7 +166,26 @@
                 </div>
               </div>
             </div>
-            <input type="file" class="d-none" @change="uploadFile($event)" id="file">
+            <input type="file" class="d-none" @change="subirArchivo($event)" id="file">
+
+
+            <div class="row">
+              <div class="mb-1">
+                <label for="" class="form-label"><b>Archivos</b></label>
+                <div class="row">
+                  <div class="btns-block d-grid gap-2">
+                    <ul class="list-group btn-group-vertical">
+                      <li class="list-group-item" v-for="(i, index) in archivos" :key="index">
+                        <button class="btn btn-light btn-sm mt-2">
+                          <span class="text-start float-start mt-1">{{ i.name }}</span>
+                          <a href="#" @click="eliminarArchivo(index)" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="d-grid gap-2 col-6 mx-auto">
               <button type="submit"  class="btn btn-success">Crear Tribunal</button>
             </div>
@@ -181,7 +200,6 @@
 <script>
 export default {
   data() {
-
     return {
       tipo_documento: [],
       ciudades: [],
@@ -190,6 +208,7 @@ export default {
 
       form: {},
       documentos: [],
+      archivos: [],
       index: 0,
     };
   },
@@ -200,14 +219,14 @@ export default {
       this.departamentos = r.data.departamentos;
       this.estado = r.data.estado;
     });
+    this.form.token = Math.floor(Math.random() * (9999 - 5000)) + 5000
   },
   methods: {
-    archivo(event){
-      this.archivo = event.file[0]
-
+    eliminarArchivo(i){
+      this.archivos.splice(i,1)
     },
-    uploadFile(event) {
-      this.archivo = event.target.files[0];
+    subirArchivo(event) {
+      this.archivos.push(event.target.files[0]);
     },
     box_file() {
       $("#file").trigger("click");
@@ -220,7 +239,6 @@ export default {
     },
     save() {
       var datos = new FormData();
-      datos.append("archivo", this.archivo);
       datos.append("nombre", this.form.nombre);
       datos.append("direccion", this.form.direccion);
       datos.append("dep_id", this.form.dep_id);
@@ -228,11 +246,22 @@ export default {
       datos.append("tipo_archivo", this.form.tipo_archivo);
       datos.append("fecha_inicio", this.form.fecha_inicio);
       datos.append("fecha_final", this.form.fecha_final);
+      datos.append("cantidad", this.archivos.length);
+      
+      for(let i=0; i < this.archivos.length ;i++){
+        datos.append("archivos"+i, this.archivos[i]);
+
+      }
       axios.post("/guardarTribunal", datos).then((res) => {
         if (res.data.code == 200) {
-          Swal.fire("¡Perfecto!", res.data.msg, "success").then(function () {
+          Swal.fire("Perfecto!", res.data.msg, "success").then(function () {
             location.reload();
           });
+        }else if(res.data.code == 406){
+           Swal.fire(res.data.msg, 'Complete todos los campos de forma correcta', "warning").then(function () {
+            });
+        }else{
+          Swal.fire("¡xxxx!", 'error', "error")
         }
       });
     },

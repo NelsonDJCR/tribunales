@@ -39,36 +39,9 @@
                     class="form-control"
                     id="nombre_tema"
                     name="nombre_tema"
-                    v-model="dataFilter.nombre_tema"
+                    v-model="dataFilter.tema"
                   />
                 </div>
-                <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Fecha</b></label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="fecha_realizacion"
-                    v-model="dataFilter.fecha_realizacion"
-                  />
-                </div>
-                <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Departamento</b></label>
-                  <select
-                    v-model="dataFilter.dep_id"
-                    class="form-select"
-                    name="dep_id"
-                    id="dep_id"
-                  >
-                    <option value="">Selecciona</option>
-                    <option
-                      v-for="(i, index) in departament"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option>
-                  </select>
-                </div>
-
                 <div class="mb-3 col-3">
                   <label for="" class="form-label"><b>Magistrado</b></label>
                   <input
@@ -76,10 +49,27 @@
                     class="form-control"
                     id=""
                     name=""
-                    v-model="dataFilter.nombre_tema"
+                    v-model="dataFilter.magistrado"
                   />
                 </div>
-
+                <div class="mb-3 col-3">
+                  <label for="" class="form-label"><b>Fecha inicial</b></label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="fecha_realizacion"
+                    v-model="dataFilter.fecha_inicial"
+                  />
+                </div>
+                <div class="mb-3 col-3">
+                  <label for="" class="form-label"><b>Fecha final</b></label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="fecha_realizacion"
+                    v-model="dataFilter.fecha_final"
+                  />
+                </div>
                 <div class="row">
                   <div class="mb-3 col-3">
                     <button
@@ -90,17 +80,6 @@
                     </button>
                   </div>
                   <div class="mb-5 col-9"></div>
-                  <!-- <div class="mb-3 col-1">
-                <button
-                  style="color: white"
-                  class="btn btn-info"
-                  id="btn_exece"
-                  type="button"
-                  @click="export_exel()"
-                >
-                  <i class="typcn typcn-database"></i>
-                </button>
-              </div> -->
                 </div>
               </div>
             </form>
@@ -110,18 +89,18 @@
               <th>Opciones</th>
               <th>Fecha</th>
               <th>Tema</th>
-              <th>Descripcion</th>
+              <th>Descripción</th>
               <th>Departamento</th>
               <th>Municipio</th>
               <th>Magistrado</th>
+              <th>Estado</th>
             </thead>
             <tbody>
-              <!-- v-for="(i, index) in cabildos" :key="index" -->
-              <tr>
+              <tr v-for="(i, index) in tabla" :key="index">
                 <td class="aling_btn_options">
                   <button
                     type="button"
-                    @click="editar()"
+                    @click="editar(i.id)"
                     class="btn btn-info btn-sm"
                   >
                     <i class="typcn typcn-edit" style="color: white"></i>
@@ -130,41 +109,41 @@
                   <button
                     type="button"
                     class="btn btn-success btn-sm"
-                    @click="view()"
+                    @click="view(i.id)"
                   >
                     <i class="typcn typcn-eye"></i>
                   </button>
 
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm"
-                    @click="deleteSesion()"
-                  >
-                    <i class="typcn typcn-trash"></i>
-                  </button>
-                  <!-- <button
-                data-id=""
-                type="button"
-                class="btn download_parameterization download_btn"
-              >
-                <i class="fa fa-download"></i>
-              </button> -->
+                  <template v-if="i.estado == 1">
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm"
+                      @click="inacive(i.id)"
+                    >
+                      <i class="typcn typcn-trash"></i>
+                    </button>
+                </template>
+                <template v-else>
+                    <button type="button" class="btn btn-info btn-sm" @click="active(i.id)">
+                        <i class="typcn typcn-tick-outline"></i>
+                    </button>
+                </template>
                 </td>
-                <td>20/20/2020</td>
-                <td>Tema</td>
-                <td>Descripcion</td>
-                <td>Departamento</td>
-                <td>Municipio</td>
-                <td>Magistrado</td>
-                <!-- <td>{{ i.nombre_tema }}</td>
-                <td>{{ i.description }}</td>
-                <td>{{ i.nombre_dep }}</td>
-                <td>{{ i.nombre_ciu }}</td>
-                <td>{{ i.fecha_realizacion }}</td> -->
+                <td>{{ i.fecha }}</td>
+                <td>{{ i.tema }}</td>
+                <td>{{ i.descripcion }}</td>
+                <td>{{ i.departamento }}</td>
+                <td>{{ i.ciudad }}</td>
+                <td>{{ i.magistrado }}</td>
+                <div v-if="i.estado == 1">
+                  <span class="badge badge-success">Activo</span>
+                </div>
+                <div v-else>
+                  <span class="badge badge-danger">Inactivo</span>
+                </div>
               </tr>
             </tbody>
           </table>
-        <!-- </template> -->
 
         <div
           class="modal fade bd-example-modal-lg"
@@ -241,12 +220,12 @@
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
-        <tribunales-actividades-editar></tribunales-actividades-editar>
+        <tribunales-actividades-editar :id="id_record"></tribunales-actividades-editar>
       </div>
     </template>
     <template v-if="pantalla == 'ver'">
       <div>
-        <tribunales-actividades-ver></tribunales-actividades-ver>
+        <tribunales-actividades-ver :id="id_record"></tribunales-actividades-ver>
       </div>
     </template>
   </div>
@@ -260,34 +239,88 @@ export default {
       departament: [],
       ciudades: [],
       type_file: [],
-      cabildos: [],
+      tabla: [],
       dataFilter: {},
       action: 0,
-      idEditar: 0,
+      id_record: 0,
       datos_edit: {},
       pantalla: "lista",
     };
   },
   created() {
-    const url = "/data-list-cabildos";
-    axios.get(url).then((r) => {
-      this.cabildos = r.data.cabildos;
-      //   this.ciudades = r.data.municipios;
-      this.departament = r.data.departments;
-      console.log(this.cabildos);
+    axios.get('/listar/actividades').then((r) => {
+      this.tabla = r.data.tabla;
     });
   },
   methods: {
-    editar() {
+    filter(){
+      axios.post('/filtros-actividad', this.dataFilter).then((r)=>{
+        this.tabla = r.data.tabla;
+      })
+    },
+    editar(id) {
+      this.id_record = id;
       this.pantalla = "editar";
     },
-    view() {
+    view(id) {
+      this.id_record = id;
       this.pantalla = "ver";
     },
     pantallaNuevo(){
       this.pantalla = "nuevo";
 
     },
+     inacive(id) {
+      Swal.fire({
+        title: "Desabilitar actividad?",
+        text: "¿Desea desabilitar esta actividad?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#757575",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.value) {
+          axios
+            .post(`/modificar-estado/${id}/actividades/0`, { id: id })
+            .then((r) => {
+              Swal.fire(
+                "Desabilitado!",
+                "La actividad ha sido desactivada",
+                "success"
+              );
+              this.tabla = r.data.tabla;
+            });
+        }
+      });
+    },
+    active(id) {
+      Swal.fire({
+        title: "¿Activar actividad?",
+        text: "¿Desea activar esta actividad?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#757575",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.value) {
+          axios
+            .post(`/modificar-estado/${id}/actividades/1`, { id: id })
+            .then((r) => {
+              Swal.fire(
+                "Activado!",
+                "El actividad ha sido activado",
+                "success"
+              );
+              this.tabla = r.data.tabla;
+            });
+        }
+      });
+    },
+
     // modal_export(id) {
     //   $("#cabildos_id").val(id);
     //   this.dataPdf.cabildo_id = id;

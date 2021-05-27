@@ -2,14 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actividad;
 use App\Models\Magistrado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class MagistradosController extends Controller
 {
     public function save()
     {
+
+
+        // use Illuminate\Support\Facades\Validator;
+        $rules = [
+            'nombre'=>'required|max:30',
+            'id_tipo_identificacion'=>'required|',
+            'numero_identificacion'=>'required|max:15',
+            'dep_id'=>'required|',
+            'ciu_id'=>'required|',
+            'direccion'=>'required|max:60',
+            'correo'=>'required|',
+            'telefono'=>'required|max:10',
+            'id_banco'=>'required|',
+            'id_tipo_cuenta'=>'required|',
+            'numero_cuenta'=>'required|max:30',
+        ];
+        $messages = [
+            'nombre.required'=>'El nombre es requerido',
+            'id_tipo_identificacion.required'=>'El tipo de identificación es requerido ',
+            'numero_identificacion.required'=>'Es número de identificación es requerido ',
+            'numero_identificacion.max'=>'El número de identificación no debe tener más de 15 carácteres',
+            'dep_id.required'=>'El departamento es requerido ',
+            'ciu_id.required'=>'La ciudad es requerida',
+            'direccion.required'=>'La dirección es requerida',
+            'direccion.max'=>'La dirección no debe tener más de 60 carácteres',
+            'correo.required'=>' El correo es requerido',
+            'telefono.required'=>'El teléfono es requerido',
+            'telefono.max'=>'El teléfono no debe tener más de 10 carácteres',
+            'id_banco.required'=>'El banco es requerido',
+            'id_tipo_cuenta.required'=>'El tipo de cuenta es requerido',
+            'numero_cuenta.required'=>'El número de cuenta es requerido',
+            'numero_cuenta.max'=>'El número de cuenta no debe tener más de 30 carácteres',
+        ];
+        $validator = Validator::make(request()->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
+        }
         if (Magistrado::insert(request()->all())) {
             return response()->json([
                 'code' =>'200',
@@ -80,4 +120,61 @@ class MagistradosController extends Controller
             'tabla' => $x
         ]);
 	}
+
+	public function misActividades()
+	{
+        return response()->json([
+            'table' => Actividad::where('id_magistrado',Auth::user()->id)
+            ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento')
+            ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")
+            ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
+            ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
+            ->get()
+        ]);
+	}
+
+	public function verActividad($id)
+	{
+		return response()->json([
+            'data'=>Actividad::where('id_magistrado',Auth::user()->id)
+            ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento')
+            ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")
+            ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
+            ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
+            ->where('actividades.id',$id)
+            ->first()
+        ]);
+	}
+
+	public function filtrarMisActividades(Request $r)
+	{
+        return response()->json([
+            'tabla'=>Actividad::where('id_magistrado',Auth::user()->id)
+            ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento')
+            ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")
+            ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
+            ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
+            ->where(function ($query) use ($r) {
+                if (isset($r['tema'])) {
+                    if (!empty($r['tema']))
+                        $query->orwhere("actividades.tema", 'like', "%" . $r['tema'] . "%");
+                }
+            })
+            ->where(function ($query) use ($r) {
+                if (isset($r['fecha_inicial'])) {
+                    if (!empty($r['fecha_inicial']))
+                        $query->orwhere("actividades.fecha", ">=" , $r['fecha_inicial']);
+                }
+            })
+            ->where(function ($query) use ($r) {
+                if (isset($r['fecha_final'])) {
+                    if (!empty($r['fecha_final']))
+                        $query->orwhere("actividades.fecha", "<=" , $r['fecha_final']);
+                }
+            })
+            ->get()
+        ]);
+	}
+
+
 }

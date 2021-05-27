@@ -8,7 +8,6 @@
     />
 
     <div class="container mt-5">
-      <!-- Breadcrumb -->
       <ol class="breadcrumb">
           <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de cuentas de cobro / Editar cuenta de cobro </label></li>
       </ol>
@@ -215,7 +214,6 @@
                 </div>
               </div>
             </div>
-
             <div class="d-grid gap-2 col-6 mx-auto">
                 <button type="submit"  class="btn btn-primary">Guardar</button>
                 <router-link :to='`/tribunales/listado-cuentas-de-cobro`' @click.native="$router.go()" class="btn btn-danger text-white w-100 mt-2">Cancelar</router-link>
@@ -224,7 +222,6 @@
         </div>
       </form>
     </div>
-
     <div
       class="modal fade"
       id="modal_file"
@@ -282,9 +279,7 @@
   </div>
 </template>
 <script>
-// $('body').on('click', '.delete_file', function() {
-//   $(this).parent().parent().remove();
-// });
+
 export default {
   data() {
     return {
@@ -294,12 +289,6 @@ export default {
       sesion: {},
       documentos: [],
       index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
     };
   },
   created() {
@@ -311,58 +300,13 @@ export default {
     });
   },
   methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
-    },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
         this.ciudades = r.data;
       });
     },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
-          });
-        }
-
-      });
-    },
+    
   },
 };
 </script>
