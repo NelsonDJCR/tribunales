@@ -84,7 +84,7 @@
                   <div class="mb-3 col-3">
                     <button
                       type="submit"
-                      class="btn-primary btn w-80 btn_search w-100"
+                      class="btn-secondary active btn w-80 btn_search w-100"
                     >
                       Buscar
                     </button>

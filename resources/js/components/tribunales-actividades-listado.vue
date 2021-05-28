@@ -74,7 +74,7 @@
                   <div class="mb-3 col-3">
                     <button
                       type="submit"
-                      class="btn-primary btn w-80 btn_search w-100"
+                      class="btn-secondary active btn w-80 btn_search w-100"
                     >
                       Buscar
                     </button>
@@ -97,7 +97,7 @@
             </thead>
             <tbody>
               <tr v-for="(i, index) in tabla" :key="index">
-                <td class="aling_btn_options">
+                <td class="aling_btn_options" style="width:170px;">
                   <button
                     type="button"
                     @click="editar(i.id)"

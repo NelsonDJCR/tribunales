@@ -76,16 +76,16 @@
                   />
                 </div>
 
-                <div class="row">
-                  <div class="d-grid gap-2 col-4 mx-auto">
+                <div class="row col-12">
+                  <div class="mb-5 col-3 ">
                     <button
                       type="submit"
-                      class="btn-primary btn w-80 btn_search w-100"
+                      class="btn-secondary active btn w-100 btn_search"
                     >
                       Buscar
                     </button>
                   </div>
-                  <div class="mb-5 col-9"></div>
+                  
 
                 </div>
               </div>
