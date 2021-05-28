@@ -141,7 +141,7 @@
 
                   <button
                     type="button"
-                    @click="modalShowAssign(i.id, i.id_estado)"
+                    @click="modalShowAssign(i.id, i.id_estado, i.id_asesor_asignado)"
                     class="btn btn-secondary btn-sm"
                   >
                     <i
@@ -219,11 +219,12 @@
                   class="close"
                   data-dismiss="modal"
                   aria-label="Close"
+                  @click="showModal = false"
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <form @submit.prevent="saveAssignement"><!-- v-model="saveAssignement"-->
+              <form @submit.prevent="saveAssignement" name="assignForm"><!-- v-model="saveAssignement"-->
                 <input
                   type="hidden"
                   name="casoID"
@@ -240,11 +241,17 @@
                       id="casoAssignUser_id"
 
                     />
-                    <select name="casoUser_id" v-model="datos_assign.userID"
+                    <select id="casoUser_id" name="casoUser_id" v-model="datos_assign.userID"
                         class="form-select"
                     >
-                        <option value="1">user 1</option>
-                        <option value="2">user 2</option>
+                        <option
+                            v-for="(i, index) in users"
+                            :key="index"
+                            v-text="i.nombre"
+                            :value="i.id"
+                            :selected="i.id == userCaso"
+                        ></option>
+
                     </select>
                   </div>
                   <div class="mb-3 col-12">
@@ -255,7 +262,7 @@
                       class="form-control"
                       v-model="dataPdf.radicado"
                     /-->
-                    <select name="casoAssignEstado_id" v-model="stateCaso"
+                    <select name="casoAssignEstado_id" id="casoAssignEstado_id" v-model="stateCaso" @change="onChangeToEnd()"
                         class="form-select" disabled
                     >
                         <option
@@ -268,23 +275,27 @@
                     </select>
                   </div>
 
-                    <div class="mb-3 col-12">
+                    <div class="mb-3 col-12" v-if="finalized === false">
                         <label for="" class="form-label"><b>Observaciones</b></label>
+                        <textarea class="form-control"  v-model="datos_assign.gestionDetails" id="detailsAssign" name="detailsAssign" rows="5"></textarea>
+                    </div>
+
+                    <div class="mb-3 col-12" v-if="finalized === true">
+                        <label for="" class="form-label"><b>Respuesta al caso</b></label>
                         <!--input
                         type="text"
                         required
                         class="form-control"
                         v-model="dataPdf.ciudadano"
                         /-->
-                        <textarea class="form-control"  v-model="datos_assign.gestionDetails" id="" rows="5"></textarea>
+                        <textarea class="form-control"  v-model="datos_assign.replyDetails" id="detailsReply" name="detailsReply" rows="5"></textarea>
                     </div>
-                    <!--
 
-                    <div class="mb-3 col-12">
+                    <div class="mb-3 col-12" v-if="finalized === true">
                         <label for="" class="form-label"
                             ><b>Tipo de archivo</b></label
                         >
-                        select
+                        <select
                             class="form-select"
                             name="type_file"
                         >
@@ -294,10 +305,10 @@
                             :value="i.id"
                             v-text="i.nombre"
                             ></option>
-                        </select
+                        </select>
                     </div>
 
-                    <div class="mb-3 col-12">
+                    <div class="mb-3 col-12" v-if="finalized === true">
                         <div class="form-group files border opacity-2 opacity-2h"
                             role="button"
                             id="box_file"
@@ -318,7 +329,6 @@
                         </div>
                     </div>
 
-                    -->
                 </div>
 
                 <div class="modal-footer">
@@ -356,6 +366,9 @@ export default {
     return {
       idCaso: 0,
       idCasoAssign: 0,
+      users: [{ 'id': 1, 'nombre': 'User Name 1'},{ 'id': 1, 'nombre': 'Nombre de Uusario 2'}, { 'id': 1, 'nombre': 'Nome do usuário 3'}],
+      userCaso: 0,
+      finalized: false,
       action: 0,
       pantalla: "lista",
       departament: [],
@@ -369,6 +382,7 @@ export default {
       tptramites: [],
       stateCaso: 0,
       datos_assign: {},
+      showModal: false,
       listado: 1,
       tituloFormulario: "",
       tipoAccion: 0,
@@ -419,11 +433,50 @@ export default {
             //console.log(this.casos);
         });*/
     },
-    modalShowAssign(id, state) {
+    onChangeToEnd(){
+        if (this.stateCaso = 3) {
+            this.finalized = true;
+            this.stateCaso = 4;
+            document.getElementById("casoAssignEstado_id").setAttribute("disabled", "disabled");
+        } else {
+            this.finalized = false;
+            this.stateCaso = 3;
+        }
+    },
+    modalShowAssign(id, state, user) {
+        this.showModal = true;
       this.idCasoAssign = id;
       this.stateCaso = state;
+      this.userCaso = user;
+
+        switch (state) {
+        case 1:
+            /*document.getElementById('detailsAssign').style.visibility = "hidden";
+            document.getElementById('detailsAssign').style.display = 'none';*/
+            $('#detailsAssign').hide();
+            break;
+        case 2:
+            $('#detailsAssign').show();
+            /*document.getElementById('detailsAssign').style.visibility = "visible";
+            document.getElementById('detailsAssign').style.display = 'block';*/
+            document.getElementById("casoUser_id").setAttribute("disabled", "disabled");
+            break;
+        case 3:
+            /*document.getElementById('detailsAssign').style.visibility = "visible";
+            document.getElementById('detailsAssign').style.display = 'block';*/
+            $('#detailsAssign').show();
+            document.getElementById('casoAssignEstado_id').disabled = false;
+            document.getElementById("casoUser_id").setAttribute("disabled", "disabled");
+
+            break;
+        default:
+            console.log("Try looking up for a hint.");
+        }
+
+
       $("#casoAssign_id").val(id);
       this.datos_assign.casoID = this.idCasoAssign;
+      this.datos_assign.userID = this.userCaso;
       //console.log('caso '+ this.idCasoAssign + 'estado'+ this.stateCaso  );
       $("#modal_export").modal("show");
     },
@@ -439,6 +492,9 @@ export default {
         datos.append('asesor_asignado', this.datos_assign.userID);
         datos.append('gestion', this.datos_assign.gestionDetails);
 
+        if(this.finalized == true){
+            datos.append('detailsReply', this.datos_assign.gestionDetails);
+        }
 
         axios.post(url, datos).then((res) => {
             if (res.data.status == 406) {
@@ -448,15 +504,22 @@ export default {
                 text: res.data.msg,
             });
             } else {
-            this.action = 0;
-            this.cabildos = res.data.table;
+            //this.action = 0;
+            //this.cabildos = res.data.table;
             // console.log(r.data);
             // return false;
-            Swal.fire({
-                icon: "success",
-                title: "¡Perfercto!",
-                text: "Datos guardados exitosamente",
-            });
+                Swal.fire({
+                    icon: "success",
+                    title: "Datos enviados!",
+                    text: res.data.msg,
+                    timer : 3000
+                }, function(){ Swal.close(); });
+                this.loadCasos(1);
+                /*hack to close possibilities*/
+                /*$("#modal_export button.close").trigger('click');
+                    $("#modal_export button.close").click();*/
+                setTimeout(function(){ $("#modal_export").modal('hide'); }, 1000);
+
             }
         });
     },
@@ -514,6 +577,7 @@ export default {
         */
 
     },
+
     changePage: function(page) {
         this.pagination.current_page = page;
         this.loadCasos(page);
@@ -573,6 +637,11 @@ export default {
             //console.log('called change dpartamento');
             this.filterid = 3;
         },
-    }
-};
+        showModal: function(){
+            if(this.showModal == false){
+                this.$refs['assignForm'].resetFields();
+            };
+        },
+    },
+}
 </script>
