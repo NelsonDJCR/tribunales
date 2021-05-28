@@ -11,7 +11,10 @@ use App\Models\Departamentos;
 use App\Models\Estado;
 use App\Models\TipoIdentificacion;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+//use Illuminate\Validation\ValidationException;
+//use Validator;
+////use Illuminate\Support\Facades\DB;
 //use Log;
 
 class CasosController extends Controller
@@ -94,6 +97,30 @@ class CasosController extends Controller
         // return Response()->json($result);
     }
 
+    private function validateAssign($request){
+
+        /*$validated = Validator::make($fields, [
+            'fname' => 'required',
+        ]);*/
+
+        $messages = [
+            'caso.required' => 'El nùmero de caso es requerido.',
+            'estado_caso.required' => 'No hay estado asignado.',
+            'asesor_asignado.required' => 'Se requiere asignar un usario al caso',
+        ];
+
+        //$validated = $this->validate($request,[
+        //$validated = $request->validate([
+        $validated = Validator::make($request->all(), [
+            'caso' => 'required',
+            'estado_caso' => 'required',
+            'asesor_asignado' => 'required'
+            //''
+        ]);
+
+        return $validated;
+    }
+
     /**
      * Store a new assignement request for creating a new casos log.
      *
@@ -101,22 +128,127 @@ class CasosController extends Controller
      */
     public function assign(Request $request)
     {
-        $this->validate($request,[
-            'caso' => 'required'
-        ]);
 
-        //
-        $case = new CasoSeguimiento();
+        $rules = [
+            'caso' => 'required|numeric',
+            'estado_caso' => 'required|numeric',
+            'asesor_asignado' => 'required|numeric'
+        ];
+        $messages = [
+            'caso.required' => 'El nùmero de caso es requerido.',
+            'estado_caso.required' => 'No hay estado asignado.',
+            'asesor_asignado.required' => 'Se requiere asignar un usuario al caso',
+            'asesor_asignado.numeric' => 'Se requiere el id del usuario para asignar al caso',
+        ];
 
-        $case->id_estado = $request->estado_caso;
-        $case->id_caso = $request->caso;
-        $case->gestion = $request->gestion;
-        $case->fecha_gestion = Carbon::now()->toDateTimeString();
-        $case->id_asesor_asignado = $request->asesor_asignado;
+        /*if (!isset($r->file)) {
+            return response()->json([
+                'msg' => 'Debe ingresar al menos un documento'
+            ]);
+        }*/
 
-        $case->save();
+        $validator = Validator::make($request->all(), $rules, $messages);
 
-        return response()->json('Caso asignado');
+        if ($validator->fails()) {
+            return response()->json(['status' => 406, 'msg' => $validator->errors()->first()]);
+        } else {
+
+            //
+            $step_estado_caso = 0;
+            $valuesToUpdate = array();
+            $msgjson = '';
+
+            $case = new CasoSeguimiento();
+            $case->id_caso = $request->caso;
+            $case->id_estado = $request->estado_caso;
+            $case->fecha_gestion = Carbon::now()->toDateString();
+
+            switch($request->estado_caso){
+                case 1:
+                    $step_estado_caso = 2;
+                    //$case->gestion = $request->gestion;
+                    $case_gestion = 'Caso asignado correctamente';
+                    $valuesToUpdate = array(
+                        'id_estado' => $step_estado_caso,
+                        'fecha_gestion' => $case->fecha_gestion,
+                        'id_asesor_asignado' => $request->asesor_asignado,
+                        'gestion' => $case_gestion,
+                    );
+                    $msgjson = 'Caso asignado correctamente';
+                break;
+                case 2:
+                    $step_estado_caso = 3;
+                    $case_gestion = $request->gestion;
+                    $fecha_eleccion = Carbon::now()->toDateString();
+                    $valuesToUpdate = array(
+                        'id_estado' => $step_estado_caso,
+                        'fecha_gestion' => $case->fecha_gestion,
+                        'id_asesor_asignado' => $request->asesor_asignado,
+                        'fecha_eleccion' => $fecha_eleccion,
+                        'gestion' => $case_gestion,
+                    );
+                    $msgjson = 'Caso gestionado correctamente';
+                break;
+                case 3:
+                    $step_estado_caso = $request->estado_caso;
+                    $case_gestion = $request->gestion;
+                    $valuesToUpdate = array(
+                        'id_estado' => $request->estado_caso,
+                        'fecha_gestion' => $case->fecha_gestion,
+                        'id_asesor_asignado' => $request->asesor_asignado,
+                        'gestion' => $case_gestion,
+                    );
+                    $msgjson = 'Caso en trámite actualizado';
+                    return;
+                case 4:
+                    $step_estado_caso = $request->estado_caso;
+                    $case_gestion = $request->detailsReply;
+                    $fecha_fin = Carbon::now()->toDateString();
+                    $valuesToUpdate = array(
+                        'id_estado' => $request->estado_caso,
+                        'fecha_gestion' => $case->fecha_gestion,
+                        'id_asesor_asignado' => $request->asesor_asignado,
+                        'fecha_fin' => $fecha_fin,
+                        'gestion' => $case_gestion,
+                    );
+                    $msgjson = 'Caso finalizado correctamente';
+                break;
+            }
+
+            $case->id_estado = $step_estado_caso;
+
+            $case->gestion = $case_gestion;
+            $case->fecha_gestion = Carbon::now()->toDateString();
+            $case->id_asesor_asignado = $request->asesor_asignado;
+
+            $case->save();
+
+            Caso::whereId($case->id_caso)
+                //->update($request->all());
+                ->update($valuesToUpdate);
+                //return response()->json('Caso actaulizado');
+
+            return response()->json([
+                'msg' => $msgjson,
+                'code' => 200,
+            ]);
+        }
+
+        /*try {
+            $this->validate(request(),[
+                'caso' => 'required',
+                'estado_caso' => 'required',
+                'asesor_asignado' => 'required'
+            ]);
+          }
+          catch (ValidationException $exception) {
+            return response()->json([
+                'status' => 'error',
+                'message'    => 'Error',
+                'errors' => $exception->errors(),
+            ], 422);
+        }*/
+
     }
     /**
      * Show the form for creating a new resource.

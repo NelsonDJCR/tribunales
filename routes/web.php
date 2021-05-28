@@ -151,24 +151,24 @@ Route::middleware('auth')->group(function () {
         Route::post('/editar-tibunal', [TribunalesController::class, 'editar']);
         Route::get('/data-rercord/{id}/{table}', [TribunalesController::class, 'dataRecord']);
         Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
-        
+
         // Magistrados
         Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
         Route::post('/editar-magistrado', [MagistradosController::class, 'editar']);
         Route::post('/filtros-magistrados', [MagistradosController::class, 'filtrar']);
-        
+
         // Actividades
         Route::post('/guardar-actividad', [ActividadesController::class, 'save']);
         Route::post('/editar-actividad', [ActividadesController::class, 'editar']);
         Route::post('/filtros-actividad', [ActividadesController::class, 'filtrar']);
         Route::post('/excel-actividades', [ActividadesController::class, 'reporteExcel']);
-        
-        
+
+
         // Mis actividades Magistrados
         Route::get('/magistrado/mis-actividades', [MagistradosController::class, 'misActividades']);
         Route::get('/magistrado/mis-actividades-ver/{id}', [MagistradosController::class, 'verActividad']);
         Route::post('/filtros-mis-actividades', [MagistradosController::class, 'filtrarMisActividades']);
-        
+
         // Sorteo
         Route::get('/listar-sorteos', [SorteoController::class, 'listarSorteos']);
         Route::post('/filtro-sorteo', [SorteoController::class, 'filtroSorteo']);
@@ -182,8 +182,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/record-cuenta-cobro', [CuentaCobroController::class,'record']);
 
 
-        
-       
+
+
 
         // Archivos
         Route::post('/nuevo-archivo', [TribunalesController::class, 'nuevaArchivo']);
