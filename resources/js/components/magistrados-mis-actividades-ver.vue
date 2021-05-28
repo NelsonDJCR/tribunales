@@ -18,7 +18,7 @@
                 <h2 class="text-blue"><b>VISUALIZACIÓN DE LA ACTIVIDAD</b></h2>
             </div>
             <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-                <router-link :to='`/magistrados/actividades`' @click.native="$router.go()" class="btn btn-secondary active text-white w-100 mt-2">Volver al listado</router-link>
+                <p @click="reload" class="btn btn-secondary active text-white w-100 mt-2">Volver al listado</p>
             </div>
         </div>
 
@@ -123,6 +123,11 @@ export default {
       this.data = r.data.data;
     });
   },
+  methods:{
+    reload(){
+      location.reload()
+    }
+  }
 
 };
 </script>

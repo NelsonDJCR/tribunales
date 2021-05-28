@@ -13,21 +13,20 @@
           <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de cuentas de cobro / Editar cuenta de cobro </label></li>
       </ol>
       <div class="row p-2 text-center border shadow rounded-3">
-              <div class="row">
-                <div class="col-12 col-md-12 col-lg-12 col-xl-12 p-2">
-                  <h1 class="text-blue"><b>VISUALIZACIÓN CUENTA DE COBRO</b></h1>
-                </div>
-                <!--div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-                  <button
-                    @click="editar"
-                    class="btn btn-warning text-white w-100 mt-2"
-                  >
-                    Editar cuenta
-                  </button>
-                </div-->
-              </div>
+        <div class="row">
+          <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+            <h1 class="text-blue"><b>VISUALIZACIÓN CUENTA DE COBRO</b></h1>
+          </div>
+          <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+            <button
+              @click="reload"
+              class="btn btn-danger text-white w-100 mt-2"
+            >
+              Volver
+            </button>
+          </div>
+        </div>
       </div>
-
       <form @submit.prevent="save">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
@@ -37,11 +36,8 @@
                 <input
                     type="text"
                     class="form-control"
-                    id=""
-                    name=""
-                    v-model="sesion.theme"
-                    placeholder="Tribunal"
                     disabled
+                    v-model="record.tribunal.nombre"
                   />
               </div>
             </div>
@@ -51,10 +47,7 @@
                   <input
                     type="text"
                     class="form-control"
-                    id=""
-                    name=""
-                    v-model="sesion.theme"
-                    placeholder="Magistrado"
+                    v-model="record.magistrado.nombre"
                     disabled
                   />
               </div>
@@ -66,9 +59,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
-                    type="date"
+                    type="text"
                     class="form-control"
+                    v-model="record.fecha_inicio"
                     disabled
                   />
                 </div>
@@ -81,9 +74,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
-                    type="date"
+                    type="text"
                     class="form-control"
+                    v-model="record.fecha_fin"
                     disabled
                   />
                 </div>
@@ -95,8 +88,7 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="record.valor_honorarios"
                     placeholder="32.000.000"
                     disabled
                   />
@@ -108,9 +100,7 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="30"
+                    v-model="record.numero_dias"
                     disabled
                   />
               </div>
@@ -121,9 +111,7 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="30.000.000"
+                    v-model="record.valor_bruto"
                     disabled
                   />
               </div>
@@ -138,9 +126,7 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="30.000.000"
+                    v-model="record.valor_factura"
                     disabled
                   />
               </div>
@@ -151,9 +137,7 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="90.000.000"
+                    v-model="record.total_pagar"
                     disabled
                   />
               </div>
@@ -164,9 +148,7 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="2%"
+                    v-model="record.rete_fuente"
                     disabled
                   />
               </div>
@@ -177,9 +159,7 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="16%"
+                    v-model="record.rete_iva"
                     disabled
                   />
               </div>
@@ -190,9 +170,7 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="10%"
+                    v-model="record.rete_ica"
                     disabled
                   />
               </div>
@@ -203,9 +181,7 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="100.000.000"
+                    v-model="record.neto_pagar"
                     disabled
                   />
               </div>
@@ -226,12 +202,10 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </form>
     </div>
-
     <div
       class="modal fade"
       id="modal_file"
@@ -286,98 +260,31 @@
         </div>
       </div>
     </div>
-    <template v-if="pantalla == 'editar'">
-      <div>
-        <cuentas-cobro-editar></cuentas-cobro-editar>
-      </div>
-    </template>
+
   </div>
 
 </template>
 <script>
-// $('body').on('click', '.delete_file', function() {
-//   $(this).parent().parent().remove();
-// });
 export default {
+  props: ['id'],
   data() {
     return {
-      type_file: [],
-      ciudades: [],
-      departament: [],
-      sesion: {},
-      documentos: [],
-      index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
+      view:{},
+      datarecord:{},
+      record:{},
     };
   },
   created() {
-    const url = "/data-new-sesion";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
-    });
+    this.getRecord();
   },
   methods: {
-    editar() {
-      this.pantalla = "editar";
-    },
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
+    getRecord(){
+      axios.post(`/record-cuenta-cobro`, {id:this.id}).then((r) => {
+        this.record = r.data.data
       });
     },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
-    changeCity() {
-      var id = $("#departamento_id").val();
-      axios.post("/changeCity", { id: id }).then((r) => {
-        this.ciudades = r.data;
-      });
-    },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
-          });
-        }
-
-      });
+    reload(){
+      location.reload()
     },
   },
 };

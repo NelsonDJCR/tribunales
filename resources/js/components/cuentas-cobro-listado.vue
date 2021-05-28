@@ -117,35 +117,21 @@
               <th>Neto a pagar</th>
             </thead>
             <tbody>
-              <!--  -->
               <tr v-for="(i, index) in table" :key="index">
                 <td class="aling_btn_options" style="width:190px;">
-
                   <button
                     type="button"
-                    @click="editar()"
+                    @click="editar(i.id)"
                     class="btn btn-info btn-sm"
                   >
                     <i class="fa fa-pencil-square-o" style="color:white;" aria-hidden="true"></i>
-
                   </button>
-
                   <button
                     type="button"
                     class="btn btn-secondary btn-sm"
-                    @click="view()"
+                    @click="view(i.id)"
                   >
                     <i class="fa fa-eye" aria-hidden="true"></i>
-
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-sm"
-                    @click="openModalFile()"
-                  >
-                    <i class="fa fa-download" style="color:white;" aria-hidden="true"></i>
-
                   </button>
                   <button
                     type="button"
@@ -153,105 +139,18 @@
                     @click="deleteSesion()"
                   >
                     <i class="fa fa-money" aria-hidden="true"></i>
-
                   </button>
                 </td>
-                <td>Tribunal</td>
-                <td>Magister</td>
-                <td>20/20/2020</td>
-                <td>20/20/2020</td>
-                <td>100</td>
-                <td>1</td>
-                <td>100</td>
+                <td>{{ i.tribunal.nombre }}</td>
+                <td>{{ i.magistrado.nombre }}</td>
+                <td>{{ i.fecha_inicio }}</td>
+                <td>{{ i.fecha_fin }}</td>
+                <td>{{ i.valor_honorarios }}</td>
+                <td>{{ i.numero_dias }}</td>
+                <td>{{ i.neto_pagar }}</td>
               </tr>
             </tbody>
           </table>
-        <!-- </template> -->
-
-        <div
-          class="modal fade"
-          id="modal_file"
-          data-bs-backdrop="static"
-          data-bs-keyboard="false"
-          tabindex="-1"
-          aria-labelledby="staticBackdropLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">
-                  Cargue soporte de pago
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  @click="closeAddFile()"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <div class="row mb-2">
-
-                  <div class="mb-3">
-                    <label for="" class="form-label"
-                      ><b>Tipo de archivo *</b></label
-                    >
-                    <select
-                      class="form-select"
-                      name="type_file"
-                    >
-                      <option
-                        v-for="(i, index) in type_file"
-                        :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                      ></option>
-                    </select>
-                  </div>
-                  <div class="row">
-                  <div
-                    class="form-group files border opacity-2 opacity-2h"
-                    role="button"
-                    id="box_file"
-                    @click="openModalFile()"
-                  >
-                    <div class="row mt-5">
-                      <img
-                        class="img_file mx-auto d-block"
-                        alt=""
-                        style="width: 100px"
-                        src="https://img.icons8.com/ios/452/google-docs.png"
-                      />
-                    </div>
-                    <div class="row mt-1 mb-5">
-                      <p class="text_file text-center">
-                        Ingresa aquí tus documentos .pdf .png .jpg
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="d-grid gap-2 col-6 mx-auto">
-                    <button type="submit"  class="btn btn-primary">Guardar</button>
-                </div>
-
-                </div>
-                <div class="col-12" id="box_files"></div>
-              </div>
-              <!--div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  @click="closeAddFile()"
-                >
-                  Aceptar
-                </button>
-              </div-->
-            </div>
-          </div>
-        </div>
-
       </div>
     </template>
     <template v-if="pantalla == 'nuevo'">
@@ -261,12 +160,12 @@
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
-        <cuentas-cobro-editar></cuentas-cobro-editar>
+        <cuentas-cobro-editar :id="idrecord"></cuentas-cobro-editar>
       </div>
     </template>
     <template v-if="pantalla == 'ver'">
       <div>
-        <cuentas-cobro-ver></cuentas-cobro-ver>
+        <cuentas-cobro-ver :id="idrecord"></cuentas-cobro-ver>
       </div>
     </template>
   </div>
@@ -282,37 +181,38 @@ export default {
       table: [],
       dataFilter: {},
       action: 0,
-      idEditar: 0,
+      idrecord: 0,
       datos_edit: {},
       pantalla: "lista",
     };
   },
   created() {
-    this.select();
-    this.table();
+    this.getSelect();
+    this.getTable();
   },
   methods: {
-    select(){
+    getSelect(){
       axios.get("/data-select").then((r) => {
         this.tribunales = r.data.tribunales;
         this.magistrados = r.data.magistrados;
       });
     },
-    table(){
+    getTable(){
       axios.post("/tabla-cuentas-cobro").then((r) => {
         this.table = r.data.table;
       });
     },
-    editar() {
+    editar(x) {
+      this.idrecord = x
       this.pantalla = "editar";
     },
-    view() {
+    view(x) {
+      this.idrecord = x
       this.pantalla = "ver";
     },
     pantallaNuevo(){
       this.pantalla = "nuevo";
     },
-    
   },
 };
 </script>

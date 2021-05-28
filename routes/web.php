@@ -178,6 +178,9 @@ Route::middleware('auth')->group(function () {
 
         // Cuenta de cobro
         Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class,'table']);
+        Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class,'save']);
+        Route::post('/record-cuenta-cobro', [CuentaCobroController::class,'record']);
+
 
         
        

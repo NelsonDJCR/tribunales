@@ -18,12 +18,12 @@
                 <h1 class="text-blue"><b>NUEVA CUENTA DE COBRO</b></h1>
             </div>
             <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-                <router-link :to='`/tribunales/listado-cuentas-de-cobro`' @click.native="$router.go()" class="btn btn-danger text-white w-100 mt-2">Cancelar</router-link>
+                <div @click="reload" class="btn btn-danger text-white w-100 mt-2">Cancelar</div>
             </div>
         </div>
       </div>
 
-      <form @submit.prevent="save">
+      <form @submit.prevent="newForm">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
@@ -33,15 +33,15 @@
 
                     class="form-select"
                     name="tribu_id"
-                    id="tribu_id"
+                    v-model="form.id_tribunal"
                   >
                     <option value="">Selecciona</option>
-                    <!--option
-                      v-for="(i, index) in tribunales"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option-->
+                   <option
+                    v-for="(i, index) in tribunales"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
                   </select>
               </div>
             </div>
@@ -51,16 +51,15 @@
                   <select
 
                     class="form-select"
-                    name="tribu_id"
-                    id="tribu_id"
+                    v-model="form.id_magistrado"
                   >
                     <option value="">Selecciona</option>
-                    <!--option
-                      v-for="(i, index) in tribunales"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option-->
+                  <option
+                    v-for="(i, index) in magistrados"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
                   </select>
               </div>
             </div>
@@ -71,7 +70,7 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                    v-model="form.fecha_inicio"
                     type="date"
                     class="form-control"
                   />
@@ -85,7 +84,7 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
+                    v-model="form.fecha_fin"
                     type="date"
                     class="form-control"
                   />
@@ -98,8 +97,7 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="form.valor_honorarios"
                   />
               </div>
             </div>
@@ -109,8 +107,7 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="form.numero_dias"
                   />
               </div>
             </div>
@@ -120,8 +117,7 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="form.valor_bruto"
                   />
               </div>
             </div>
@@ -131,8 +127,7 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="form.valor_factura"
                   />
               </div>
             </div>
@@ -145,8 +140,7 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="form.total_pagar"
                   />
               </div>
             </div>
@@ -156,8 +150,7 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="form.rete_fuente"
                   />
               </div>
             </div>
@@ -167,8 +160,7 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="form.rete_iva"
                   />
               </div>
             </div>
@@ -178,8 +170,7 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="form.rete_ica"
                   />
               </div>
             </div>
@@ -189,8 +180,7 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="form.neto_pagar"
                   />
               </div>
             </div>
@@ -202,10 +192,10 @@
                 <select
                   class="form-select"
                   name="type_file"
-                  v-model="sesion.type_file"
                 >
+                <option>Seleccione ...</option>
                   <option
-                    v-for="(i, index) in type_file"
+                    v-for="(i, index) in tipo_archivos"
                     :key="index"
                     :value="i.id"
                     v-text="i.nombre"
@@ -287,7 +277,7 @@
           </div>
           <div class="modal-footer">
             <button
-              type="button"
+              type="submit"
               class="btn btn-primary"
               @click="closeAddFile()"
             >
@@ -300,87 +290,42 @@
   </div>
 </template>
 <script>
-// $('body').on('click', '.delete_file', function() {
-//   $(this).parent().parent().remove();
-// });
 export default {
   data() {
     return {
-      type_file: [],
-      ciudades: [],
-      departament: [],
-      sesion: {},
-      documentos: [],
-      index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
+      tribunales:[],
+      magistrados:[],
+      tipo_archivos:[],
+      form:{},
     };
   },
   created() {
-    const url = "/data-new-sesion";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
-    });
+     this.select()
   },
   methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
+    reload(){
+      location.reload()
     },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
+    select(){
+      axios.get(`/data-select`).then((r) => {
+        this.tribunales = r.data.tribunales; 
+        this.magistrados = r.data.magistrados; 
+        this.tipo_archivos = r.data.tipo_archivos; 
+      })
     },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
-    changeCity() {
-      var id = $("#departamento_id").val();
-      axios.post("/changeCity", { id: id }).then((r) => {
-        this.ciudades = r.data;
-      });
-    },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
-          });
+    newForm(){
+      axios.post(`/guardar-cuenta-cobro`, this.form).then((r) => {
+        if(r.data.code== 200){
+          swal.fire(r.data.msg,'', "success").then(function(){ location.reload() });
+        }else if(r.data.code== 406){
+          swal.fire(r.data.msg,'', "warning")
+        }else{
+          swal.fire("Fallo en el sevidor!",'error', "error")
         }
-
       });
     },
+    
+
   },
 };
 </script>

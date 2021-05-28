@@ -8,54 +8,48 @@
     />
 
     <div class="container mt-5">
+      <!-- Breadcrumb -->
       <ol class="breadcrumb">
           <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de cuentas de cobro / Editar cuenta de cobro </label></li>
       </ol>
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-          <h1 class="text-blue"><b>EDITAR CUENTA DE COBRO</b></h1>
+          <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+            <h1 class="text-blue"><b>VISUALIZACIÓN CUENTA DE COBRO</b></h1>
+          </div>
+          <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+            <button
+              @click="reload"
+              class="btn btn-danger text-white w-100 mt-2"
+            >
+              Volver
+            </button>
+          </div>
         </div>
       </div>
-
       <form @submit.prevent="save">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
-                  <select
-
-                    class="form-select"
-                    name="tribu_id"
-                    id="tribu_id"
-                  >
-                    <option value="">Tribunal</option>
-                    <!--option
-                      v-for="(i, index) in tribunales"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option-->
-                  </select>
+                <input
+                    type="text"
+                    class="form-control"
+                    disabled
+                    v-model="record.tribunal.nombre"
+                  />
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Magistrado</b></label>
-                  <select
-
-                    class="form-select"
-                    name="tribu_id"
-                    id="tribu_id"
-                  >
-                    <option value="">Magistrado</option>
-                    <!--option
-                      v-for="(i, index) in tribunales"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option-->
-                  </select>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="record.magistrado.nombre"
+                    disabled
+                  />
               </div>
             </div>
             <div class="row">
@@ -65,9 +59,10 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
-                    type="date"
+                    type="text"
                     class="form-control"
+                    v-model="record.fecha_inicio"
+                    disabled
                   />
                 </div>
               </div>
@@ -79,9 +74,10 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
-                    type="date"
+                    type="text"
                     class="form-control"
+                    v-model="record.fecha_fin"
+                    disabled
                   />
                 </div>
               </div>
@@ -92,9 +88,9 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
+                    v-model="record.valor_honorarios"
                     placeholder="32.000.000"
+                    disabled
                   />
               </div>
             </div>
@@ -104,9 +100,8 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="30"
+                    v-model="record.numero_dias"
+                    disabled
                   />
               </div>
             </div>
@@ -116,9 +111,8 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="30.000.000"
+                    v-model="record.valor_bruto"
+                    disabled
                   />
               </div>
             </div>
@@ -132,9 +126,8 @@
                 <input
                     type="number"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="30.000.000"
+                    v-model="record.valor_factura"
+                    disabled
                   />
               </div>
             </div>
@@ -144,9 +137,8 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="90.000.000"
+                    v-model="record.total_pagar"
+                    disabled
                   />
               </div>
             </div>
@@ -156,9 +148,8 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="2%"
+                    v-model="record.rete_fuente"
+                    disabled
                   />
               </div>
             </div>
@@ -168,9 +159,8 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="16%"
+                    v-model="record.rete_iva"
+                    disabled
                   />
               </div>
             </div>
@@ -180,9 +170,8 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="10%"
+                    v-model="record.rete_ica"
+                    disabled
                   />
               </div>
             </div>
@@ -192,9 +181,8 @@
                 <input
                     type="number" min="1" step="any"
                     class="form-control"
-                    id=""
-                    name=""
-                    placeholder="100.000.000"
+                    v-model="record.neto_pagar"
+                    disabled
                   />
               </div>
             </div>
@@ -213,10 +201,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <button type="submit"  class="btn btn-primary">Guardar</button>
-                <router-link :to='`/tribunales/listado-cuentas-de-cobro`' @click.native="$router.go()" class="btn btn-danger text-white w-100 mt-2">Cancelar</router-link>
             </div>
           </div>
         </div>
@@ -276,37 +260,32 @@
         </div>
       </div>
     </div>
+
   </div>
+
 </template>
 <script>
-
 export default {
+  props: ['id'],
   data() {
     return {
-      type_file: [],
-      ciudades: [],
-      departament: [],
-      sesion: {},
-      documentos: [],
-      index: 0,
+      view:{},
+      datarecord:{},
+      record:{},
     };
   },
   created() {
-    const url = "/data-new-sesion";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
-    });
+    this.getRecord();
   },
   methods: {
-    changeCity() {
-      var id = $("#departamento_id").val();
-      axios.post("/changeCity", { id: id }).then((r) => {
-        this.ciudades = r.data;
+    getRecord(){
+      axios.post(`/record-cuenta-cobro`, {id:this.id}).then((r) => {
+        this.record = r.data.data
       });
     },
-    
+    reload(){
+      location.reload()
+    },
   },
 };
 </script>
