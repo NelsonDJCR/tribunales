@@ -241,7 +241,6 @@
                   @click="add_file()"
                   type="button"
                 >
-                  <!-- <i class="fas fa-plus"></i> -->
                   <i class="typcn typcn-document-add" style="color: green"></i>
                 </button>
               </div>

@@ -48,7 +48,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    :maxlength="20"
+                    :maxlength="150"
                     v-model="form.tema"
                   />
               </div>
@@ -58,7 +58,7 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Descripción</b></label>
-                <textarea v-model="form.descripcion" class="form-control" :maxlength="300" id="" rows="3"></textarea>
+                <textarea v-model="form.descripcion" class="form-control" :maxlength="501" id="" rows="3"></textarea>
                     
               </div>
             </div>

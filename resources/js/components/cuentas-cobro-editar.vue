@@ -33,12 +33,7 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
-                <input
-                    type="text"
-                    class="form-control"
-                    disabled
-                    v-model="record.tribunal.nombre"
-                  />
+                
               </div>
             </div>
             <div class="row">

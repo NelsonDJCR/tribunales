@@ -139,11 +139,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/inactivar-estado/{id}/{tabla}/{estado}', [ParametrosController::class, 'estadoInactivar']);
         Route::post('/nuevo', [ParametrosController::class, 'nuevo']);
 
-        Route::post('/guardarTribunal', [TribunalesController::class, 'store']);
-
-
-
+        
+        
+        
         // Rutas para tribunales
+        Route::post('/guardarTribunal', [TribunalesController::class, 'store']);
         Route::get('/data-select', [TribunalesController::class, 'data']);
         Route::get('/listar-tribunales', [TribunalesController::class, 'listar_ ']);
         Route::get('/listar/{tabla}', [TribunalesController::class, 'listar']);

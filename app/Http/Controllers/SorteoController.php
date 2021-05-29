@@ -63,8 +63,6 @@ class SorteoController extends Controller
 
     public function nuevoSorteo(Request $r)
     {
-
-        // use Illuminate\Support\Facades\Validator;
         $rules = [
             'nombre'=>'required|',
             'id_tipo_eleccion'=>'required|',
@@ -78,7 +76,6 @@ class SorteoController extends Controller
             return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
         }
 
-     
         $limite_asignados = intval( count(Magistrado::all()->where('estado',1)) / count(Tribunal::all()->where('estado',1)));
         if (count(Magistrado::all()->where('estado',1)->where('asignado',0)) == 0) {
             return response()->json([
@@ -89,34 +86,27 @@ class SorteoController extends Controller
             $limite_asignados = $limite_asignados + 1;
             $tribunal = Tribunal::all()->where('estado',1)->where('asignados','<',$limite_asignados)->random();
         }
-        
-        $tribunal = Tribunal::all()->where('estado',1)->where('asignados','<',$limite_asignados)->random();
-        $magistrado = Magistrado::all()->where('estado',1)->where('asignado',0)->random();
-
-        $x = Tribunal::find($tribunal->id);
-        $x->asignados = $x->asignados + 1;
-        $x->save();
-        $x = Magistrado::find($magistrado->id);
-        $x->asignado = 1;
-        $x->save();
-
-        $x = new Sorteo;
-        $x->nombre = $r->nombre;
-        $x->id_magistrado = $magistrado->id;
-        $x->id_tribunal = $tribunal->id;
-        $x->id_tipo_eleccion = $r->id_tipo_eleccion;
-        $x->fecha = date('Y-m-d');
-        if ($x->save()) {
-            return response()->json([
-                'code' =>200,
-                'msg' => 'El sorteo se ha realizado satisfactoriamente'
-            ]);
+        $sorteo =  count(Magistrado::all()->where('estado',1)->where('asignado',0));
+        for ($i=0; $i < $sorteo; $i++) { 
+            $tribunal = Tribunal::all()->where('estado',1)->where('asignados','<',$limite_asignados)->random();
+            $magistrado = Magistrado::all()->where('estado',1)->where('asignado',0)->random();
+            $x = Tribunal::find($tribunal->id);
+            $x->asignados = $x->asignados + 1;
+            $x->save();
+            $x = Magistrado::find($magistrado->id);
+            $x->asignado = 1;
+            $x->save();
+            $x = new Sorteo;
+            $x->nombre = $r->nombre;
+            $x->id_magistrado = $magistrado->id;
+            $x->id_tribunal = $tribunal->id;
+            $x->id_tipo_eleccion = $r->id_tipo_eleccion;
+            $x->fecha = date('Y-m-d');
+            $x->save();
         }
-
-        
-
-
+        return response()->json([
+            'code' =>200,
+            'msg' => 'El sorteo se ha realizado satisfactoriamente'
+        ]);
     }
-
-
 }

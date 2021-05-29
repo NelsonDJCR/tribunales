@@ -22,7 +22,7 @@ class CuentaCobroController extends Controller
         $rules = [
             'id_tribunal'=>'required|',
             'id_magistrado'=>'required|',
-            'fecha_inicio'=>'required|after:today',
+            'fecha_inicio'=>'required|',
             'fecha_fin'=>"required|after:$date",
             'valor_honorarios'=>"required|",
             'numero_dias'=>'required|',
