@@ -24,7 +24,7 @@
 
       </div>
 
-      <form @submit.prevent="save">
+      <form @submit.prevent="save" >
         <section v-if="!loading">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
@@ -49,9 +49,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    type="date"
+                    type="text"
                     class="form-control"
-                    :value="dataCaso.data.fecha_eleccion"
+                    :placeholder="dataCaso.data.fecha_eleccion"
                     disabled
                   />
                 </div>
@@ -90,9 +90,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    type="date"
+                    type="text"
                     class="form-control"
-                    :value="dataCaso.data.fecha_recibido"
+                    :placeholder="dataCaso.data.fecha_recibido"
                     disabled
                   />
                 </div>
@@ -203,9 +203,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    type="date"
+                    type="text"
                     class="form-control"
-                    :value="dataCaso.data.fecha_inicio"
+                    :placeholder="dataCaso.data.fecha_inicio"
                     disabled
                   />
                 </div>
@@ -218,9 +218,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    type="date"
+                    type="text"
                     class="form-control"
-                    :value="dataCaso.data.fecha_fin"
+                    :placeholder="dataCaso.data.fecha_fin"
                     disabled
                   />
                 </div>
@@ -281,7 +281,7 @@
             <h3 class="mb-2 text-secondary"><b>Datos del solicitante</b></h3>
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Nombres y apellidos del solicitante</b></label>
+                <label for="" class="form-label"><b>Nombres y Apellidos del solicitante</b></label>
                 <input
                     type="text"
                     class="form-control"
@@ -397,14 +397,14 @@
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-3">
             <h3 class="mb-2 text-secondary"><b>Gestión</b></h3>
             <div class="row">
-              <div class="mb-3">
+              <div class="mb-3" v-if="estados[0].nombre">
                 <label for="" class="form-label"><b>Estado</b></label>
                 <input
                     type="text"
                     class="form-control"
                     id=""
                     name=""
-                    :placeholder="lastStepInfo.estadocaso"
+                    :placeholder="estados[lastStepInfo.estadocaso - 1].nombre"
                     disabled
                   />
               </div>
@@ -422,14 +422,30 @@
                   />
               </div>
             </div>
-            <div class="row">
-              <div class="mb-3">
-                <label for="" class="form-label"><b>Fecha de asignación</b></label>
+            <div class="row" v-if="lastStepInfo.estadocaso">
+              <div class="mb-3" >
+                <label for="" class="form-label">
+                    <b v-if="lastStepInfo.estadocaso === 2">Fecha de asignación</b>
+                    <b v-if="lastStepInfo.estadocaso === 3">Fecha de gestion</b>
+                    <b v-if="lastStepInfo.estadocaso === 4">Fecha de finalización</b>
+                </label>
                 <div class="input-group">
-                  <input
-                    type="date"
+                  <input v-if="lastStepInfo.estadocaso == 1"
+                    type="text"
                     class="form-control"
-                    :value="lastStepInfo.fecha_gestion"
+                    :placeholder="dataCaso.data.fecha_recibido"
+                    disabled
+                  />
+                  <input v-else-if="lastStepInfo.estadocaso == 2 || lastStepInfo.estadocaso == 3"
+                    type="text"
+                    class="form-control"
+                    :placeholder="lastStepInfo.fecha_gestion"
+                    disabled
+                  />
+                  <input v-else-if="lastStepInfo.estadocaso == 4"
+                    type="text"
+                    class="form-control"
+                    :placeholder="dataCaso.data.fecha_fin"
                     disabled
                   />
                 </div>
@@ -438,20 +454,20 @@
 
           </div>
 
-          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-3">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-3" v-if="lastStepInfo.estadocaso === 4">
             <div class="row mb-3 hidden-sm">
                 <br/>
             </div>
             <div class="row">
-              <div class="mb-3" v-if="lastStepInfo.updated_at">
+              <div class="mb-3">
                 <label for="" class="form-label"
                   ><b>Fecha de respuesta</b>
                 </label>
                 <div class="input-group">
                   <input
-                    type="date"
+                    type="text"
                     class="form-control"
-                    :value="lastStepInfo.updated_at"
+                    :placeholder="dataCaso.data.fecha_fin"
                     disabled
                   />
                 </div>
@@ -481,9 +497,9 @@
                                 <th scope="col">Fecha</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr v-for="(i, index) in dataCaso.data.caso" :key="index">
-                                <th scope="row">{{ i.estadocaso }}</th>
+                        <tbody v-if="estados[0].nombre">
+                            <tr v-for="(i, index) in dataCaso.data.caso.slice().reverse()" :key="index">
+                                <th scope="row">{{ estados[i.estadocaso - 1].nombre }}</th>
                                 <td>{{ i.gestion }}</td>
                                 <td>{{ i.asesor }}</td>
                                 <td>{{ i.fecha_gestion }}</td>
@@ -565,6 +581,7 @@ export default {
       idCaso: this.id,
       dataCaso:[],
       type_file: [],
+      estados: [],
       ciudades: [],
       departament: [],
       data_record: {},
@@ -598,6 +615,12 @@ export default {
     ifInArray: function (value) {
             return this.dataCaso.data.indexOf(value) > -1 ? 'Yes' : 'No';
     },
+    loadEstados(){
+        const url = "/resources/estados/";
+        axios.get(url).then((r) => {
+            this.estados = r.data.data;
+        });
+    },
     /*async method function*/
         /*
             this.departament = r.data.departamentos;
@@ -617,10 +640,11 @@ export default {
   created() {
       this.loading = true;
         this.idCaso = this.id;
+        this.loadEstados();
 
         axios.get(`/tribunales/casos-listar/${this.idCaso}`).then((r) => {
             this.dataCaso = r.data;
-            console.log(this.dataCaso);
+            //console.log(this.dataCaso);
             this.loading = false;
 
             /*if(this.dataCaso.includes(r.data.data.caso)){

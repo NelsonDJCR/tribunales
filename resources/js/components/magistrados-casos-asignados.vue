@@ -22,79 +22,29 @@
               </div>
             </div>
             <form @submit.prevent="filter">
-              <div class="row mt-5">
-                <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Tema</b></label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="nombre_tema"
-                    name="nombre_tema"
-                    v-model="dataFilter.nombre_tema"
-                  />
-                </div>
-                <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Fecha</b></label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="fecha_realizacion"
-                    v-model="dataFilter.fecha_realizacion"
-                  />
-                </div>
-
-                <div class="mb-3 col-3">
-
-                    <div class="row">
-
-                        <div class="mb-12 col-12 mt-4">
-                            <button
-                            type="submit"
-                            class="btn btn-secondary active btn_search w-100 mt-2"
-                            >
-                            Buscar
-                            </button>
-                        </div>
-                        <div class="mb-5 col-9"></div>
-                        <!-- <div class="mb-3 col-1">
-                                <button
-                                style="color: white"
-                                class="btn btn-info"
-                                id="btn_exece"
-                                type="button"
-                                @click="export_exel()"
-                                >
-                                <i class="typcn typcn-database"></i>
-                                </button>
-                            </div> -->
-                    </div>
-                </div>
-
-                <div class="mb-3 col-3">
-
-                </div>
-
-              </div>
+                FORM FILTROS
             </form>
           </div>
-          <table class="table table-bordered table-striped table-lg" id="datos">
-            <thead class="text-left align-middle">
-              <th class="w-5">Opciones</th>
-              <th>Fecha</th>
-              <th>Tema</th>
-              <th colspan="2" class="w-25">Descripción</th>
+          <table class="table table-bordered table-striped table-sm fnt-hd-sm" id="datos">
+            <thead class="text-center align-middle">
+              <th>Opciones</th>
+              <th>Tipo de Trámite</th>
+              <th>Prioridad</th>
+              <th>Fecha recibido</th>
               <th>Departamento</th>
               <th>Municipio</th>
-              <th>Magistrado</th>
+              <th>Solicitante</th>
+              <th>Estado</th>
             </thead>
             <tbody>
               <!-- v-for="(i, index) in cabildos" :key="index" -->
-              <tr >
+
+              <tr v-for="(i, index) in casos" :key="index">
                 <td class="aling_btn_options">
 
                   <button
                     type="button"
-                    @click="modal_export(5)"
+                    @click="modalShowAssign(i.id, i.id_estado, i.id_asesor_asignado)"
                     class="btn btn-secondary btn-sm"
                   >
                     <i
@@ -104,23 +54,30 @@
                   <button
                     type="button"
                     class="btn btn-success btn-sm"
-                    @click="pantallaEditar()"
+                    @click="pantallaVer(i.id)"
                   >
                     <i class="typcn typcn-eye"></i>
                   </button>
 
-
+                  <!--button
+                    type="button"
+                    class="btn btn-warning btn-sm"
+                  >
+                    <i class="typcn typcn-download cl-white"></i>
+                  </button-->
                 </td>
-                <td>20/20/20</td>
-                <td>Tema</td>
-                <td colspan="2">Descripción</td>
-                <td>Cundinamarca</td>
-                <td>Chía</td>
-                <td>Camilo Avendaño</td>
-                <!-- <td>{{ i.nombre_tema }}}</td> -->
+                <td>{{ i.tramite }}</td>
+                <td>{{ i.prioridad }}</td>
+                <td>{{ i.fecha_recibido }}</td>
+                <td style="word-wrap: break-word; max-width: 120px;">{{ i.departamento_nombre }}</td>
+                <td>{{ i.ciudad_nombre }}</td>
+                <td>{{ i.nombres_solicitante }} {{ i.apellidos_solicitante }}</td>
+                <td><span class="badge badge-primary badge-outline-secondary">{{ i.estado }}</span></td>
               </tr>
             </tbody>
+
           </table>
+
         </template>
 
         <div
@@ -146,106 +103,15 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <form @submit.prevent="exportPdf">
-                <input
-                  type="hidden"
-                  name=""
-                  id="cabildos_id"
-                  v-model="dataPdf.cabildo_id"
-                />
-                <div class="modal-body">
-                  <div class="mb-3 col-12">
-                    <label for="" class="form-label"><b>Estado</b></label>
-                    <!--input
-                      type="text"
-                      required
-                      class="form-control"
-                      v-model="dataPdf.radicado"
-                    /-->
-                    <select
-                        class="form-select"
-                    >
-                        <option>Estado 1</option>
-                        <option>Estado 2</option>
-                        <option>Estado 3</option>
-                    </select>
-                  </div>
-
-                    <div class="mb-3 col-12">
-                        <label for="" class="form-label"><b>Observaciones</b></label>
-                        <!--input
-                        type="text"
-                        required
-                        class="form-control"
-                        v-model="dataPdf.ciudadano"
-                        /-->
-                        <textarea class="form-control" id="" rows="5"></textarea>
-                    </div>
-
-                    <div class="mb-3 col-12">
-                        <label for="" class="form-label"
-                            ><b>Tipo de archivo</b></label
-                        >
-                        <select
-                            class="form-select"
-                            name="type_file"
-                        >
-                            <option
-                            v-for="(i, index) in type_file"
-                            :key="index"
-                            :value="i.id"
-                            v-text="i.nombre"
-                            ></option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3 col-12">
-                        <div class="form-group files border opacity-2 opacity-2h"
-                            role="button"
-                            id="box_file"
-                        >
-                            <div class="row mt-5">
-                            <img
-                                class="img_file mx-auto d-block"
-                                alt=""
-                                style="width: 100px"
-                                src="https://img.icons8.com/ios/452/google-docs.png"
-                            />
-                            </div>
-                            <div class="row mt-1 mb-5">
-                            <p class="text_file text-center">
-                                Ingresa aquí tus documentos .pdf .png .jpg
-                            </p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <div class="d-grid gap-2 d-md-block mx-auto">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-dismiss="modal"
-                        >
-                            Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-secondary active">
-                            Guardar
-                        </button>
-                    </div>
-                </div>
-              </form>
             </div>
           </div>
         </div>
       </div>
     </template>
 
-    <template v-if="pantalla == 'editar'">
+    <template v-if="pantalla == 'ver'">
       <div>
-        <magistrados-casos-asignados-ver></magistrados-casos-asignados-ver>
+        <magistrados-casos-asignados-ver :id="idCaso" :key="$route.fullPath"></magistrados-casos-asignados-ver>
       </div>
     </template>
   </div>
@@ -255,146 +121,113 @@
 export default {
   data() {
     return {
-      dataPdf: { cabildo_id: "", radicado: "", ciudadano: "" },
       departament: [],
       ciudades: [],
       type_file: [],
-      cabildos: [],
-      dataFilter: {},
+      casos: [],
       action: 0,
-      idEditar: 0,
-      datos_edit: {},
       pantalla: 'lista',
     };
   },
   created() {
-    const url = "/data-list-cabildos";
-    axios.get(url).then((r) => {
-      this.cabildos = r.data.cabildos;
-      //   this.ciudades = r.data.municipios;
-      this.departament = r.data.departments;
-      console.log(this.cabildos);
-    });
+
   },
   methods: {
-      pantallaEditar(){
-          this.pantalla = 'editar'
-      },
-    modal_export(id) {
-      $("#cabildos_id").val(id);
-      this.dataPdf.cabildo_id = id;
-      this.dataPdf.radicado = "";
-      this.dataPdf.ciudadano = "";
-      $("#modal_export").modal("show");
+    pantallaVer(x){
+        this.idCaso = x;
+        this.pantalla = 'ver'
     },
-    exportPdf() {
-      window.open(
-        "/download?id=" +
-          this.dataPdf.cabildo_id +
-          "&radicado=" +
-          this.dataPdf.radicado +
-          "&ciudadano=" +
-          this.dataPdf.ciudadano
-      );
-      $("#modal_export").modal("hide");
-    },
-    export_exel() {
-      let url = "/excel-cabildos";
-      let filtros = this.dataFilter;
-      axios.post(url, filtros).then((res) => {
-        let blob = new Blob([res.data]);
-        let link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        link.download = "ReporteCabildos.xls";
-        link.click();
-      });
-    },
-    changeCity() {
-      var id = $("#departamento_id").val();
-      axios.post("/changeCity", { id: id }).then((r) => {
-        this.ciudades = r.data;
-      });
-    },
-    filter() {
-      let filtros = this.dataFilter;
-      axios.post("/filter-list-cabildos", filtros).then((r) => {
-        console.log(r.data.cabildos);
-        this.cabildos = r.data.cabildos;
-      });
-    },
+    loadCasos(page){
 
-    report() {
-      var form = new FormData();
-      form.append("nombre_tema", $("#nombre_tema").val());
-      form.append("dep_id", $("#dep_id").val());
-      form.append("fecha_realizacion", $("#fecha_realizacion").val());
-      form.append("fecha_final", $("#fecha_final").val());
-      axios.post("/excel-cabildos", form).then((r) => {});
-    },
-
-    deleteSesion(id) {
-      Swal.fire({
-        title: "¿Eliminar registro?",
-        text: "Esta acción no se puede revertir",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#757575",
-        confirmButtonText: "Aceptar",
-        cancelButtonText: "Cancelar",
-      }).then((result) => {
-        console.log(result);
-        if (result.value) {
-          const url = "/delete-session/" + id;
-          axios.get(url).then((r) => {
-            this.cabildos = r.data.cabildos;
-            Swal.fire(
-              "¡Perfecto!",
-              "Datos eliminados correctamente",
-              "success"
-            );
-          });
+        if (axios == null) {
+            console.log(('NULL RESULT'));
+            return;
         }
-      });
-    },
-    editSession(id) {
-      this.action = 1;
-      this.idEditar = id;
-      axios
-        .get("/edit-sesion/" + id)
-        .then((r) => {
-          this.datos_edit = r.data.datos;
-          this.departament = r.data.departament;
-          this.ciudades = r.data.ciudades;
-          this.type_file = r.data.type_file;
-        })
-        .catch(function (error) {
-          console.log(error);
+
+        let queryString = this.objectToQueryString(this.dataFilter), fullStr;
+
+        if(queryString !== null){
+            //fullStr = "?page="+page+"&"+queryString+"&buscar="+this.dataFilter.buscar;
+            fullStr = "?page="+page;
+        }else{
+            fullStr = '?page='+page;
+        }
+
+        axios.get('/tribunales/casos-listar?page='+page+'&'+queryString).then((res)=>{
+
+            if(res.status === 200){
+                this.casos=res.data.casos.data;
+                //console.log('Data = ');
+                console.log(res.data);
+                this.departament = res.data.departamentos;
+                this.pagination = res.data.pagination;
+            }
+
+        }).catch(err=>{
+            console.log(err);
         });
     },
-    saveEdit() {
-      let datos = this.datos_edit;
-      let url = "/editSesion";
-      axios.post(url, datos).then((res) => {
-        if (res.data.status == 406) {
-          Swal.fire({
-            icon: "error",
-            title: "¡Error!",
-            text: res.data.msg,
-          });
-        } else {
-          this.action = 0;
-          this.cabildos = res.data.table;
-          // console.log(r.data);
-          // return false;
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          });
-        }
+    changeCity() {
+        var id = $("#departamento_id").val();
+      axios.post("/changeCity", { id: id }).then((r) => {
+          this.ciudades = r.data;
       });
     },
+    objectToQueryString(obj) {
+        var str = [];
+        for (var p in obj)
+            if (obj.hasOwnProperty(p)) {
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            }
+        return str.join("&");
+    },
+    loadEstados(){
+        const url = "/resources/estados/";
+        axios.get(url).then((r) => {
+            this.estados = r.data.data;
+        });
+    },
+    loadTipoTramites(){
+        const url = "/resources/tipotramites/";
+        axios.get(url).then((r) => {
+            this.tptramites = r.data.data;
+        });
+    },
+    loadCasos(page){
+
+        if (axios == null) {
+            console.log(('NULL RESULT'));
+            return;
+        }
+
+        let queryString = this.objectToQueryString(this.dataFilter), fullStr;
+
+        if(queryString !== null && page !== undefined){
+            fullStr = "?page="+page+"&"+queryString+"&buscar="+this.dataFilter.buscar;
+        }else{
+            fullStr = '';
+        }
+
+        axios.get('/tribunales/casos-listar'+fullStr).then((res)=>{
+
+            if(res.status === 200){
+                this.casos=res.data.casos.data;
+                this.departament = res.data.departamentos;
+                this.pagination = res.data.pagination;
+            }
+
+        }).catch(err=>{
+            console.log(err);
+        });
+    },
+
+  },
+  mounted() {
+    this.loadEstados();
+    this.loadTipoTramites();
+  },
+  created() {
+    this.loadCasos();
   },
 };
 </script>

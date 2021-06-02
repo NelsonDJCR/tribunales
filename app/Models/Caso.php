@@ -26,18 +26,24 @@ class Caso extends Model
         return $this->hasMany(CasoSeguimiento::class, 'id_caso', 'id');
     }
 
-    public function getListOfCasos(){
+    public function getListOfCasos($otherUser = null){
 
         $casos = Caso::with('caso')
-            ->join('departamentos', 'casos.id_departamento', '=', 'departamentos.id')
-            ->join('ciudades', 'casos.id_municipio', '=', 'ciudades.id')
-            ->join("tipo_tramite", "tipo_tramite.id", '=', "casos.id_tramite" )
-            ->join("prioridad", "prioridad.id", '=', "casos.id_prioridad" )
-            ->join("estado", "estado.id", '=', "casos.id_estado")
-            ->select('casos.*', 'departamentos.nombre AS departamento_nombre', 'ciudades.nombre AS ciudad_nombre', 'tipo_tramite.nombre AS tramite', 'prioridad.nombre AS prioridad', 'estado.nombre AS estado', 'casos.id_asesor_asignado AS asesor_asignado')
-            ->orderBy('casos.id', 'asc')->paginate(10);
+        ->join('departamentos', 'casos.id_departamento', '=', 'departamentos.id')
+        ->join('ciudades', 'casos.id_municipio', '=', 'ciudades.id')
+        ->join("tipo_tramite", "tipo_tramite.id", '=', "casos.id_tramite" )
+        ->join("prioridad", "prioridad.id", '=', "casos.id_prioridad" )
+        ->join("estado", "estado.id", '=', "casos.id_estado")
+        ->select('casos.*', 'departamentos.nombre AS departamento_nombre', 'ciudades.nombre AS ciudad_nombre', 'tipo_tramite.nombre AS tramite', 'prioridad.nombre AS prioridad', 'estado.nombre AS estado', 'casos.id_asesor_asignado AS asesor_asignado')
+        ->where(function ($query) use ($otherUser) {
+            if (isset($otherUser))
+                if (!empty($otherUser)) {
+                    $query->where('casos.id_asesor_asignado', '=', $otherUser);
+                }
+        })
+        ->orderBy('casos.id', 'asc')->paginate(10);
 
-            return $casos;
+        return $casos;
     }
 
     public function searchListOfCasos($filtro){
