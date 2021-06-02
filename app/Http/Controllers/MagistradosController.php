@@ -100,7 +100,7 @@ class MagistradosController extends Controller
             ->where(function ($query) use ($post) {
                 if (isset($post['dep_id'])) {
                     if (!empty($post['dep_id']))
-                        $query->orwhere("magistrados.dep_id", 'like', "%" . $post['dep_id'] . "%");
+                        $query->orwhere("magistrados.dep_id", '=' , $post['dep_id'] );
                 }
             })
             ->where(function ($query) use ($post) {

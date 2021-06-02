@@ -43,6 +43,7 @@
                   v-model="data_record.dep_id"
                   id="departamento_id"
                   v-on:change="changeCity()"
+                  disabled
                 >
                   <option disabled>Seleccione ...</option>
                   <option
@@ -53,6 +54,7 @@
                     {{ i.nombre }}
                   </option>
                 </select>
+                
               </div>
             </div>
             <div class="row">
@@ -63,6 +65,7 @@
                   v-model="data_record.ciu_id"
                   name="municipality"
                   id="municipio"
+                  disabled
                 >
                   <option disabled>Seleccione ...</option>
                   <option

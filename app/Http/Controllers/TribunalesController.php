@@ -30,7 +30,7 @@ class TribunalesController extends Controller
             'direccion'=>'required|max:60',
             'dep_id'=>'required',
             'ciu_id'=>'required',
-            'fecha_inicio'=>'required|after:today',
+            'fecha_inicio'=>'required|',
             'fecha_final'=>"required|after:$fechaInicio",
         ];
         $messages = [
@@ -184,6 +184,18 @@ class TribunalesController extends Controller
     {
         if ($table == 'actividades') {
             $x = DB::table('actividades')->where('id', $id)->first();
+            return response()->json([
+                'formulario' => DB::table($table)->where('id', $id)->first(),
+                'departamentos' => Departamentos::all()->where('estado', 1),
+                'ciudades' => Ciudades::all()->where('estado', 1),
+                'tipo_archivo' => TipoArchivo::all()->where('estado', 1),
+                'bancos' => Banco::all()->where('estado', 1),
+                'tipo_cuentas' => TipoCuenta::all()->where('estado', 1),
+                'tipo_archivos' => TipoArchivo::all()->where('estado', 1),
+                'tipo_identificacion' => TipoIdentificacion::all()->where('estado', 1),
+                'magistrado' => Magistrado::where('id',$x->id_magistrado)->select('magistrados.nombre AS magistrado')->first(),
+                
+            ]);
         }
         return response()->json([
             'formulario' => DB::table($table)->where('id', $id)->first(),
@@ -194,9 +206,11 @@ class TribunalesController extends Controller
             'tipo_cuentas' => TipoCuenta::all()->where('estado', 1),
             'tipo_archivos' => TipoArchivo::all()->where('estado', 1),
             'tipo_identificacion' => TipoIdentificacion::all()->where('estado', 1),
-            'magistrado' => Magistrado::where('id',$x->id_magistrado)->select('magistrados.nombre AS magistrado')->first(),
+            
+
         ]);
     }
+    
 
     public function editar(Request $r)
     {
@@ -231,7 +245,7 @@ class TribunalesController extends Controller
             ->where(function ($query) use ($post) {
                 if (isset($post['dep_id'])) {
                     if (!empty($post['dep_id']))
-                        $query->orwhere("tribunal.dep_id", 'like', "%" . $post['dep_id'] . "%");
+                        $query->orwhere("tribunal.dep_id", '=', $post['dep_id'] );
                 }
             })
             ->where(function ($query) use ($post) {
