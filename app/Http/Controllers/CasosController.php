@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Caso;
@@ -63,12 +64,24 @@ class CasosController extends Controller
             // print_r($buscar);
 
         }else{
-
+            $imMagister = false; //TODO set with user rol
             $casos = new Caso();
-            $casos = $casos->getListOfCasos();
 
-        }
+            /*::::::::::::::::::TODO Validate MAGISTRADOs USERs*/
 
+            if($imMagister == true ){
+
+                    /*::::::::::::::::::TODO get user id*/
+                    //$condicion = Auth::user()->can($permiso['permiso']);
+                    //$condicion = true;
+                    $idUser = 2;
+                    $casos = $casos->getListOfCasos($idUser);
+
+                }else if( /*Session('conexion') != 'centralizado' &&*/ Auth::user()->super_administrador == 1/* or $centralizado*/ ){
+
+                    $casos = $casos->getListOfCasos();
+            };
+        };
 
         return response()->json([
             'pagination' => [
@@ -97,29 +110,6 @@ class CasosController extends Controller
         // return Response()->json($result);
     }
 
-    private function validateAssign($request){
-
-        /*$validated = Validator::make($fields, [
-            'fname' => 'required',
-        ]);*/
-
-        $messages = [
-            'caso.required' => 'El nùmero de caso es requerido.',
-            'estado_caso.required' => 'No hay estado asignado.',
-            'asesor_asignado.required' => 'Se requiere asignar un usario al caso',
-        ];
-
-        //$validated = $this->validate($request,[
-        //$validated = $request->validate([
-        $validated = Validator::make($request->all(), [
-            'caso' => 'required',
-            'estado_caso' => 'required',
-            'asesor_asignado' => 'required'
-            //''
-        ]);
-
-        return $validated;
-    }
 
     /**
      * Store a new assignement request for creating a new casos log.

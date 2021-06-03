@@ -1,5 +1,5 @@
 <template>
-  <div class="main col-12" id="sesion">
+  <div class="main col-12">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -17,14 +17,21 @@
             <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
                 <h1 class="text-blue"><b>VISUALIZACIÓN DEL CASO</b></h1>
             </div>
-            <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-                <router-link :to='`/magistrados/casos-asignados`' @click.native="$router.go()" class="btn btn-secondary active text-white w-100 mt-2">Volver al listado</router-link>
+            <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2"><!--here-->
+                <router-link :to="{ path: '/magistrados/casos-asignados' }"  @click.native="$router.go()" class="btn btn-secondary active text-white w-100 mt-2">Volver al listado</router-link>
+                <!--button
+                type="button"
+                @click="hasHistory()
+                    ? $router.go(-1)
+                    : $router.push('/')" class="my-5 btn btn-outline-success">&laquo;
+                Back
+                </button-->
             </div>
         </div>
 
       </div>
 
-      <form @submit.prevent="save">
+      <form v-if="!loading">
 
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
@@ -37,7 +44,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Queja"
+                    :placeholder="dataCaso.data.tramite"
                     disabled
                   />
               </div>
@@ -49,9 +56,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
-                    type="date"
+                    type="text"
                     class="form-control"
+                    :placeholder="dataCaso.data.fecha_eleccion"
                     disabled
                   />
                 </div>
@@ -65,8 +72,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    v-model="sesion.theme"
-                    placeholder="Ordinaria"
+                    :placeholder="dataCaso.data.eleccion"
                     disabled
                   />
               </div>
@@ -79,7 +85,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Alta"
+                    :placeholder="dataCaso.data.prioridad"
                     disabled
                   />
               </div>
@@ -91,9 +97,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
-                    type="date"
+                    type="text"
                     class="form-control"
+                    :placeholder="dataCaso.data.fecha_recibido"
                     disabled
                   />
                 </div>
@@ -107,7 +113,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Correo electrónico"
+                    :placeholder="dataCaso.data.recepcion"
                     disabled
                   />
               </div>
@@ -120,7 +126,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="correo@correo.com"
+                    :placeholder="dataCaso.data.correo_notificacion"
                     disabled
                   />
               </div>
@@ -133,7 +139,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Si"
+                    :placeholder="[[ dataCaso.data.informante_anonimo === 0 ? 'Anónimo' : dataCaso.data.informante_anonimo ]]"
                     disabled
                   />
               </div>
@@ -147,13 +153,7 @@
                     name="dep_id"
                     id="dep_id"
                   >
-                    <option value="" selected>Cundinamarca</option>
-                    <option
-                      v-for="(i, index) in departament"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option>
+                    <option value="" selected>{{ dataCaso.data.departamento }}</option>
                   </select>
               </div>
             </div>
@@ -166,13 +166,7 @@
                     name=""
                     id=""
                   >
-                    <option value="" selected>Chía</option>
-                    <option
-                      v-for="(i, index) in departament"
-                      :key="index"
-                      v-text="i.nombre"
-                      :value="i.id"
-                    ></option>
+                    <option value="" selected>{{ dataCaso.data.ciudad }}</option>
                   </select>
               </div>
             </div>
@@ -191,7 +185,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Calle falsa 123"
+                    :placeholder="dataCaso.data.direccion"
                     disabled
                   />
               </div>
@@ -204,7 +198,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Kennnedy"
+                    :placeholder="dataCaso.data.barrio"
                     disabled
                   />
               </div>
@@ -216,9 +210,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
-                    type="date"
+                    type="text"
                     class="form-control"
+                    :placeholder="dataCaso.data.fecha_inicio"
                     disabled
                   />
                 </div>
@@ -231,9 +225,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
-                    type="date"
+                    type="text"
                     class="form-control"
+                    :placeholder="dataCaso.data.fecha_fin"
                     disabled
                   />
                 </div>
@@ -247,7 +241,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Escuela patria"
+                    :placeholder="dataCaso.data.puesto_votacion"
                     disabled
                   />
               </div>
@@ -260,7 +254,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Escuela patria"
+                    :placeholder="dataCaso.data.mesa_votacion"
                     disabled
                   />
               </div>
@@ -273,7 +267,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="3"
+                    :placeholder="dataCaso.data.asunto"
                     disabled
                   />
               </div>
@@ -281,7 +275,7 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Hechos</b></label>
-                <textarea class="form-control" id="" rows="8" placeholder="Descripción de los hechos" disabled></textarea>
+                <textarea class="form-control" id="" rows="8" :placeholder="dataCaso.data.hechos" disabled></textarea>
               </div>
             </div>
 
@@ -294,13 +288,13 @@
             <h3 class="mb-2 text-secondary"><b>Datos del solicitante</b></h3>
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Nombres y apellidos del solicitante</b></label>
+                <label for="" class="form-label"><b>Nombres y Apellidos del solicitante</b></label>
                 <input
                     type="text"
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Camilo Avendaño"
+                    :placeholder="dataCaso.data.nombres_solicitante+' '+dataCaso.data.apellidos_solicitante"
                     disabled
                   />
               </div>
@@ -314,7 +308,7 @@
                     name=""
                     id=""
                   >
-                    <option value="" selected>CC</option>
+                    <option value="" selected>{{ dataCaso.data.identification  }}</option>
                   </select>
               </div>
             </div>
@@ -326,7 +320,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="10305582574"
+                    :placeholder="dataCaso.data.num_identificacion"
                     disabled
                   />
               </div>
@@ -341,7 +335,7 @@
                     name=""
                     id=""
                   >
-                    <option value="" selected>Cundinamarca</option>
+                    <option value="" selected>{{ dataCaso.data.departamento_residencia }}</option>
                   </select>
                 </div>
               </div>
@@ -365,7 +359,7 @@
                     name=""
                     id=""
                   >
-                    <option value="" selected>Chía</option>
+                    <option value="" selected>{{ dataCaso.data.municipio_residencia }}</option>
                   </select>
                 </div>
               </div>
@@ -378,7 +372,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Calle falsa 123"
+                    :placeholder="dataCaso.data.direccion_residencia"
                     disabled
                   />
               </div>
@@ -391,7 +385,7 @@
                     class="form-control"
                     id=""
                     name=""
-                    placeholder="Calle falsa 123"
+                    :placeholder="dataCaso.data.telefono"
                     disabled
                   />
               </div>
@@ -400,25 +394,25 @@
 
         </div>
 
-        <div class="row">
+        <div class="row" v-if="dataCaso.data.caso.length">
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-3">
             <h3 class="mb-2 text-secondary"><b>Gestión</b></h3>
             <div class="row">
-              <div class="mb-3">
+              <div class="mb-3" v-if="estados[0].nombre">
                 <label for="" class="form-label"><b>Estado</b></label>
                 <input
+
                     type="text"
                     class="form-control"
                     id=""
                     name=""
-                    v-model="sesion.theme"
-                    placeholder="En proceso"
+                    :placeholder="estados[lastStepInfo.estadocaso - 1].nombre"
                     disabled
                   />
               </div>
             </div>
-            <div class="row">
+            <!--div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Asesor asignado</b></label>
                 <input
@@ -426,20 +420,35 @@
                     class="form-control"
                     id=""
                     name=""
-                    v-model="sesion.theme"
-                    placeholder="Pepito Perez"
+                    :placeholder="lastStepInfo.asesor"
                     disabled
                   />
               </div>
-            </div>
-            <div class="row">
-              <div class="mb-3">
-                <label for="" class="form-label"><b>Fecha de asignación</b></label>
+            </div-->
+            <div class="row" v-if="lastStepInfo.estadocaso">
+              <div class="mb-3" >
+                <label for="" class="form-label">
+                    <b v-if="lastStepInfo.estadocaso === 2">Fecha de asignación</b>
+                    <b v-if="lastStepInfo.estadocaso === 3">Fecha de gestion</b>
+                    <b v-if="lastStepInfo.estadocaso === 4">Fecha de finalización</b>
+                </label>
                 <div class="input-group">
-                  <input
-                    v-model="sesion.date"
-                    type="date"
+                  <input v-if="lastStepInfo.estadocaso == 1"
+                    type="text"
                     class="form-control"
+                    :placeholder="dataCaso.data.fecha_recibido"
+                    disabled
+                  />
+                  <input v-else-if="lastStepInfo.estadocaso == 2 || lastStepInfo.estadocaso == 3"
+                    type="text"
+                    class="form-control"
+                    :placeholder="lastStepInfo.fecha_gestion"
+                    disabled
+                  />
+                  <input v-else-if="lastStepInfo.estadocaso == 4"
+                    type="text"
+                    class="form-control"
+                    :placeholder="dataCaso.data.fecha_fin"
                     disabled
                   />
                 </div>
@@ -448,7 +457,7 @@
 
           </div>
 
-          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-3">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-3"  v-if="lastStepInfo.estadocaso === 4">
             <div class="row mb-3 hidden-sm">
                 <br/>
             </div>
@@ -459,9 +468,9 @@
                 </label>
                 <div class="input-group">
                   <input
-                    v-model="sesion.date"
-                    type="date"
+                    type="text"
                     class="form-control"
+                    :placeholder="dataCaso.data.fecha_fin"
                     disabled
                   />
                 </div>
@@ -471,14 +480,14 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Respuesta</b></label>
-                <textarea class="form-control" id="" rows="5" placeholder="Respuesta al caso" disabled></textarea>
+                <textarea class="form-control" id="" rows="5" :placeholder="lastStepInfo.gestion" disabled></textarea>
               </div>
             </div>
           </div>
 
         </div>
 
-        <div class="row">
+        <div class="row" v-if="dataCaso.data.caso.length">
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
                <h3 class="mb-2 text-secondary"><b>Trazabilidad</b></h3>
                <div class="row">
@@ -487,22 +496,16 @@
                             <tr>
                                 <th scope="col">Estado</th>
                                 <th scope="col" class="w-50 ">Gestión</th>
-                                <th scope="col">Asesor</th>
+                                <!--th scope="col">Asesor</th-->
                                 <th scope="col">Fecha</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
+                        <tbody v-if="estados[0].nombre">
+                            <tr v-for="(i, index) in dataCaso.data.caso.slice().reverse()" :key="index">
+                                <th scope="row">{{ estados[i.estadocaso - 1].nombre }}</th>
+                                <td>{{ i.gestion }}</td>
+                                <!--th scope="col">Asesor</th-->
+                                <td>{{ i.fecha_gestion }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -514,60 +517,6 @@
       </form>
     </div>
 
-    <div
-      class="modal fade"
-      id="modal_file"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="staticBackdropLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">
-              Agregar Documentos
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              @click="closeAddFile()"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="row mb-2">
-              <div class="col-11">
-                <label class="form-label">Agrege todos los documentos</label>
-              </div>
-              <div class="col-1">
-                <button
-                  class="btn-more btn"
-                  id="add_file"
-                  @click="add_file()"
-                  type="button"
-                >
-                  <!-- <i class="fas fa-plus"></i> -->
-                  <i class="typcn typcn-document-add" style="color: green"></i>
-                </button>
-              </div>
-            </div>
-            <div class="col-12" id="box_files"></div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="closeAddFile()"
-            >
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 <script>
@@ -575,82 +524,71 @@
 //   $(this).parent().parent().remove();
 // });
 export default {
+  props: ['id'],
   data() {
     return {
+      idCaso: this.id,
+      dataCaso:[],
       type_file: [],
-      ciudades: [],
+      estados: [],
       departament: [],
-      sesion: {},
+      data_record: {},
+      data: {},
       documentos: [],
+      lastStepInfo: {},
       index: 0,
-      // department = 0,
-      //   municipality =0,
-      //   radicado_CNE = '',
-      //   theme = '',
-      //   description = '',
-      //   date = '',
+      loading: false
     };
   },
+  filters: {
+    reverse: function (array) {
+      return array.slice().reverse();
+    },
+  },
+  mounted() {
+
+  },
   created() {
-    const url = "/data-new-sesion";
-    axios.get(url).then((r) => {
-      this.type_file = r.data.tipo;
-      this.ciudades = r.data.municipios;
-      this.departament = r.data.departament;
-    });
+        this.loading = true;
+        this.idCaso = this.id;
+        this.loadEstados();
+
+        axios.get(`/tribunales/casos-listar/${this.idCaso}`).then((r) => {
+            this.dataCaso = r.data;
+            //console.log(this.dataCaso);
+            this.loading = false;
+
+            this.assignedLastStep();
+        });
   },
   methods: {
-    openModalFile() {
-      $("#modal_file").modal("show");
-    },
-    add_file() {
-      var index = this.index++;
-      var file = `<div class="row">
-              <div class="col-11">
-                  <input id="archivo_${index}"  type="text" class="form-control mb-3" />
-              </div>
-              <div class="col-1">
-                  <button class="btn-delete-file btn delete_file " @click="delete_file()" ><i class="typcn typcn-delete" style="color:red; backgroud:red;"></i></button>
-              </div>
-          </div>`;
-      $("#box_files").append(file);
-      var archivo1 = $(`#arcivo_${index}`).val()
-      console.log(archivo1);
-      this.documentos[index] = archivo1
-      // console.log(this.documentos);
-      $("body").on("click", ".delete_file", function () {
-        $(this).parent().parent().remove();
-      });
-    },
-    delete_file() {
-      $(this).parent().parent().remove();
-    },
-    closeAddFile() {
-      $("#modal_file").modal("hide");
-    },
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
         this.ciudades = r.data;
       });
     },
-    save() {
-      let datos = this.sesion;
-      let url = "saveSesion";
-      axios.post(url, datos).then((r) => {
-        if (r.data.status == 406) {
-          Swal.fire("Error", r.data.msg, "error");
-        } else if (r.data.code == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Perfercto!",
-            text: "Datos guardados exitosamente",
-          }).then(function () {
-            window.location = "/main#/listarSesiones";
-          });
-        }
 
-      });
+    hasHistory () { return window.history.length > 1 },
+
+    assignedLastStep() {
+        var lastPosition = this.dataCaso.data.caso.length - 1;
+        if(lastPosition > 0){
+            this.lastStepInfo = this.dataCaso.data.caso[lastPosition];
+        }else{
+            this.lastStepInfo = this.dataCaso.data.caso[0];
+        }
+        console.log(this.lastStepInfo);
+        return this.lastStepInfo;
+    },
+    ifInArray: function (value) {
+            return this.dataCaso.data.indexOf(value) > -1 ? 'Yes' : 'No';
+    },
+    loadEstados(){
+        const url = "/resources/estados/";
+        axios.get(url).then((r) => {
+            this.estados = r.data.data;
+        });
     },
   },
 };

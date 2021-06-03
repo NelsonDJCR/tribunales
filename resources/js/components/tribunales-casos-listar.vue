@@ -470,7 +470,7 @@ export default {
 
             break;
         default:
-            console.log("Try looking up for a hint.");
+            console.log("Default");
         }
 
 
@@ -544,10 +544,10 @@ export default {
 
         let queryString = this.objectToQueryString(this.dataFilter), fullStr;
 
-        if(queryString !== null){
+        if(queryString !== null && page !== undefined){
             fullStr = "?page="+page+"&"+queryString+"&buscar="+this.dataFilter.buscar;
         }else{
-            fullStr = '?page='+page;
+            fullStr = '';
         }
 
         axios.get('/tribunales/casos-listar?page='+page+'&'+queryString).then((res)=>{
@@ -593,8 +593,8 @@ export default {
   },
   computed: {
     isActived: function() {
-        console.log(this.pagination);
-        console.log('isActived called');
+        //console.log(this.pagination);
+        //console.log('isActived called');
         return this.pagination.current_page;
     },
     pagesNumber: function() {
