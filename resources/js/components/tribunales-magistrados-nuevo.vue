@@ -40,6 +40,39 @@
             </div>
             <div class="row">
               <div class="mb-3">
+                <label for="" class="form-label"><b>Cargo</b></label>
+                <select
+                  class="form-select"
+                  name=""
+                   v-model="form.cargo"
+
+                >
+                  <option>Seleccione ...</option>
+                  <option value="Funcionario">Funcionario</option>
+                  <option value="Magistrado">Magistrado</option>
+                </select>
+              </div>
+            </div>
+            <div class="row" v-if="form.cargo == 'Funcionario'">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Tribunal</b></label>
+                <select
+                  class="form-select"
+                  name=""
+                   v-model="form.tribunal_id">
+                  <option>Seleccione ...</option>
+                  <option
+                        v-for="(i, index) in tribunales"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                        ></option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-3">
                 <label for="" class="form-label"><b>Tipo de Identificación</b></label>
                 <select
                   class="form-select"
@@ -355,6 +388,7 @@ export default {
       type_file: [],
       ciudades: [],
       departament: [],
+      tribunales: [],
       form: {},
       documentos: [],
       index: 0,
@@ -368,6 +402,7 @@ export default {
       this.tipo_cuentas = r.data.tipo_cuentas;
       this.tipo_archivos = r.data.tipo_archivos;
       this.tipo_identificacion = r.data.tipo_identificacion;
+      this.tribunales = r.data.tribunales;
     });
   },
   methods: {

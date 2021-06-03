@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Actividad;
 use App\Models\Magistrado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,14 +13,19 @@ class ActividadesController extends Controller
 {
     public function save()
     {
-        // use Illuminate\Support\Facades\Validator;
+        $data =  request()->all();
+        if (isset($data['id_magistrado'])) {
+            $data['id_magistrado'] = $data['id_magistrado'];
+        }else {
+            $data['id_magistrado'] = Auth::user()->id;
+        }
         $rules = [
             'fecha'=>'required|after:today',
             'tema'=>'required|',
             'descripcion'=>'required|',
             'dep_id'=>'required|',
             'ciu_id'=>'required|',
-            'id_magistrado'=>'required|',
+            'tribunal_id'=>'required|',
         ];
         $messages = [
             'fecha.required'=>'La fecha es requerida',
@@ -29,12 +35,14 @@ class ActividadesController extends Controller
             'dep_id.required'=>'El departamento es requerido',
             'ciu_id.required'=>'La ciudad es requerida',
             'id_magistrado.required'=>'El magistrado es requerido',
+            'tribunal_id.required'=>'El tribunal es requerido',
         ];
+
         $validator = Validator::make(request()->all(), $rules, $messages);
         if ($validator->fails()) {
             return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
         }
-        if (Actividad::insert(request()->all())) {
+        if (Actividad::insert($data)) {
             return response()->json([
                 'code' =>'200',
                 'msg' => 'Datos Guardados correctamente'
@@ -114,6 +122,7 @@ class ActividadesController extends Controller
                     $query->where("actividades.fecha",   '<=',  $post['fecha_final']);
                 }
             })
+            ->orderBy('actividades.id','DESC')
             ->get();
         return response()->json([
             'tabla' => $x

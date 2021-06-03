@@ -17,8 +17,16 @@
             </ol>
             <div class="row p-2 text-center border shadow rounded-3">
               <div class="row">
-                <div class="col-12 col-md-12 col-lg-12 col-xl-12 p-2">
-                  <h1 class="text-blue"><b>MIS ACTIVIDADES</b></h1>
+                <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+                  <h1 class="text-blue"><b>Mis actividades</b></h1>
+                </div>
+                <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+                  <button
+                    @click="pantallaNuevo(3)"
+                    class="btn btn-warning text-white w-100 mt-2"
+                  >
+                    Nueva actividad
+                  </button>
                 </div>
               </div>
             </div>
@@ -116,6 +124,12 @@
       </div>
     </template>
 
+    <template v-if="pantalla == 'nuevo'">
+      <div>
+        <tribunales-actividades-nuevo :id="id_magistrado"></tribunales-actividades-nuevo>
+      </div>
+    </template>
+
   </div>
 </template>
 
@@ -126,7 +140,8 @@ export default {
       tabla: [],
       dataFilter: {},
       pantalla:'lista',
-      id_record:0
+      id_record:0,
+      id_magistrado:0
     };
   },
   created() {
@@ -143,6 +158,10 @@ export default {
       axios.post('/filtros-mis-actividades', this.dataFilter).then((r)=>{
         this.tabla = r.data.tabla;
       })  
+    },
+    pantallaNuevo(x){
+      this.pantalla = "nuevo";
+      this.id_magistrado = x;
     },
   },
 };

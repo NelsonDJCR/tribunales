@@ -233,6 +233,7 @@
 
 <script>
 export default {
+  props:['id'],
   data() {
     return {
       dataPdf: { cabildo_id: "", radicado: "", ciudadano: "" },

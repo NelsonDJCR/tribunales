@@ -19,6 +19,7 @@ class MagistradosController extends Controller
         $rules = [
             'nombre'=>'required|max:30',
             'id_tipo_identificacion'=>'required|',
+            'cargo'=>'required|',
             'numero_identificacion'=>'required|max:15',
             'dep_id'=>'required|',
             'ciu_id'=>'required|',
@@ -32,6 +33,7 @@ class MagistradosController extends Controller
         $messages = [
             'nombre.required'=>'El nombre es requerido',
             'id_tipo_identificacion.required'=>'El tipo de identificación es requerido ',
+            'cargo.required'=>'El cargo es requerido ',
             'numero_identificacion.required'=>'Es número de identificación es requerido ',
             'numero_identificacion.max'=>'El número de identificación no debe tener más de 15 carácteres',
             'dep_id.required'=>'El departamento es requerido ',
@@ -115,6 +117,7 @@ class MagistradosController extends Controller
                     $query->where("magistrados.telefono",  'like', "%" . $post['telefono'] . "%");
                 }
             })
+            ->orderBy('magistrados.id','DESC')
             ->get();
         return response()->json([
             'tabla' => $x
@@ -172,6 +175,7 @@ class MagistradosController extends Controller
                         $query->orwhere("actividades.fecha", "<=" , $r['fecha_final']);
                 }
             })
+            ->orderBy('actividades.id','DESC')
             ->get()
         ]);
 	}

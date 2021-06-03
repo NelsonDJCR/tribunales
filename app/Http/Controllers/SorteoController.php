@@ -76,8 +76,8 @@ class SorteoController extends Controller
             return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
         }
 
-        $limite_asignados = intval( count(Magistrado::all()->where('estado',1)) / count(Tribunal::all()->where('estado',1)));
-        if (count(Magistrado::all()->where('estado',1)->where('asignado',0)) == 0) {
+        $limite_asignados = intval( count(Magistrado::all()->where('estado',1)->where('cargo','Magistrado')) / count(Tribunal::all()->where('estado',1)));
+        if (count(Magistrado::all()->where('estado',1)->where('asignado',0)->where('cargo','Magistrado')) == 0) {
             return response()->json([
                 'code' =>407,
                 'msg' => 'No hay magistrados para sortear'
@@ -86,10 +86,10 @@ class SorteoController extends Controller
             $limite_asignados = $limite_asignados + 1;
             $tribunal = Tribunal::all()->where('estado',1)->where('asignados','<',$limite_asignados)->random();
         }
-        $sorteo =  count(Magistrado::all()->where('estado',1)->where('asignado',0));
+        $sorteo =  count(Magistrado::all()->where('estado',1)->where('asignado',0)->where('cargo','Magistrado'));
         for ($i=0; $i < $sorteo; $i++) { 
             $tribunal = Tribunal::all()->where('estado',1)->where('asignados','<',$limite_asignados)->random();
-            $magistrado = Magistrado::all()->where('estado',1)->where('asignado',0)->random();
+            $magistrado = Magistrado::all()->where('estado',1)->where('asignado',0)->where('cargo','Magistrado')->random();
             $x = Tribunal::find($tribunal->id);
             $x->asignados = $x->asignados + 1;
             $x->save();

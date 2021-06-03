@@ -105,7 +105,7 @@
             <tbody>
               <!--  -->
               <tr v-for="(i, index) in tabla" :key="index">
-                <td class="aling_btn_options">
+                <td class="aling_btn_options" style="width:180px;">
 
                   <button
                     type="button"

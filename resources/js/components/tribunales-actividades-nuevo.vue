@@ -107,7 +107,11 @@
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-            <div class="row">
+
+
+
+            
+            <div class="row" v-if="origen == 'actividades'">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Magistrado</b></label>
                   <select
@@ -119,6 +123,26 @@
                     <option value="">Selecciona</option>
                     <option
                       v-for="(i, index) in magistrados"
+                      :key="index"
+                      v-text="i.nombre"
+                      :value="i.id"
+                    ></option>
+                  </select>
+              </div>
+            </div>
+
+
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Tribunal</b></label>
+                  <select
+                    v-model="form.tribunal_id"
+                    class="form-select"
+                  >
+                    <option value="">Selecciona</option>
+                    <option
+                      v-for="(i, index) in tribunales"
                       :key="index"
                       v-text="i.nombre"
                       :value="i.id"
@@ -184,23 +208,32 @@
 //   $(this).parent().parent().remove();
 // });
 export default {
+  props:['id'],
   data() {
     return {
       type_file: [],
       ciudades: [],
       departament: [],
+      tribunales: [],
       magistrados: [],
       form: {},
       documentos: [],
+      origen: '',
       index: 0,
     };
   },
   created() {
+    if(this.id){
+      this.origen = 'magistrado'
+    }else{
+      this.origen = 'actividades'
+    }    
     axios.get("/data-select").then((r) => {
       this.ciudades = r.data.ciudades;
       this.departament = r.data.departamentos;
       this.type_file = r.data.tipo_archivos;
       this.magistrados = r.data.magistrados;
+      this.tribunales = r.data.tribunales;
     });
     this.form.token = Math.floor(Math.random() * (9999 - 5000)) + 5000
   },

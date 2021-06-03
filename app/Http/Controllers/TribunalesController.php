@@ -119,12 +119,14 @@ class TribunalesController extends Controller
                 ->join("departamentos", "departamentos.id", "$table.dep_id")
                 ->join("ciudades", "ciudades.id", "$table.ciu_id")
                 ->join("magistrados", "magistrados.id", "actividades.id_magistrado")
+                ->orderBy("$table.id",'DESC')
                 ->get();
         } else {
             $tabla = DB::table($table)
                 ->select("$table.*", 'departamentos.nombre AS departamento', 'ciudades.nombre AS ciudad')
                 ->join("departamentos", "departamentos.id", "$table.dep_id")
                 ->join("ciudades", "ciudades.id", "$table.ciu_id")
+                ->orderBy("$table.id",'DESC')
                 ->get();
         }
 
@@ -260,8 +262,7 @@ class TribunalesController extends Controller
                         $query->where("tribunal.fecha_final",   '<=',  $post['fecha_final']);
                 }
             })
-
-
+            ->orderBy('tribunal.id','DESC')
             ->get();
         return response()->json([
             'tabla' => $x

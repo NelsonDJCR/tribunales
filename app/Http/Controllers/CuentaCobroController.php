@@ -12,7 +12,7 @@ class CuentaCobroController extends Controller
     public function table(Request $r)
     {
         return response()->json([
-            'table' => CuentaCobro::where('estado',1)->with('tribunal','magistrado')->get()           
+            'table' => CuentaCobro::where('estado',1)->with('tribunal','magistrado')->orderBy('id','DESC')->get()           
         ]);
     }
 
@@ -24,14 +24,7 @@ class CuentaCobroController extends Controller
             'id_magistrado'=>'required|',
             'fecha_inicio'=>'required|',
             'fecha_fin'=>"required|after:$date",
-            'valor_honorarios'=>"required|",
-            'numero_dias'=>'required|',
-            'valor_bruto'=>'required|',
-            'valor_factura'=>'required|',
             'total_pagar'=>'required|',
-            'rete_fuente'=>'required|',
-            'rete_iva'=>'required|',
-            'rete_ica'=>'required|',
             'neto_pagar'=>'required|',
         ];
         $messages = [
