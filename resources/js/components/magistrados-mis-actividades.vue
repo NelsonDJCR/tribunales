@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
                   <button
-                    @click="pantallaNuevo(3)"
+                    @click="pantallaNuevo(0)"
                     class="btn btn-warning text-white w-100 mt-2"
                   >
                     Nueva actividad

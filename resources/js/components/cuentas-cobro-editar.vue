@@ -15,7 +15,7 @@
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
           <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-            <h1 class="text-blue"><b>VISUALIZACIÓN CUENTA DE COBRO</b></h1>
+            <h1 class="text-blue"><b>EDITAR CUENTA DE COBRO</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
             <button
@@ -27,24 +27,42 @@
           </div>
         </div>
       </div>
-      <form @submit.prevent="save">
+      <form @submit.prevent="editar">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-            <div class="row">
+          <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
-                
+                  <select
+                    v-model="record.id_tribunal"
+                    class="form-select"
+                    name="tribu_id"
+                  >
+                    <option value="">Selecciona</option>
+                   <option
+                    v-for="(i, index) in tribunales"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                  </select>
               </div>
             </div>
-            <div class="row">
+            <div class="row" v-if="validacion == '0'">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Magistrado</b></label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    v-model="record.magistrado.nombre"
-                    disabled
-                  />
+                  <select
+                    v-model="record.id_magistrado"
+                    class="form-select"
+                  >
+                    <option value="">Selecciona</option>
+                  <option
+                    v-for="(i, index) in magistrados"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                  </select>
               </div>
             </div>
             <div class="row">
@@ -57,7 +75,7 @@
                     type="text"
                     class="form-control"
                     v-model="record.fecha_inicio"
-                    disabled
+                    
                   />
                 </div>
               </div>
@@ -72,7 +90,7 @@
                     type="text"
                     class="form-control"
                     v-model="record.fecha_fin"
-                    disabled
+                    
                   />
                 </div>
               </div>
@@ -84,8 +102,8 @@
                     type="number"
                     class="form-control"
                     v-model="record.valor_honorarios"
-                    placeholder="32.000.000"
-                    disabled
+                    
+                    
                   />
               </div>
             </div>
@@ -96,7 +114,7 @@
                     type="number"
                     class="form-control"
                     v-model="record.numero_dias"
-                    disabled
+                    
                   />
               </div>
             </div>
@@ -107,7 +125,7 @@
                     type="number"
                     class="form-control"
                     v-model="record.valor_bruto"
-                    disabled
+                    
                   />
               </div>
             </div>
@@ -122,7 +140,7 @@
                     type="number"
                     class="form-control"
                     v-model="record.valor_factura"
-                    disabled
+                    
                   />
               </div>
             </div>
@@ -133,7 +151,7 @@
                     type="number" min="1" step="any"
                     class="form-control"
                     v-model="record.total_pagar"
-                    disabled
+                    
                   />
               </div>
             </div>
@@ -144,7 +162,7 @@
                     type="number" min="1" step="any"
                     class="form-control"
                     v-model="record.rete_fuente"
-                    disabled
+                    
                   />
               </div>
             </div>
@@ -155,7 +173,7 @@
                     type="number" min="1" step="any"
                     class="form-control"
                     v-model="record.rete_iva"
-                    disabled
+                    
                   />
               </div>
             </div>
@@ -166,7 +184,7 @@
                     type="number" min="1" step="any"
                     class="form-control"
                     v-model="record.rete_ica"
-                    disabled
+                    
                   />
               </div>
             </div>
@@ -177,11 +195,11 @@
                     type="number" min="1" step="any"
                     class="form-control"
                     v-model="record.neto_pagar"
-                    disabled
+                    
                   />
               </div>
             </div>
-            <div class="row">
+            <!-- <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Archivo</b></label>
                 <div class="row">
@@ -197,6 +215,15 @@
                 </div>
               </div>
             </div>
+             -->
+
+            <div class="d-grid gap-2 col-6 mx-auto">
+              <button type="submit"  class="btn btn-secondary active">Editar</button>
+              <button @click="reload" class="btn btn-danger text-white w-100 mt-2">Cancelar</button>
+
+            </div>
+
+
           </div>
         </div>
       </form>
@@ -261,21 +288,48 @@
 </template>
 <script>
 export default {
-  props: ['id'],
+  props: ['id','solicitud'],
   data() {
     return {
       view:{},
       datarecord:{},
+      tribunales:{},
+      magistrados:{},
       record:{},
+      validacion:'',
     };
   },
   created() {
+    if (this.solicitud) {
+      this.validacion = ''
+    }else{
+      this.validacion = '0'
+    }
     this.getRecord();
+    this.select();
   },
   methods: {
+    select(){
+      axios.get(`/data-select`).then((r) => {
+        this.tribunales = r.data.tribunales; 
+        this.magistrados = r.data.magistrados; 
+        this.tipo_archivos = r.data.tipo_archivos; 
+      })
+    },
     getRecord(){
       axios.post(`/record-cuenta-cobro`, {id:this.id}).then((r) => {
         this.record = r.data.data
+      });
+    },
+    editar(){
+      axios.post(`/cuenta-cobro-editar`, this.record).then((r) => {
+          if(r.data.code== 200){
+            swal.fire(r.data.msg,'', "success").then(function(){ location.reload() });
+          }else if(r.data.code== 406){
+            swal.fire(r.data.msg,'', "warning")
+          }else{
+            swal.fire("Fallo en el sevidor!",'error', "error")
+          }
       });
     },
     reload(){

@@ -15,10 +15,8 @@ class SorteoController extends Controller
     public function listarSorteos()
     {
         $tabla = DB::table('sorteo')
-            ->select("sorteo.*", 'magistrados.nombre AS magistrado', 'tribunal.nombre AS tribunal', 'tipo_eleccion.nombre AS tipo_eleccion')
-            ->leftjoin("tribunal", "tribunal.id", "sorteo.id_tribunal")
-            ->leftjoin("magistrados", "magistrados.id", "sorteo.id_magistrado")
-            ->leftjoin("tipo_eleccion", "tipo_eleccion.id", "sorteo.id_tipo_eleccion")
+            ->select('sorteo.*')
+            
             ->get();
         return response()->json([
             'tabla' => $tabla,
@@ -109,4 +107,9 @@ class SorteoController extends Controller
             'msg' => 'El sorteo se ha realizado satisfactoriamente'
         ]);
     }
+
+	public function agregarCantidad()
+	{
+		return request()->all();
+	}
 }

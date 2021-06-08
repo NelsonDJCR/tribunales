@@ -25,7 +25,7 @@
           <div class="row p-2 text-center border shadow rounded-3">
             <div class="row">
               <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                <h1 class="text-blue"><b>LISTADO DE CUENTAS DE COBRO</b></h1>
+                <h1 class="text-blue"><b>MIS CUENTAS DE COBRO</b></h1>
               </div>
               <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
                 <button
@@ -39,54 +39,51 @@
           </div>
           <form @submit.prevent="filter">
             <div class="row mt-5">
-              <div class="mb-3 col-3">
-                <label for="" class="form-label"><b>Tema</b></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="nombre_tema"
-                  name="nombre_tema"
-                  v-model="dataFilter.nombre_tema"
-                />
-              </div>
-              <div class="mb-3 col-3">
-                <label for="" class="form-label"><b>Fecha</b></label>
-                <input
-                  type="date"
-                  class="form-control"
-                  id="fecha_realizacion"
-                  v-model="dataFilter.fecha_realizacion"
-                />
-              </div>
-              <div class="mb-3 col-3">
-                <label for="" class="form-label"><b>Departamento</b></label>
+             <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Tribunal</b></label>
                 <select
-                  v-model="dataFilter.dep_id"
+                  v-model="dataFilter.tribunal_id"
                   class="form-select"
                   name="dep_id"
                   id="dep_id"
                 >
                   <option value="">Selecciona</option>
                   <option
-                    v-for="(i, index) in departament"
+                    v-for="(i, index) in tribunales"
                     :key="index"
                     v-text="i.nombre"
                     :value="i.id"
                   ></option>
                 </select>
               </div>
-
               <div class="mb-3 col-3">
-                <label for="" class="form-label"><b>Magistrado</b></label>
+                <label for="" class="form-label"><b>Fecha inicio</b></label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="fecha_realizacion"
+                  v-model="dataFilter.fecha_inicio"
+                />
+              </div>
+             
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Fecha fin</b></label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="fecha_realizacion"
+                  v-model="dataFilter.fecha_fin"
+                />
+              </div>
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Valor honorarios</b></label>
                 <input
                   type="text"
                   class="form-control"
-                  id=""
-                  name=""
-                  v-model="dataFilter.nombre_tema"
+                  id="fecha_realizacion"
+                  v-model="dataFilter.valor_honorarios"
                 />
               </div>
-
               <div class="row">
                 <div class="mb-3 col-3">
                   <button
@@ -107,7 +104,8 @@
                 >
                   <i class="typcn typcn-database"></i>
                 </button>
-              </div> -->
+                </div> 
+                -->
               </div>
             </div>
           </form>
@@ -125,6 +123,7 @@
           </thead>
           <tbody>
             <tr v-for="(i, index) in table" :key="index">
+              
               <td class="aling_btn_options" style="width: 190px">
                 <button
                   type="button"
@@ -155,7 +154,7 @@
               <td>{{ i.tribunal.nombre }}</td>
               <td>{{ i.magistrado.nombre }}</td>
               <td>{{ i.fecha_inicio }}</td>
-              <td>{{ i.fecha_fin }}</td>
+              <td>{{ i.departamento_id }}</td>
               <td>{{ i.valor_honorarios }}</td>
               <td>{{ i.numero_dias }}</td>
               <td>{{ i.neto_pagar }}</td>
@@ -166,12 +165,12 @@
     </template>
     <template v-if="pantalla == 'nuevo'">
       <div>
-        <cuentas-cobro-nuevo></cuentas-cobro-nuevo>
+        <cuentas-cobro-nuevo :id="valide"></cuentas-cobro-nuevo>
       </div>
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
-        <cuentas-cobro-editar :id="idrecord"></cuentas-cobro-editar>
+        <cuentas-cobro-editar :id="idrecord" :solicitud="1"></cuentas-cobro-editar>
       </div>
     </template>
     <template v-if="pantalla == 'ver'">
@@ -450,7 +449,7 @@ export default {
       comisiones: {},
       action: 0,
       idrecord: 0,
-      editar: 0,
+      // editar: 0,
       id_comision: 0,
       cuentas_cobro_id: 0,
       datos_edit: {},
@@ -469,6 +468,7 @@ export default {
       axios.get("/data-select").then((r) => {
         this.tribunales = r.data.tribunales;
         this.magistrados = r.data.magistrados;
+        this.departamentos = r.data.departamentos;
       });
     },
     getComisiones() {
@@ -479,7 +479,12 @@ export default {
         });
     },
     getTable() {
-      axios.post("/tabla-cuentas-cobro").then((r) => {
+      axios.post("/tabla-cuentas-cobro-magistrado",this.dataFilter).then((r) => {
+        this.table = r.data.table;
+      });
+    },
+    filter() {
+      axios.post("/tabla-cuentas-cobro-magistrado", this.dataFilter).then((r) => {
         this.table = r.data.table;
       });
     },
@@ -492,6 +497,7 @@ export default {
       this.pantalla = "ver";
     },
     pantallaNuevo() {
+      this.valide = '1'
       this.pantalla = "nuevo";
     },
     comision(x) {
@@ -502,7 +508,6 @@ export default {
       this.getComisiones();
     },
     reload() {
-      alert("");
       this.pantalla = "lista";
     },
     newComision() {

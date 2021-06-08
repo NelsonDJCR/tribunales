@@ -53,7 +53,6 @@
                 </select>
               </div>
             </div>
-            <div class="row" v-if="form.cargo == 'Funcionario'">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
                 <select
@@ -69,7 +68,6 @@
                         ></option>
                 </select>
               </div>
-            </div>
 
             <div class="row">
               <div class="mb-3">

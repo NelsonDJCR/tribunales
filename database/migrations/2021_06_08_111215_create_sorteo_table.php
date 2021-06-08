@@ -16,10 +16,10 @@ class CreateSorteoTable extends Migration
         Schema::create('sorteo', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->foreignId('id_magistrado')->nullable()->constrained('magistrados');
-            $table->foreignId('id_tribunal')->nullable()->constrained('tribunal');
-            $table->foreignId('id_tipo_eleccion')->nullable()->constrained('tipo_eleccion');
+            $table->foreignId('departamento_id')->constrained('departamentos');
+            $table->foreignId('magistrado_id')->constrained('magistrados');
             $table->date('fecha');
+            $table->foreignId('id_tipo_eleccion')->nullable()->constrained('tipo_eleccion');
             $table->timestamps();
         });
     }
