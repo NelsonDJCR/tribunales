@@ -51,6 +51,9 @@ class CreateCasosTable extends Migration
             $table->string('direccion_residencia', 255);
             $table->string('barrio_residencia', 255);
             $table->string('telefono', 20);
+            $table->string('observacion_asignacion',599)->nullable();
+            $table->string('respuesta')->nullable();
+            $table->date('fecha_respuesta');
 
             $table->string('entidades_informadas', 255);
 

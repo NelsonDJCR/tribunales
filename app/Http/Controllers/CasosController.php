@@ -9,9 +9,15 @@ use App\Models\Caso;
 use App\Models\CasoSeguimiento;
 use App\Models\Ciudades;
 use App\Models\Departamentos;
+use App\Models\Documento;
 use App\Models\Estado;
+use App\Models\PersonaCentralizado;
+use App\Models\Soporte;
+use App\Models\TipoArchivo;
 use App\Models\TipoIdentificacion;
+use App\Models\TipoTramite;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 //use Illuminate\Validation\ValidationException;
 //use Validator;
@@ -108,6 +114,606 @@ class CasosController extends Controller
 
         // $result = array('success'=>true,'casos'=>$casos);
         // return Response()->json($result);
+    }
+
+    public function listadoCasoData()
+    {
+        $casos = $this->tabla();
+        $tramite = TipoTramite::all();
+        $usuarios = PersonaCentralizado::where('estado', 1)->get();
+        $departamento = Departamentos::all();
+        $estado = Estado::all();
+        $tipoArchivo = TipoArchivo::all();
+        $estado1 = Estado::where('estado', 1)
+            ->where('id', '<>', 1)->get();
+
+        return response()->json([
+            'tipoArchivo' => $tipoArchivo,
+            'tramite' => $tramite,
+            'departamento' => $departamento,
+            'estado' => $estado,
+            'casos' => $casos,
+            'usuarios' => $usuarios,
+            'estado1' => $estado1,
+        ]);
+    }
+
+    public function tabla()
+    {
+        $casos = DB::table('casos')
+            ->select(
+                'casos.*',
+                DB::raw('departamentos.nombre as dep_nombre'),
+                DB::raw('ciudades.nombre as ciu_nombre'),
+                DB::raw('estado.nombre as estado_nombre'),
+                DB::raw('tipo_tramite.nombre as tramite_nombre'),
+                DB::raw('prioridad.nombre as prioridad_nombre'),
+            )->join('departamentos', 'departamentos.id', 'casos.id_departamento')
+            ->join('ciudades', 'ciudades.id', 'casos.id_municipio')
+            ->join('estado', 'estado.id', 'casos.id_estado')
+            ->join('tipo_tramite', 'tipo_tramite.id', 'casos.id_tramite')
+            ->join('prioridad', 'prioridad.id', 'casos.id_prioridad')
+            ->orderBy("casos.fecha_recibido")
+            ->where('id_estado', 1)->get();
+        return $casos;
+    }
+
+    public function verCasoData($id)
+    {
+        $caso = DB::table('casos')
+        ->select(
+            'casos.*',
+            'departamentos.nombre as dep_nombre',
+            'ciudades.nombre as ciu_nombre',
+            'estado.nombre as estado_nombre',
+            'tipo_tramite.nombre as tramite_nombre',
+            'prioridad.nombre as prioridad_nombre',
+            'tipo_eleccion.nombre as eleccion_nombre',
+            'medio_recepcion.nombre as recepcion_nombre',
+            'dep.nombre as dep_nombre_residencia',
+            'ciu.nombre as ciu_nombre_residencia',
+        )->join('departamentos','departamentos.id', 'casos.id_departamento')
+        ->join('ciudades', 'ciudades.id', 'casos.id_municipio')
+        ->join('estado', 'estado.id', 'casos.id_estado')
+        ->join('tipo_tramite', 'tipo_tramite.id', 'casos.id_tramite')
+        ->join('prioridad', 'prioridad.id', 'casos.id_prioridad')
+        ->join('tipo_eleccion', 'tipo_eleccion.id', 'casos.id_eleccion')
+        ->join('medio_recepcion', 'medio_recepcion.id', 'casos.id_recepcion')
+        ->join('departamentos AS dep', 'dep.id', 'casos.id_departamento_residencia')
+        ->join('ciudades AS ciu', 'ciu.id', 'casos.id_municipio_residencia')
+        ->where('casos.id',$id)->get();
+        // return $caso;
+
+        // $caso = DB::table('casos')
+        //     ->select(
+        //         'casos.*',
+        //         DB::raw('departamentos.nombre as dep_nombre'),
+        //         DB::raw('ciudades.nombre as ciu_nombre'),
+        //         DB::raw('estado.nombre as estado_nombre'),
+        //         DB::raw('tipo_tramite.nombre as tramite_nombre'),
+        //         DB::raw('prioridad.nombre as prioridad_nombre'),
+        //         DB::raw('tipo_eleccion.nombre as eleccion_nombre'),
+        //         DB::raw('medio_recepcion.nombre as recepcion_nombre'),
+        //         DB::raw('dep.nombre as dep_nombre_residencia'),
+        //         DB::raw('tipo_identificacion.nombre as tipo_identificacion_nombre'),
+        //         DB::raw('ciu.nombre as ciu_nombre_residencia'),
+        //     )->join('departamentos', 'departamentos.id', 'casos.id_departamento')
+        //     ->join('ciudades', 'ciudades.id', 'casos.id_municipio')
+        //     ->join('estado', 'estado.id', 'casos.id_estado')
+        //     ->join('tipo_tramite', 'tipo_tramite.id', 'casos.id_tramite')
+        //     ->join('prioridad', 'prioridad.id', 'casos.id_prioridad')
+        //     ->join('tipo_eleccion', 'tipo_eleccion.id', 'casos.id_eleccion')
+        //     ->join('medio_recepcion', 'medio_recepcion.id', 'casos.id_recepcion')
+        //     ->join('tipo_identificacion', 'tipo_identificacion.id', 'casos.id_identificacion')
+        //     ->join('departamentos AS dep', 'dep.id', 'casos.id_departamento_residencia')
+        //     ->join('ciudades AS ciu', 'ciu.id', 'casos.id_municipio_residencia')
+        //     ->where('casos.id', $id)->get();
+
+        $trazabilidad = DB::table('casos_seguimientos')
+            ->select(
+                'casos_seguimientos.*',
+                'estado.nombre as estado_nombre'
+            )
+            ->join('casos', 'casos.id', 'casos_seguimientos.id_caso')
+            ->join('estado', 'estado.id', 'casos_seguimientos.id_estado')
+            ->where('id_caso', $id)
+            ->orderByDesc('casos_seguimientos.fecha_gestion')
+            ->get();
+
+        return response()->json(['caso' =>  $caso, 'trazabilidad' => $trazabilidad]);
+    }
+
+    public function asignarCaso(Request $request)
+    {
+        // $caso = DB::table("casos")->where("id",$request->id)->get();
+        $caso = Caso::find($request->id);
+
+        // echo "<pre>";
+        // var_dump($caso);die;
+
+        $caso->id_asesor_asignado = $request->asesor;
+        $caso->id_estado = 2;
+        $caso->observacion_asignacion = $request->observacion;
+        $caso->fecha_gestion = date('Y-m-d');
+        $caso->save();
+        $seguimiento = new CasoSeguimiento();
+        $seguimiento->gestion = 'Caso asignado';
+        $seguimiento->fecha_gestion = date('Y-m-d');
+        $seguimiento->id_asesor_asignado = $request->asesor;
+        $seguimiento->id_estado = 2;
+        $seguimiento->id_caso = $caso->id;
+        $seguimiento->save();
+        // $casos = $this->tabla();
+        return response()->json(['status' => 200, 'msg' => 'Caso asignado con éxito']);
+    }
+
+    public function listadoCasosAsignadosData()
+    {
+        $casos = $this->tablaasignados();
+        $tramite = TipoTramite::all();
+        $departamento = Departamentos::all();
+        $estado = Estado::all();
+        $tipoArchivo = TipoArchivo::where('estado', 1)->get();
+        $estado1 = Estado::where('estado', 1)
+            ->where('id', '<>', 1)->get();
+
+        return response()->json([
+            'tramite' => $tramite,
+            'departamento' => $departamento,
+            'estado' => $estado,
+            'casos' => $casos,
+            'estado1' => $estado1,
+            'tipoArchivo' => $tipoArchivo,
+        ]);
+    }
+
+    public function tablaasignados()
+    {
+        $casos = DB::table('casos')
+            ->select(
+                'casos.*',
+                DB::raw('departamentos.nombre as dep_nombre'),
+                DB::raw('ciudades.nombre as ciu_nombre'),
+                DB::raw('estado.nombre as estado_nombre'),
+                DB::raw('tipo_tramite.nombre as tramite_nombre'),
+                DB::raw('prioridad.nombre as prioridad_nombre'),
+                // DB::raw('centralizado_cne.nombre as nom_persona'),
+            )->join('departamentos', 'departamentos.id', 'casos.id_departamento')
+            ->join('ciudades', 'ciudades.id', 'casos.id_municipio')
+            ->join('estado', 'estado.id', 'casos.id_estado')
+            ->join('tipo_tramite', 'tipo_tramite.id', 'casos.id_tramite')
+            ->join('prioridad', 'prioridad.id', 'casos.id_prioridad')
+            // ->join('centralizado_cne.personas','centralizado_cne.personas.id','casos.id_asesor_asignado')
+            ->orderBy("casos.fecha_recibido")
+            ->where('id_asesor_asignado', Auth::user()->id)
+            ->where('casos.id_estado', '<>', 1)
+            ->where('casos.id_estado', '<>', 4)->get();
+        return $casos;
+    }
+
+    public function gestion_en_tramite(Request $request)
+    {
+        // return $request->all();
+        $caso = Caso::find($request->id);
+        $caso->id_estado = 3;
+        // $caso->save();
+        $caso->observacion_asignacion = $request->observacion;
+        // $caso->id_asesor_asignado = $request->asesor;
+        // $caso->fecha_respuesta = date('Y-m-d');
+
+        $seguimiento = new CasoSeguimiento();
+        $seguimiento->gestion = $request->observacion;
+        $seguimiento->fecha_gestion = date('Y-m-d');
+        $seguimiento->id_asesor_asignado = $request->asesor;
+        $seguimiento->id_caso = $caso->id;
+        $seguimiento->id_estado = 3;
+        $seguimiento->save();
+
+
+        if ($request->hasFile('archivo')) {
+            $file = $request->file('archivo');
+            $fileName = time() . '_' . $file->getClientOriginalname();
+
+            $documento = new Documento();
+            $documento->nombre = $fileName;
+            $documento->ruta = 'uploads/' . $fileName;
+            $documento->estado = 1;
+            $documento->id_subserie = 1;
+            $documento->id_tipo_documento = $request->tipo_archivo;
+            $documento->save();
+
+            $soporte = new Soporte();
+            // $soporte->estado = 1;
+            $soporte->id_caso = $caso->id;
+            $soporte->id_documento = $documento->id;
+            $soporte->save();
+            $request->archivo->move(public_path('uploads'), $fileName);
+        }
+        if ($caso->save()) {
+            $casos = $this->tablaasignados();
+            return response()->json(['status' => 200, 'msg' => 'Datos actualizados con éxito', 'casos' => $casos]);
+        } else {
+            return response()->json(['status' => 500, 'msg' => 'Error en la actualización']);
+        }
+    }
+
+    public function gestion_en_finalizado(Request $request)
+    {
+        // return $request->all();
+        $caso = Caso::find($request->id);
+        $caso->id_estado = 4;
+        $caso->respuesta = $request->respuesta;
+        // $caso->id_asesor_asignado = $request->asesor;
+        $caso->fecha_respuesta = date('Y-m-d');
+
+        $seguimiento = new CasoSeguimiento();
+        $seguimiento->gestion = $request->respuesta;
+        $seguimiento->fecha_gestion = date('Y-m-d');
+        $seguimiento->id_asesor_asignado = $request->asesor;
+        $seguimiento->id_caso = $caso->id;
+        $seguimiento->id_estado = 4;
+        $seguimiento->save();
+
+        $file = $request->file('archivo');
+        if ($request->hasFile('archivo')) {
+            $fileName = time() . '_' . $file->getClientOriginalname();
+        }
+        $documento = new Documento();
+        $documento->nombre = $fileName;
+        $documento->ruta = 'uploads/' . $fileName;
+        $documento->estado = 1;
+        $documento->id_subserie = 1;
+        $documento->id_tipo_documento = $request->tipo_archivo;
+        $documento->save();
+
+        $soporte = new Soporte();
+        // $soporte->estado = 1;
+        $soporte->id_caso = $caso->id;
+        $soporte->id_documento = $documento->id;
+        $soporte->save();
+
+        $request->archivo->move(public_path('uploads'), $fileName);
+
+        if ($caso->save()) {
+            $casos = $this->tabla();
+            return response()->json(['status' => 200, 'msg' => 'Datos actualizados con éxito', 'casos' => $casos]);
+        } else {
+            return response()->json(['status' => 500, 'msg' => 'Error en la actualización']);
+        }
+    }
+
+    public function listado_historico_casos_data()
+    {
+        $casos = $this->tabla_historico();
+        $tramite = TipoTramite::all();
+        $departamento = Departamentos::all();
+        $estado = Estado::all();
+        $tipoArchivo = TipoArchivo::all();
+        $personas = PersonaCentralizado::where('estado', 1)->get();
+        $estado1 = Estado::where('estado', 1)
+            ->where('id', '<>', 1)->get();
+
+        return response()->json([
+            'tipoArchivo' => $tipoArchivo,
+            'tramite' => $tramite,
+            'departamento' => $departamento,
+            'estado' => $estado,
+            'casos' => $casos,
+            'estado1' => $estado1,
+            'personas' => $personas,
+        ]);
+    }
+
+    public function tabla_historico()
+    {
+        $casos = DB::table('casos')
+            ->select(
+                'casos.*',
+                DB::raw('departamentos.nombre as dep_nombre'),
+                DB::raw('ciudades.nombre as ciu_nombre'),
+                DB::raw('estado.nombre as estado_nombre'),
+                DB::raw('tipo_tramite.nombre as tramite_nombre'),
+                DB::raw('prioridad.nombre as prioridad_nombre'),
+            )->join('departamentos', 'departamentos.id', 'casos.id_departamento')
+            ->join('ciudades', 'ciudades.id', 'casos.id_municipio')
+            ->join('estado', 'estado.id', 'casos.id_estado')
+            ->join('tipo_tramite', 'tipo_tramite.id', 'casos.id_tramite')
+            ->join('prioridad', 'prioridad.id', 'casos.id_prioridad')
+            ->orderBy("casos.fecha_recibido")
+            ->where('id_estado', '<>', 1)->get();
+        return $casos;
+    }
+
+    public function gestion_caso_admin(Request $request)
+    {
+        // return $request->all();
+        $estado = $request->estado;
+        switch ($estado) {
+            case 1:
+                $caso = Caso::find($request->id);
+                $caso->gestion = $request->observacion;
+                $caso->id_estado = $request->estado;
+                $caso->save();
+                $seguimiento = CasoSeguimiento::find($request->id);
+                $seguimiento->gestion = $request->observacion;
+                $seguimiento->fecha_gestion = date('Y-m-d');
+                $seguimiento->id_asesor_asignado = $request->asesor;
+                $seguimiento->id_caso = $caso->id;
+                $seguimiento->id_estado = $request->estado;
+                $seguimiento->save();
+                return response()->json([
+                    'status' => 200,
+                    'msg' => 'Datos actualizados con éxito',
+                    'caso' => $caso,
+                ]);
+                break;
+            case '2':
+                $caso = Caso::find($request->id);
+                $caso->gestion = $request->observacion;
+                $caso->id_asesor_asignado = $request->asesor;
+                $caso->id_estado = $request->estado;
+                $caso->save();
+                $seguimiento = CasoSeguimiento::find($request->id);
+                $seguimiento->gestion = $request->observacion;
+                $seguimiento->fecha_gestion = date('Y-m-d');
+                $seguimiento->id_asesor_asignado = $request->asesor;
+                $seguimiento->id_caso = $caso->id;
+                $seguimiento->id_estado = $request->estado;
+                $seguimiento->save();
+                return response()->json([
+                    'status' => 200,
+                    'msg' => 'Datos actualizados con éxito',
+                    'caso' => $caso,
+                ]);
+                break;
+            case '3':
+                $caso = Caso::find($request->id);
+                $caso->id_estado = 3;
+                $caso->observacion_asignacion = $request->observacion;
+                // $caso->id_asesor_asignado = Auth::user()->id;
+                $caso->save();
+                // $caso->fecha_respuesta = date('Y-m-d');
+
+                $seguimiento = new CasoSeguimiento();
+                $seguimiento->gestion = $request->observacion;
+                $seguimiento->fecha_gestion = date('Y-m-d');
+                // $seguimiento->id_asesor_asignado = Auth::user()->id;
+                $seguimiento->id_caso = $caso->id;
+                $seguimiento->id_estado = 3;
+                $seguimiento->save();
+
+                if ($request->hasFile('archivo')) {
+                    $file = $request->file('archivo');
+                    $fileName = time() . '_' . $file->getClientOriginalname();
+
+                    $documento = new Documento();
+                    $documento->nombre = $fileName;
+                    $documento->ruta = 'uploads/' . $fileName;
+                    $documento->estado = 1;
+                    $documento->id_subserie = 1;
+                    $documento->id_tipo_documento = $request->tipoArchivo;
+                    $documento->save();
+
+                    $soporte = new Soporte();
+                    // $soporte->estado = 1;
+                    $soporte->id_caso = $caso->id;
+                    $soporte->id_documento = $documento->id;
+                    $soporte->save();
+                    $request->archivo->move(public_path('uploads'), $fileName);
+                }
+                return response()->json([
+                    'status' => 200,
+                    'msg' => 'Datos actualizados con éxito',
+                    'caso' => $caso,
+                ]);
+                break;
+            case '4':
+                $caso = Caso::find($request->id);
+                $caso->id_estado = 4;
+                $caso->respuesta = $request->respuesta;
+                // $caso->id_asesor_asignado = $request->asesor;
+                $caso->fecha_respuesta = date('Y-m-d');
+                $caso->save();
+
+                $seguimiento = new CasoSeguimiento();
+                $seguimiento->gestion = $request->observacion;
+                $seguimiento->fecha_gestion = date('Y-m-d');
+                // $seguimiento->idAsesorGestion = $request->asesor;
+                $seguimiento->id_caso = $caso->id;
+                $seguimiento->id_estado = 4;
+                $seguimiento->save();
+
+                $file = $request->file('archivo');
+                if ($request->hasFile('archivo')) {
+                    $fileName = time() . '_' . $file->getClientOriginalname();
+                }
+                $documento = new Documento();
+                $documento->nombre = $fileName;
+                $documento->ruta = 'uploads/' . $fileName;
+                $documento->estado = 1;
+                $documento->id_subserie = 1;
+                $documento->id_tipo_documento = $request->tipoArchivo;
+                $documento->save();
+
+                $soporte = new Soporte();
+                // $soporte->estado = 1;
+                $soporte->id_caso = $caso->id;
+                $soporte->id_documento = $documento->id;
+                $soporte->save();
+
+                $request->archivo->move(public_path('uploads'), $fileName);
+                return response()->json([
+                    'status' => 200,
+                    'msg' => 'Datos actualizados con éxito',
+                    'caso' => $caso,
+                ]);
+                break;
+        }
+    }
+
+    public function filtrar_listado_casos(Request $request)
+    {
+        $post = $request;
+        $casos = DB::table('casos')
+            ->select(
+                'casos.*',
+                DB::raw('departamentos.nombre as dep_nombre'),
+                DB::raw('ciudades.nombre as ciu_nombre'),
+                DB::raw('estado.nombre as estado_nombre'),
+                DB::raw('tipo_tramite.nombre as tramite_nombre'),
+                DB::raw('prioridad.nombre as prioridad_nombre'),
+            )->join('departamentos', 'departamentos.id', 'casos.id_departamento')
+            ->join('ciudades', 'ciudades.id', 'casos.id_municipio')
+            ->join('estado', 'estado.id', 'casos.id_estado')
+            ->join('tipo_tramite', 'tipo_tramite.id', 'casos.id_tramite')
+            ->join('prioridad', 'prioridad.id', 'casos.id_prioridad')
+            ->orderBy("casos.fecha_recibido")
+            ->where('id_estado', 1)
+            ->where(function ($query) use ($post) {
+                if (isset($post['tramite'])) {
+                    if (!empty($post['tramite']))
+                        $query->orwhere('casos.id_tramite', $post['tramite']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['fecha_realizacion'])) {
+                    if (!empty($post['fecha_realizacion']))
+                        $query->orwhere('casos.fecha_recibido', $post['fecha_realizacion']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['departamento'])) {
+                    if (!empty($post['departamento']))
+                        $query->orwhere('casos.id_departamento', $post['departamento']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['estado'])) {
+                    if (!empty($post['estado']))
+                        $query->orwhere('casos.id_estado', $post['estado']);
+                }
+            })->get();
+
+        return $casos;
+        return response()->json([
+            'casos' => $casos,
+        ]);
+    }
+
+    public function documentoxcaso($id)
+    {
+        $soporte = Caso::find($id)->soportes;
+        $documentos = [];
+        $x = 0;
+        foreach ($soporte as $row) {
+            $documentos[$x] = $row->documento;
+            $x++;
+        }
+        return $documentos;
+    }
+
+    public function filtrar_listado_casos_asignados(Request $request)
+    {
+        $post = $request;
+        $casos = DB::table('casos')
+            ->select(
+                'casos.*',
+                DB::raw('departamentos.nombre as dep_nombre'),
+                DB::raw('ciudades.nombre as ciu_nombre'),
+                DB::raw('estado.nombre as estado_nombre'),
+                DB::raw('tipo_tramite.nombre as tramite_nombre'),
+                DB::raw('prioridad.nombre as prioridad_nombre'),
+            )->join('departamentos', 'departamentos.id', 'casos.id_departamento')
+            ->join('ciudades', 'ciudades.id', 'casos.id_municipio')
+            ->join('estado', 'estado.id', 'casos.id_estado')
+            ->join('tipo_tramite', 'tipo_tramite.id', 'casos.id_tramite')
+            ->join('prioridad', 'prioridad.id', 'casos.id_prioridad')
+            ->orderBy("casos.fecha_recibido")
+            // ->where('id_asesor_asignado', Auth::user()->id)
+            ->where('casos.id_estado', '<>', 1)
+            ->where('casos.id_estado', '<>', 4)
+            // ->where('casos.estado_pro', 1)
+            ->orderBy("casos.fecha_recibido")
+            // ->where('id_asesor_asignado', Auth::user()->id)
+            // ->where('casos.id_estado', '<>', 1)
+            // ->where('casos.estado_pro', 1)
+            ->where(function ($query) use ($post) {
+                if (isset($post['tramite'])) {
+                    if (!empty($post['tramite']))
+                        $query->orwhere('casos.id_tramite', $post['tramite']);
+                }
+            })
+            // ->where('id_asesor_asignado', Auth::user()->id)
+            ->where(function ($query) use ($post) {
+                if (isset($post['fecha_realizacion'])) {
+                    if (!empty($post['fecha_realizacion']))
+                        $query->orwhere('casos.fecha_recibido', $post['fecha_realizacion']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['departamento'])) {
+                    if (!empty($post['departamento']))
+                        $query->orwhere('casos.id_departamento', $post['departamento']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['estado'])) {
+                    if (!empty($post['estado']))
+                        $query->orwhere('casos.id_estado', $post['estado']);
+                }
+            })->get();
+        return $casos;
+        return response()->json([
+            'casos' => $casos,
+        ]);
+    }
+
+    public function filtros_historico_casos(Request $request)
+    {
+        // return $request->all();
+        $post = $request->all();
+        $casos = DB::table('casos')
+            ->select(
+                'casos.*',
+                DB::raw('departamentos.nombre as dep_nombre'),
+                DB::raw('ciudades.nombre as ciu_nombre'),
+                DB::raw('estado.nombre as estado_nombre'),
+                DB::raw('tipo_tramite.nombre as tramite_nombre'),
+                DB::raw('prioridad.nombre as prioridad_nombre'),
+            )->join('departamentos', 'departamentos.id', 'casos.id_departamento')
+            ->join('ciudades', 'ciudades.id', 'casos.id_municipio')
+            ->join('estado', 'estado.id', 'casos.id_estado')
+            ->join('tipo_tramite', 'tipo_tramite.id', 'casos.id_tramite')
+            ->join('prioridad', 'prioridad.id', 'casos.id_prioridad')
+            ->orderBy("casos.fecha_recibido")
+            ->where('id_estado', '<>', 1)
+            ->where(function ($query) use ($post) {
+                if (isset($post['tramite'])) {
+                    if (!empty($post['tramite']))
+                        $query->orwhere('tipo_tramite.id', $post['tramite']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['fecha_recibido'])) {
+                    if (!empty($post['fecha_recibido']))
+                        $query->orwhere('casos.fecha_recibido', $post['fecha_recibido']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['departamento'])) {
+                    if (!empty($post['departamento']))
+                        $query->orwhere('departamentos.id', $post['departamento']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['estado'])) {
+                    if (!empty($post['estado']))
+                        $query->orwhere('casos.id_estado', $post['estado']);
+                }
+            })
+            // ->where('estado_pro', 1)
+            ->get();
+        return $casos;
     }
 
 
