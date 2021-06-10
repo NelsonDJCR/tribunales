@@ -286,4 +286,5 @@ Route::middleware('auth')->group(function () {
         Route::post('/asignar-caso',[CasosController::class, 'asignarCaso']);
         Route::post('/casos-asignados-data',[CasosController::class, 'listadoCasosAsignadosData']);
         Route::put('/gestion_en_tramite',[CasosController::class, 'gestion_en_tramite']);
+        Route::put('/gestion_en_finalizado',[CasosController::class, 'gestion_en_finalizado']);
 

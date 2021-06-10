@@ -337,6 +337,51 @@ class CasosController extends Controller
         }
     }
 
+    public function gestion_en_finalizado(Request $request)
+    {
+        // return $request->all();
+        $caso = Caso::find($request->id);
+        $caso->id_estado = 4;
+        $caso->respuesta = $request->respuesta;
+        // $caso->id_asesor_asignado = $request->asesor;
+        $caso->fecha_respuesta = date('Y-m-d');
+
+        $seguimiento = new CasoSeguimiento();
+        $seguimiento->gestion = $request->respuesta;
+        $seguimiento->fecha_gestion = date('Y-m-d');
+        $seguimiento->id_asesor_asignado = $request->asesor;
+        $seguimiento->id_caso = $caso->id;
+        $seguimiento->id_estado = 4;
+        $seguimiento->save();
+
+        $file = $request->file('archivo');
+        if ($request->hasFile('archivo')) {
+            $fileName = time() . '_' . $file->getClientOriginalname();
+        }
+        $documento = new Documento();
+        $documento->nombre = $fileName;
+        $documento->ruta = 'uploads/' . $fileName;
+        $documento->estado = 1;
+        $documento->id_subserie = 1;
+        $documento->id_tipo_documento = $request->tipo_archivo;
+        $documento->save();
+
+        $soporte = new Soporte();
+        // $soporte->estado = 1;
+        $soporte->id_caso = $caso->id;
+        $soporte->id_documento = $documento->id;
+        $soporte->save();
+
+        $request->archivo->move(public_path('uploads'), $fileName);
+
+        if ($caso->save()) {
+            $casos = $this->tabla();
+            return response()->json(['status' => 200, 'msg' => 'Datos actualizados con éxito', 'casos' => $casos]);
+        } else {
+            return response()->json(['status' => 500, 'msg' => 'Error en la actualización']);
+        }
+    }
+
 
     /**
      * Store a new assignement request for creating a new casos log.
