@@ -139,9 +139,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/inactivar-estado/{id}/{tabla}/{estado}', [ParametrosController::class, 'estadoInactivar']);
         Route::post('/nuevo', [ParametrosController::class, 'nuevo']);
 
-        
-        
-        
+
+
+
         // Rutas para tribunales
         Route::post('/guardarTribunal', [TribunalesController::class, 'store']);
         Route::get('/data-select', [TribunalesController::class, 'data']);
@@ -276,4 +276,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/editar_tipoDocumento', [TipoDocumentoController::class, 'edit'])->name('tipoDocumento.edit');
         Route::post('/update_tipoDocumento', [TipoDocumentoController::class, 'update'])->name('tipoDocumento.update');
         Route::post('/buscar-tipoDocumento/{nombre}', [TipoDocumentoController::class, 'buscar_tipoDocumento'])->name('buscar_tipoDocumento');
+
+        //-------------------------------------------------------------------------------------------------------------------------
+        // Rutas J
+        //-------------------------------------------------------------------------------------------------------------------------
+
+        Route::post('/listado-casos-data',[CasosController::class, 'listadoCasoData']);
+        Route::get('/ver-caso/{id}',[CasosController::class, 'verCasoData']);
+        Route::post('/asignar-caso',[CasosController::class, 'asignarCaso']);
+        Route::post('/casos-asignados-data',[CasosController::class, 'listadoCasosAsignadosData']);
+        Route::put('/gestion_en_tramite',[CasosController::class, 'gestion_en_tramite']);
 

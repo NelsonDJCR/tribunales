@@ -1,360 +1,358 @@
 <template>
   <div>
-    <template v-if="pantalla == 'lista'">
-      <div class="main col-12">
-        <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
-          crossorigin="anonymous"
-        />
-        <!--template v-if="action == 0"-->
-          <div class="container mt-5">
-            <!-- Breadcrumb -->
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de casos</label></li>
-            </ol>
-            <div class="row p-2 text-center border shadow rounded-3">
-              <div class="row">
-                <div class="col-12 col-md-12 col-lg-12 col-xl-12 p-2">
-                  <h1 class="text-blue"><b>LISTADO DE CASOS</b></h1>
-                </div>
-
-              </div>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
+      integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp"
+      crossorigin="anonymous"
+    />
+    <template v-if="pantalla == 'listado'">
+      <div
+        class="modal fade"
+        id="1modal_download"
+        aria-hidden="true"
+        aria-labelledby="exampleModalToggleLabel"
+        tabindex="-1"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel">Modal 1</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
-            <form @submit.prevent="filter(filterid)">
-              <div class="row mt-5">
-                <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Tipo de Trámite</b></label>
-                  <!--input
-                    type="text"
-                    class="form-control"
-                    id="tipo_tramite"
-                    name="tipo_tramite"
-                    v-model="dataFilter.nombre_tema"
-                  /-->
-                  <!--v-model="dataFilter.tramite_id"-->
-                  <select
-                    class="form-select"
-                    name="tramite_id"
-                    id="tramite_id"
-                    v-model="dataFilter.tramite_id"
-                    >
-                        <option value="" selected>Selecciona</option>
-                        <option
-                            v-for="(i, index) in tptramites"
-                            :key="index"
-                            v-text="i.nombre"
-                            :value="i.id"
-                        ></option>
-                    </select>
-                </div>
-                <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Fecha recibido</b></label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="fecha_realizacion"
-                    v-model="dataFilter.fecha_recibido"
-                  />
-                </div>
+            <div class="modal-body">
+              Show a second modal and hide this one with the button below.
+            </div>
+            <div class="modal-footer"></div>
+          </div>
+        </div>
+      </div>
 
-                <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Departamento</b></label>
-                  <select
-                    v-model="dataFilter.departamento_id"
-                    class="form-select"
-                    name="dep_id"
-                    id="dep_id"
-                    >
-                    <option value="">Selecciona</option>
-                    <option
-                        v-for="(i, index) in departament"
-                        :key="index"
-                        v-text="i.nombre"
-                        :value="i.id"
-                    ></option>
-                    </select>
-                </div>
+      <!-- Inicio modal descargar archivos -->
 
-                <div class="mb-3 col-3">
-                  <label for="" class="form-label"><b>Estado</b></label>
+      <div
+        class="modal fade"
+        id="modal_download"
+        aria-hidden="true"
+        aria-labelledby="exampleModalToggleLabel2"
+        tabindex="-1"
+      >
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel2">
+                Sistema uriel
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                @click="cerrar_modal_s"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div
+                v-for="(i, index) in documentos"
+                :key="index"
+                class="row container mb-2"
+              >
+                <div class="col-10">
                   <select
                     class="form-select"
-                    name=""
-                    id=""
-                    v-model="dataFilter.estado_id"
+                    id="tipo"
+                    disabled
+                    v-model="i.id_tipo_documento"
                   >
-                    <option value="">Seleccionas</option>
                     <option
-                            v-for="(i, index) in estados"
-                            :key="index"
-                            v-text="i.nombre"
-                            :value="i.id"
-                        ></option>
+                      v-for="(i, index) in tipoArchivo"
+                      :key="index"
+                      :value="i.id"
+                      v-text="i.nombre"
+                    ></option>
                   </select>
                 </div>
-
-                <div class="row">
-                  <div class="mb-3 col-3">
-                    <button
-                      type="submit"
-                      class="btn-secondary active btn w-80 btn_search w-100"
-
-                    >
-                      Buscar
-                    </button>
-                  </div>
-                  <div class="mb-5 col-9"></div>
-                  <!-- <div class="mb-3 col-1">
-                <button
-                  style="color: white"
-                  class="btn btn-info"
-                  id="btn_exece"
-                  type="button"
-                  @click="export_exel()"
-                >
-                  <i class="typcn typcn-database"></i>
-                </button>
-              </div> -->
-                </div>
-              </div>
-            </form>
-          </div>
-          <table class="table table-bordered table-striped table-sm fnt-hd-sm" id="datos">
-            <thead class="text-center align-middle">
-              <th>Opciones</th>
-              <th>Tipo de Trámite</th>
-              <th>Prioridad</th>
-              <th>Fecha recibido</th>
-              <th>Departamento</th>
-              <th>Municipio</th>
-              <th>Solicitante</th>
-              <th>Estado</th>
-              <th>Usuario Asignado</th>
-            </thead>
-            <tbody>
-              <!-- v-for="(i, index) in cabildos" :key="index" -->
-
-              <tr v-for="(i, index) in casos" :key="index">
-                <td class="aling_btn_options">
-
-                  <button
-                    type="button"
-                    @click="modalShowAssign(i.id, i.id_estado, i.id_asesor_asignado)"
-                    class="btn btn-secondary btn-sm"
-                  >
-                    <i
-                      class="typcn typcn-cog cl-white"
-                    ></i>
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-success btn-sm"
-                    @click="pantallaVer(i.id)"
-                  >
-                    <i class="typcn typcn-eye"></i>
-                  </button>
-
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-sm"
+                <div class="col-2">
+                  <a
+                    class="btn-self btn btn-warning text-white"
+                    :href="i.ruta"
+                    :download="i.ruta"
                   >
                     <i class="typcn typcn-download cl-white"></i>
-                  </button>
-                </td>
-                <td>{{ i.tramite }}</td>
-                <td>{{ i.prioridad }}</td>
-                <td>{{ i.fecha_recibido }}</td>
-                <td style="word-wrap: break-word; max-width: 120px;">{{ i.departamento_nombre }}</td>
-                <td>{{ i.ciudad_nombre }}</td>
-                <td>{{ i.nombres_solicitante }} {{ i.apellidos_solicitante }}</td>
-                <td><span class="badge badge-primary badge-outline-secondary">{{ i.estado }}</span></td>
-                <td>{{ i.asesor_asignado }}</td>
-              </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="9">
-                        <nav class="mt-3">
-                            <ul class="pagination justify-content-center">
-                                <li v-if="pagination.current_page > 1" class="page-item">
-                                    <a class="page-link btn-secondary active" href="#" @click.prevent="changePage(pagination.current_page - 1)">
-                                        <span>Atras</span></a>
-                                </li>
-                                <li v-for="page in pagesNumber" v-bind:key="page">
-                                    <a class="page-link" href="#" @click.prevent="changePage(page)" v-bind:class="[ page == isActived ? 'nav-item text-white btn-secondary active' : 'nav-item text-dark bg-white' ]">
-                                        {{ page }}
-                                    </a>
-                                </li>
-                                <li v-if="pagination.current_page < pagination.last_page" class="page-item">
-                                    <a class="page-link btn-secondary active" href="#" @click.prevent="changePage(pagination.current_page + 1)">
-                                        <span>Siguiente</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </td>
-                </tr>
-            </tfoot>
-          </table>
-        <!--/template-->
-
-        <div
-          class="modal fade bd-example-modal-lg"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myLargeModalLabel"
-          aria-hidden="true"
-          id="modal_export"
-        >
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">
-                  Gestionar caso asignado
-                </h3>
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                  @click="showModal = false"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                  </a>
+                </div>
               </div>
-              <form @submit.prevent="saveAssignement" name="assignForm"><!-- v-model="saveAssignement"-->
-                <input
-                  type="hidden"
-                  name="casoID"
-                  id="casoAssign_id"
-                  v-model="datos_assign.casoID"
-                />
-                <div class="modal-body">
-                  <div class="mb-3 col-12">
-                    <label for="" class="form-label"><b>Asignar a:</b></label>
-                    <input
-                      type="hidden"
-                      required
-                      class="form-control"
-                      id="casoAssignUser_id"
-
-                    />
-                    <select id="casoUser_id" name="casoUser_id" v-model="datos_assign.userID"
-                        class="form-select"
-                    >
-                        <option
-                            v-for="(i, index) in users"
-                            :key="index"
-                            v-text="i.nombre"
-                            :value="i.id"
-                            :selected="i.id == userCaso"
-                        ></option>
-
-                    </select>
-                  </div>
-                  <div class="mb-3 col-12">
-                    <label for="" class="form-label"><b>Estado</b></label>
-                    <!--input
-                      type="text"
-                      required
-                      class="form-control"
-                      v-model="dataPdf.radicado"
-                    /-->
-                    <select name="casoAssignEstado_id" id="casoAssignEstado_id" v-model="stateCaso" @change="onChangeToEnd()"
-                        class="form-select" disabled
-                    >
-                        <option
-                            v-for="(i, index) in estados"
-                            :key="index"
-                            v-text="i.nombre"
-                            :value="i.id"
-                            :selected="i.id == stateCaso"
-                        ></option>
-                    </select>
-                  </div>
-
-                    <div class="mb-3 col-12" v-if="finalized === false">
-                        <label for="" class="form-label"><b>Observaciones</b></label>
-                        <textarea class="form-control"  v-model="datos_assign.gestionDetails" id="detailsAssign" name="detailsAssign" rows="5"></textarea>
-                    </div>
-
-                    <div class="mb-3 col-12" v-if="finalized === true">
-                        <label for="" class="form-label"><b>Respuesta al caso</b></label>
-                        <!--input
-                        type="text"
-                        required
-                        class="form-control"
-                        v-model="dataPdf.ciudadano"
-                        /-->
-                        <textarea class="form-control"  v-model="datos_assign.replyDetails" id="detailsReply" name="detailsReply" rows="5"></textarea>
-                    </div>
-
-                    <div class="mb-3 col-12" v-if="finalized === true">
-                        <label for="" class="form-label"
-                            ><b>Tipo de archivo</b></label
-                        >
-                        <select
-                            class="form-select"
-                            name="type_file"
-                        >
-                            <option
-                            v-for="(i, index) in type_file"
-                            :key="index"
-                            :value="i.id"
-                            v-text="i.nombre"
-                            ></option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3 col-12" v-if="finalized === true">
-                        <div class="form-group files border opacity-2 opacity-2h"
-                            role="button"
-                            id="box_file"
-                        >
-                            <div class="row mt-5">
-                            <img
-                                class="img_file mx-auto d-block"
-                                alt=""
-                                style="width: 100px"
-                                src="https://img.icons8.com/ios/452/google-docs.png"
-                            />
-                            </div>
-                            <div class="row mt-1 mb-5">
-                            <p class="text_file text-center">
-                                Ingresa aquí tus documentos .pdf .png .jpg
-                            </p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <div class="d-grid gap-2 d-md-block mx-auto">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-dismiss="modal"
-                        >
-                            Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-secondary active">
-                            Guardar
-                        </button>
-                    </div>
-                </div>
-              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                class="btn btn-primary"
+                data-bs-target="#exampleModalToggle"
+                data-bs-toggle="modal"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </template>
 
+      <!-- Fin modal descargar archivos -->
+
+      <div class="main col-12">
+        <div class="container mt-5">
+          <!-- <label class="p-2">Sistema Uriel/Listado de casos</label> -->
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item active">
+              <router-link :to="{ name: 'home' }"
+                ><span>Home</span></router-link
+              >
+              /
+              <label for="" class="p-2"
+                >Sistema Uriel / Listado de casos
+              </label>
+            </li>
+          </ol>
+          <div class="row p-2 text-center border shadow rounded-3">
+            <div class="row">
+              <div class="col-8 col-md-8 col-lg-8 col-xl-8 p-2">
+                <h1 class="text-blue"><b>LISTADO DE CASOS</b></h1>
+              </div>
+              <div class="col-4 p-3">
+                <button
+                  @click="nuevocaso"
+                  class="btn-general btn-warning btn w-80 btn_search text-white"
+                >
+                  Nuevo Caso
+                </button>
+                <!-- </a> -->
+              </div>
+            </div>
+          </div>
+          <form @submit.prevent="filtrar" id="filter_list">
+            <div class="row mt-5">
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Tipo de trámite</b></label>
+                <select
+                  class="form-select"
+                  name="id_tramite"
+                  v-model="caso.tramite"
+                >
+                  <option value="">Seleccione ...</option>
+                  <option
+                    v-for="(i, index) in tramites"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Fecha recibido</b></label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id=""
+                  name="fecha_realizacion"
+                  v-model="caso.fecha_realizacion"
+                />
+              </div>
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Departamento</b></label>
+                <select
+                  class="form-select"
+                  name="id_departamento"
+                  v-model="caso.departamento"
+                >
+                  <option value="">Seleccione ...</option>
+                  <option
+                    v-for="(i, index) in departamentos"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Estado</b></label>
+                <select class="form-select" name="estado" v-model="caso.estado">
+                  <option value="">Seleccione ...</option>
+                  <option
+                    v-for="(i, index) in estados"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
+            </div>
+            <div class="row mt-2 col-3">
+              <button
+                type="submit"
+                class="btn btn-secondary active w-80 filtrar"
+              >
+                Buscar
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <table
+          class="table-responsive table-bordered mt-4 text-center"
+          id="tablecasos"
+        >
+          <thead>
+            <tr>
+              <th width="20%">Opciones</th>
+              <th>Tipo de trámite</th>
+              <th>Prioridad</th>
+              <th>Fecha recibido</th>
+              <th>Departamento</th>
+              <th>Ciudad</th>
+              <th>Solicitante</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(i, index) in casos" :key="index">
+              <td class="aling_btn_options w-20">
+                <button
+                  class="btn btn-secondary btn-sm"
+                  @click="abrir_modal_config(i, index)"
+                >
+                  <i class="typcn typcn-cog"></i>
+                </button>
+                <button
+                  class="btn btn-success btn-sm"
+                  @click="cambiarVer(i.id)"
+                >
+                  <i class="typcn typcn-eye"></i>
+                </button>
+                <button
+                  class="btn-self btn btn-warning btn-sm"
+                  @click="modal_archivos(i)"
+                >
+                  <i class="typcn typcn-download cl-white"></i>
+                </button>
+              </td>
+              <td>{{ i.tramite_nombre }}</td>
+              <td>{{ i.prioridad_nombre }}</td>
+              <td>{{ i.fecha_recibido }}</td>
+              <td>{{ i.dep_nombre }}</td>
+              <td>{{ i.ciu_nombre }}</td>
+              <td>{{ i.nombres_solicitante }}</td>
+              <td>{{ i.estado_nombre }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Inicio modal gestionar -->
+        <div
+          class="modal fade"
+          id="gestion-caso"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title"><b>Gestionar caso</b></h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  @click="cerrar_modal_g"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" v-model="gestion.id" id="idgestion" />
+                <div class="mb-3 col-12">
+                  <label for="" class="form-label"><b>Estado</b></label>
+                  <select
+                    class="form-select obliGes"
+                    name=""
+                    data-label="El estado es requerido"
+                    id="estado"
+                    disabled
+                  >
+                    <option value="">Asignado</option>
+                  </select>
+                </div>
+                <div class="mb-3 col-12">
+                  <label for="" class="form-label"
+                    ><b>Asesor asignado</b></label
+                  >
+                  <select
+                    class="form-select obliGes"
+                    name=""
+                    data-label="El asesor es requerido"
+                    id="asesor"
+                    v-model="gestion.asesor"
+                  >
+                    <option value="">Seleccione ...</option>
+                    <option
+                      v-for="(i, index) in usuarios"
+                      :key="index"
+                      :value="i.id"
+                      v-text="i.nombre"
+                    ></option>
+                  </select>
+                  <span style="color: red" v-text="gestion.msg"></span>
+                </div>
+                <div class="mb-3 col-12">
+                  <label for="" class="form-label"
+                    ><b
+                      >Observación
+                      <nav></nav></b
+                  ></label>
+                  <textarea
+                    maxlength="499"
+                    cols="30"
+                    rows="10"
+                    class="form-control"
+                    style="height: 150px"
+                    v-model="gestion.observacion"
+                  ></textarea>
+                </div>
+                <div class="mt-4 col-12">
+                  <center>
+                    <button
+                      class="btn btn-secondary active w-50 ml-25"
+                      id="guardarGestionar"
+                      @click="gestionarCaso"
+                    >
+                      Guardar
+                    </button>
+                  </center>
+                </div>
+              </div>
+              <div class="modal-footer"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Fin modal gestionar -->
+      </div>
+    </template>
     <template v-if="pantalla == 'ver'">
       <div>
-        <tribunales-casos-ver :id="idCaso"></tribunales-casos-ver>
+        <tribunales-casos-ver @pantalla="pantalla = $event" :id="id" />
+      </div>
+    </template>
+    <template v-if="pantalla == 'nuevo'">
+      <div>
+        <nuevo-caso />
       </div>
     </template>
   </div>
@@ -364,284 +362,124 @@
 export default {
   data() {
     return {
-      idCaso: 0,
-      idCasoAssign: 0,
-      users: [{ 'id': 1, 'nombre': 'User Name 1'},{ 'id': 1, 'nombre': 'Nombre de Uusario 2'}, { 'id': 1, 'nombre': 'Nome do usuário 3'}],
-      userCaso: 0,
-      finalized: false,
-      action: 0,
-      pantalla: "lista",
-      departament: [],
-      ciudades: [],
-      type_file: [],
-      dataFilter: {},
-      filterid : 0,
-      tabla: [],
-      casos: [],
+      departamentos: [],
+      documentos: [],
       estados: [],
-      tptramites: [],
-      stateCaso: 0,
-      datos_assign: {},
-      showModal: false,
-      listado: 1,
-      tituloFormulario: "",
-      tipoAccion: 0,
-      errorFormulario: 0,
-      errorMensajesFormularios: [],
-      page: 0,
-      offset: 3,
-      pagination: {
-        total: 0,
-        current_page: 0,
-        per_page: 0,
-        last_page: 0,
-        from: 0,
-        to: 0
-        },
+      tramites: [],
+      tipoArchivo: [],
+      estado1: [],
+      usuarios: [],
+      casos: [],
+      caso: {},
+      posicion: -1,
+      gestion: { id: 0, estado: "", asesor: "", msg: "", observacion: "" },
+      id: 0,
+      pantalla: "",
     };
   },
-  methods: {
-    pantallaVer(x){
-        this.idCaso = x;
-          this.pantalla = 'ver'
-    },
-    changeCity() {
-      var id = $("#departamento_id").val();
-      axios.post("/changeCity", { id: id }).then((r) => {
-        this.ciudades = r.data;
-      });
-    },
-    objectToQueryString(obj) {
-        var str = [];
-        for (var p in obj)
-            if (obj.hasOwnProperty(p)) {
-            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-            }
-        return str.join("&");
-    },
-    filter(filt) {
-      let filtros = this.dataFilter;
-      filtros.buscar = filt;
-
-      //let queryString = this.objectToQueryString(filtros);
-
-        this.loadCasos(1);
-        /*axios.get("/tribunales/casos-listar?"+queryString+"&buscar="+filt).then((res) => {
-        //axios.post("/tribunales/casos-listar", filtros).then((res) => {
-            this.casos=res.data.casos.data;
-            this.pagination = res.data.pagination;
-            //console.log(this.casos);
-        });*/
-    },
-    onChangeToEnd(){
-        if (this.stateCaso = 3) {
-            this.finalized = true;
-            this.stateCaso = 4;
-            document.getElementById("casoAssignEstado_id").setAttribute("disabled", "disabled");
-        } else {
-            this.finalized = false;
-            this.stateCaso = 3;
-        }
-    },
-    modalShowAssign(id, state, user) {
-        this.showModal = true;
-      this.idCasoAssign = id;
-      this.stateCaso = state;
-      this.userCaso = user;
-
-        switch (state) {
-        case 1:
-            /*document.getElementById('detailsAssign').style.visibility = "hidden";
-            document.getElementById('detailsAssign').style.display = 'none';*/
-            $('#detailsAssign').hide();
-            break;
-        case 2:
-            $('#detailsAssign').show();
-            /*document.getElementById('detailsAssign').style.visibility = "visible";
-            document.getElementById('detailsAssign').style.display = 'block';*/
-            document.getElementById("casoUser_id").setAttribute("disabled", "disabled");
-            break;
-        case 3:
-            /*document.getElementById('detailsAssign').style.visibility = "visible";
-            document.getElementById('detailsAssign').style.display = 'block';*/
-            $('#detailsAssign').show();
-            document.getElementById('casoAssignEstado_id').disabled = false;
-            document.getElementById("casoUser_id").setAttribute("disabled", "disabled");
-
-            break;
-        default:
-            console.log("Default");
-        }
-
-
-      $("#casoAssign_id").val(id);
-      this.datos_assign.casoID = this.idCasoAssign;
-      this.datos_assign.userID = this.userCaso;
-      //console.log('caso '+ this.idCasoAssign + 'estado'+ this.stateCaso  );
-      $("#modal_export").modal("show");
-    },
-    saveAssignement(){
-        //let datos = this.datos_assign;
-        let url = "/tribunales/casos-asignar/"+this.idCasoAssign;
-        this.datos_assign.estadoID = this.stateCaso;
-
-        var datos = new  FormData();
-
-        datos.append('caso', this.idCasoAssign);
-        datos.append('estado_caso', this.datos_assign.estadoID);
-        datos.append('asesor_asignado', this.datos_assign.userID);
-        datos.append('gestion', this.datos_assign.gestionDetails);
-
-        if(this.finalized == true){
-            datos.append('detailsReply', this.datos_assign.gestionDetails);
-        }
-
-        axios.post(url, datos).then((res) => {
-            if (res.data.status == 406) {
-            Swal.fire({
-                icon: "error",
-                title: "¡Error!",
-                text: res.data.msg,
-            });
-            } else {
-            //this.action = 0;
-            //this.cabildos = res.data.table;
-            // console.log(r.data);
-            // return false;
-                Swal.fire({
-                    icon: "success",
-                    title: "Datos enviados!",
-                    text: res.data.msg,
-                    timer : 3000
-                }, function(){ Swal.close(); });
-                this.loadCasos(1);
-                /*hack to close possibilities*/
-                /*$("#modal_export button.close").trigger('click');
-                    $("#modal_export button.close").click();*/
-                setTimeout(function(){ $("#modal_export").modal('hide'); }, 1000);
-
-            }
-        });
-    },
-    loadEstados(){
-        const url = "/resources/estados/";
-        axios.get(url).then((r) => {
-            this.estados = r.data.data;
-        });
-    },
-    loadTipoTramites(){
-        const url = "/resources/tipotramites/";
-        axios.get(url).then((r) => {
-            this.tptramites = r.data.data;
-        });
-    },
-    loadCasos(page){
-
-        if (axios == null) {
-            console.log(('NULL RESULT'));
-            return;
-        }
-
-        let queryString = this.objectToQueryString(this.dataFilter), fullStr;
-
-        if(queryString !== null && page !== undefined){
-            fullStr = "?page="+page+"&"+queryString+"&buscar="+this.dataFilter.buscar;
-        }else{
-            fullStr = '';
-        }
-
-        axios.get('/tribunales/casos-listar?page='+page+'&'+queryString).then((res)=>{
-
-            if(res.status === 200){
-                this.casos=res.data.casos.data;
-                //console.log('Data = ');
-                console.log(res.data);
-                this.departament = res.data.departamentos;
-                this.pagination = res.data.pagination;
-            }
-
-        }).catch(err=>{
-            console.log(err);
-        });
-
-        //axios.get('/tribunales/casos-listar').then(response => this.casos = response.data);
-
-        /*try {
-            // This will wait until promise resolve
-            const response = await axios.get('/tribunales/casos-listar');
-            this.casos = response.casos.data;
-            console.log(this.casos);
-        } catch(error) {
-            console.log(error)
-        }
-        */
-
-    },
-
-    changePage: function(page) {
-        this.pagination.current_page = page;
-        this.loadCasos(page);
-        //console.log('changed page: '+page)
-    }
-  },
   mounted() {
-    this.loadEstados();
-    this.loadTipoTramites();
+    this.pantalla = "listado";
   },
   created() {
-    this.loadCasos();
+    let url = "/listado-casos-data";
+    axios.post(url).then((res) => {
+      this.departamentos = res.data.departamento;
+      this.estados = res.data.estado;
+      this.tramites = res.data.tramite;
+      this.casos = res.data.casos;
+      this.estado1 = res.data.estado1;
+      this.tipoArchivo = res.data.tipoArchivo;
+      this.usuarios = res.data.usuarios;
+      console.log(this.usuarios);
+      this.formatearFecha();
+    });
   },
-  computed: {
-    isActived: function() {
-        //console.log(this.pagination);
-        //console.log('isActived called');
-        return this.pagination.current_page;
+  methods: {
+    abrir_modal_config(caso, index) {
+      (this.gestion = {
+        id: 0,
+        estado: "",
+        asesor: "",
+        msg: "",
+        observacion: "",
+      }),
+        (this.gestion.id = caso.id);
+      this.gestion.estado = caso.id_estado;
+      //   this.gestion.asesor = caso.id_asesor_asignado;
+      this.posicion = index;
+      $("#gestion-caso").modal("show");
     },
-    pagesNumber: function() {
-        if(!this.pagination.to){
-            return [];
+    modal_archivos(caso) {
+      let url = "/documentos-x-casos/" + caso.id;
+      axios.post(url).then((res) => {
+        this.documentos = res.data;
+        if (this.documentos.length == 0) {
+          Swal.fire(
+            "¡Advertencia!",
+            "Este caso no tiene archivos cargados",
+            "warning"
+          );
+        } else {
+          $("#modal_download").modal("show");
         }
-
-        var from = this.pagination.current_page - this.offset;
-        if(from < 1){
-            from = 1;
-        }
-
-        var to = from + (this.offset * 2);
-        if(to >= this.pagination.last_page){
-            to = this.pagination.last_page;
-        }
-
-        var pagesArray = [];
-        while(from <= to){
-            pagesArray.push(from);
-            from++;
-        }
-        return pagesArray;
-    }
+        // $("#modal_download").modal("show");
+      });
+    },
+    gestionarCaso() {
+      console.log(this.gestion);
+      if (
+        this.gestion.asesor != "" &&
+        this.gestion.id != 0 &&
+        this.gestion.observacion != ""
+      ) {
+        let url = "/asignar-caso";
+        let gestion = this.gestion;
+        axios.post(url, gestion).then((res) => {
+            // console.log(res.data);
+          this.casos.splice(this.posicion, 1);
+          Swal.fire("¡Editado!", res.data.msg, "success");
+          setTimeout(function () {
+            $("#gestion-caso").modal("hide");
+          }, 500);
+        });
+      } else {
+        Swal.fire("¡Advertencia!", "Completa todos los campos.", "warning");
+      }
+    },
+    cambiarVer(id) {
+      this.id = id;
+      this.pantalla = "ver";
+    },
+    filtrar() {
+      let url = "filtrar-casos";
+      let filtros = this.caso;
+      axios.post(url, filtros).then((res) => {
+        this.casos = res.data;
+        this.formatearFecha();
+      });
+    },
+    formatearFecha() {
+      var fechas = "";
+      var fecha_format = "";
+      var array = [];
+      for (let index = 0; index < this.casos.length; index++) {
+        fechas = this.casos[index].fecha_recibido;
+        array = fechas.split("-");
+        fecha_format = array[2] + "-" + array[1] + "-" + array[0];
+        this.casos[index].fecha_recibido = fecha_format;
+      }
+    },
+    nuevocaso() {
+      //   window.location.href = "nuevo-caso";
+      this.pantalla = "nuevo";
+    },
+    cerrar_modal_g() {
+      $("#gestion-caso").modal("hide");
+    },
+    cerrar_modal_s() {
+      $("#modal_download").modal("hide");
+    },
   },
-  watch: {
-        'dataFilter.tramite_id': function() {
-            //console.log('called change tramite');
-            this.filterid = 1;
-        },
-        'dataFilter.estado_id': function() {
-            //console.log('called change estado');
-            this.filterid = 4;
-        },
-        'dataFilter.fecha_recibido': function() {
-            //console.log('called change fecha');
-            this.filterid = 2;
-        },
-        'dataFilter.departamento_id': function() {
-            //console.log('called change dpartamento');
-            this.filterid = 3;
-        },
-        showModal: function(){
-            if(this.showModal == false){
-                this.$refs['assignForm'].resetFields();
-            };
-        },
-    },
-}
+};
 </script>
+

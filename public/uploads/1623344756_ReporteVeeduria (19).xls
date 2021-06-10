@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+
+<body>
+    <table border="1">
+        <thead>
+            
+            <th>Nombre de la veeduría</th>
+            <th>Descripción</th>
+            <th>Departamento de la veeduría</th>
+            <th>Ciudad de la veeduría</th>
+            <th>Radicado CNE</th>
+            <th>Fecha de realización</th>
+            <th>id integrante</th>
+            <th>Tipo de identificación</th>
+            <th>nombre de integrante</th>
+            <th>Número de documento del integrante</th>
+            <th>Dirección</th>
+            <th>teléfono</th>
+            <th>correo electrónico</th>
+        </thead>
+        <tbody>
+                                                <tr>
+                        <td>Prueba</td>
+                        <td>wskdjfh</td>
+                        <td></td>
+                        <td></td>
+                        <td>Raciado d rpeyab</td>
+                        <td>2021-06-29</td>
+                        <td>No hay integrantes</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                    </tr>
+                                                                <tr>
+                        <td>Veeduría 0806</td>
+                        <td>Descripción 0806</td>
+                        <td></td>
+                        <td></td>
+                        <td>Radicado de prueba</td>
+                        <td>2021-06-10</td>
+                        <td>No hay integrantes</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                    </tr>
+                                                                <tr>
+                        <td>nombre d eahsd</td>
+                        <td>dshfkjh</td>
+                        <td>Atlántico</td>
+                        <td></td>
+                        <td>23yuie</td>
+                        <td>2021-06-13</td>
+                        <td>No hay integrantes</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                    </tr>
+                                                                <tr>
+                        <td>Nombre de prueba</td>
+                        <td>Descripción 09/06/2021</td>
+                        <td></td>
+                        <td></td>
+                        <td>Radicado de prueba</td>
+                        <td>2021-06-02</td>
+                        <td>No hay integrantes</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                    </tr>
+                                                                <tr>
+                        <td>fhdfgh</td>
+                        <td>dfghdfgh</td>
+                        <td></td>
+                        <td></td>
+                        <td>fgh</td>
+                        <td>2021-07-08</td>
+                        <td>No hay integrantes</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                    </tr>
+                                    </tbody>
+    </table>
+</body>
+</html>
