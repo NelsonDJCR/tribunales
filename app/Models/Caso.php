@@ -26,6 +26,11 @@ class Caso extends Model
         return $this->hasMany(CasoSeguimiento::class, 'id_caso', 'id');
     }
 
+    public function soportes()
+    {
+        return $this->hasMany(Soporte::class,'id_caso','id');
+    }
+
     public function getListOfCasos($otherUser = null){
 
         $casos = Caso::with('caso')

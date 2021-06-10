@@ -11,4 +11,9 @@ class Soporte extends Model
 
     protected $connection = 'dinamico';
     protected $table = 'caso_soporte';
+
+    public function documento()
+    {
+        return $this->hasOne(Documento::class, 'id', 'id_documento');
+    }
 }

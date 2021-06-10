@@ -551,6 +551,67 @@ class CasosController extends Controller
         }
     }
 
+    public function filtrar_listado_casos(Request $request)
+    {
+        $post = $request;
+        $casos = DB::table('casos')
+            ->select(
+                'casos.*',
+                DB::raw('departamentos.nombre as dep_nombre'),
+                DB::raw('ciudades.nombre as ciu_nombre'),
+                DB::raw('estado.nombre as estado_nombre'),
+                DB::raw('tipo_tramite.nombre as tramite_nombre'),
+                DB::raw('prioridad.nombre as prioridad_nombre'),
+            )->join('departamentos', 'departamentos.id', 'casos.id_departamento')
+            ->join('ciudades', 'ciudades.id', 'casos.id_municipio')
+            ->join('estado', 'estado.id', 'casos.id_estado')
+            ->join('tipo_tramite', 'tipo_tramite.id', 'casos.id_tramite')
+            ->join('prioridad', 'prioridad.id', 'casos.id_prioridad')
+            ->orderBy("casos.fecha_recibido")
+            ->where('id_estado', 1)
+            ->where(function ($query) use ($post) {
+                if (isset($post['tramite'])) {
+                    if (!empty($post['tramite']))
+                        $query->orwhere('casos.id_tramite', $post['tramite']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['fecha_realizacion'])) {
+                    if (!empty($post['fecha_realizacion']))
+                        $query->orwhere('casos.fecha_recibido', $post['fecha_realizacion']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['departamento'])) {
+                    if (!empty($post['departamento']))
+                        $query->orwhere('casos.id_departamento', $post['departamento']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['estado'])) {
+                    if (!empty($post['estado']))
+                        $query->orwhere('casos.id_estado', $post['estado']);
+                }
+            })->get();
+
+        return $casos;
+        return response()->json([
+            'casos' => $casos,
+        ]);
+    }
+
+    public function documentoxcaso($id)
+    {
+        $soporte = Caso::find($id)->soportes;
+        $documentos = [];
+        $x = 0;
+        foreach ($soporte as $row) {
+            $documentos[$x] = $row->documento;
+            $x++;
+        }
+        return $documentos;
+    }
+
 
     /**
      * Store a new assignement request for creating a new casos log.
