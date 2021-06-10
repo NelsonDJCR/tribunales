@@ -418,8 +418,8 @@
               <tr v-for="(i, index) in trazabilidad" :key="index">
                 <td>{{ i.estado_nombre }}</td>
                 <td>{{ i.gestion }}</td>
-                <td>{{ i.idAsesorGestion }}</td>
-                <td>{{ i.fechaGestion }}</td>
+                <td>{{ i.id_asesor_asignado }}</td>
+                <td>{{ i.fecha_gestion }}</td>
               </tr>
             </tbody>
           </table>

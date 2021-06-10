@@ -177,9 +177,9 @@ Route::middleware('auth')->group(function () {
 
 
         // Cuenta de cobro
-        Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class,'table']);
-        Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class,'save']);
-        Route::post('/record-cuenta-cobro', [CuentaCobroController::class,'record']);
+        Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class, 'table']);
+        Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class, 'save']);
+        Route::post('/record-cuenta-cobro', [CuentaCobroController::class, 'record']);
 
 
 
@@ -197,27 +197,27 @@ Route::middleware('auth')->group(function () {
         Route::put('/tipoDocumento/activar', [TipoDocumento2Controller::class, 'activar']);
 
         //------------------INICIO RUTAS CALBILDOS----------------------------------------------------------------------------------
-        Route::get('/tribunales/casos-listar',[CasosController::class,'index']);
+        Route::get('/tribunales/casos-listar', [CasosController::class, 'index']);
         /*Route::post('/tribunales/casos-listar',[CasosController::class,'index']);*/
         Route::get('/tribunales/casos-listar/{id}', [CasosController::class, 'show']);
         Route::post('/tribunales/casos-asignar/{id}', [CasosController::class, 'assign']);
 
 
         /*Recursos externos*/
-        Route::get('/resources/estados/{id}', function(Estado $id) {
+        Route::get('/resources/estados/{id}', function (Estado $id) {
             return new EstadosResource($id);
         });
 
-        Route::get('/resources/estados', function() {
+        Route::get('/resources/estados', function () {
             //return new EstadosResource(Estado::all());
             return EstadosResource::collection(Estado::all());
         });
 
-        Route::get('/resources/tipotramites/{id}', function(TipoTramite $id) {
+        Route::get('/resources/tipotramites/{id}', function (TipoTramite $id) {
             return new TipoTramitesResource($id);
         });
 
-        Route::get('/resources/tipotramites', function() {
+        Route::get('/resources/tipotramites', function () {
             return TipoTramitesResource::collection(TipoTramite::all());
         });
 
@@ -225,66 +225,67 @@ Route::middleware('auth')->group(function () {
         // Rutas para reportes
         //--------------------------------------------------------------------------------------
 
-        Route::get('/download', function (Request $r)
-        {
-            $cabildos = CabildoAbierto::where('cabildo_abierto.id',$r->id)
-            ->select('cabildo_abierto.*', 'ciudades.nombre AS city' , 'departamentos.nombre AS departamento')
-            ->leftjoin("ciudades", "ciudades.id", "cabildo_abierto.ciu_id")
-            ->leftjoin("departamentos", "departamentos.id", "cabildo_abierto.dep_id")
-            ->first();
+        Route::get('/download', function (Request $r) {
+            $cabildos = CabildoAbierto::where('cabildo_abierto.id', $r->id)
+                ->select('cabildo_abierto.*', 'ciudades.nombre AS city', 'departamentos.nombre AS departamento')
+                ->leftjoin("ciudades", "ciudades.id", "cabildo_abierto.ciu_id")
+                ->leftjoin("departamentos", "departamentos.id", "cabildo_abierto.dep_id")
+                ->first();
             $radicado = $r->radicado;
             $ciudadano = $r->ciudadano;
-            $pdf = \PDF::loadView('report.test',[
-                'ciudadano'=>$ciudadano,
-                'radicado'=>$radicado,
-                'data'=>$cabildos,
-                ]);
+            $pdf = \PDF::loadView('report.test', [
+                'ciudadano' => $ciudadano,
+                'radicado' => $radicado,
+                'data' => $cabildos,
+            ]);
             return $pdf->download('ffsdf.pdf');
         });
     });
 });
 
 
-        //--------------------------------------------------------------------------------------
-        // Rutas para tipos de documento
-        //--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
+// Rutas para tipos de documento
+//--------------------------------------------------------------------------------------
 
-        Route::get('/new-sesion', [CabildosController::class, 'getIndex']);
-        Route::get('/data-new-sesion', [CabildosController::class, 'dataGetIndex']);
-        Route::post('/saveSesion', [CabildosController::class, 'save']);
-        Route::get('/edit-sesion/{id}', [CabildosController::class, 'edit']);
-        Route::post('/edit-sesion-document', [CabildosController::class, 'editDocument']);
-        Route::post('/editSesion', [CabildosController::class, 'editSesion']);
-        Route::get('/delete-session/{id}', [CabildosController::class, 'deleteSesion']);
-        Route::post('/view-documents', [CabildosController::class, 'viewDocuments']);
-        Route::get('/uploads/{file}', [CabildosController::class, 'downloadFile']);
-        Route::get('/report-cabildos', [CabildosController::class, 'reportSessions']);
-        Route::post('/report-cabildos', [CabildosController::class, 'reportSessions']);
-        Route::get('/list-cabildos', [CabildosController::class, 'list']);
-        Route::post('/filter-list-cabildos', [CabildosController::class, 'filter']);
-        Route::get('/data-list-cabildos', [CabildosController::class, 'getList']);
-        Route::post('/changeCity', [CabildosController::class, 'changeCity']);
+Route::get('/new-sesion', [CabildosController::class, 'getIndex']);
+Route::get('/data-new-sesion', [CabildosController::class, 'dataGetIndex']);
+Route::post('/saveSesion', [CabildosController::class, 'save']);
+Route::get('/edit-sesion/{id}', [CabildosController::class, 'edit']);
+Route::post('/edit-sesion-document', [CabildosController::class, 'editDocument']);
+Route::post('/editSesion', [CabildosController::class, 'editSesion']);
+Route::get('/delete-session/{id}', [CabildosController::class, 'deleteSesion']);
+Route::post('/view-documents', [CabildosController::class, 'viewDocuments']);
+Route::get('/uploads/{file}', [CabildosController::class, 'downloadFile']);
+Route::get('/report-cabildos', [CabildosController::class, 'reportSessions']);
+Route::post('/report-cabildos', [CabildosController::class, 'reportSessions']);
+Route::get('/list-cabildos', [CabildosController::class, 'list']);
+Route::post('/filter-list-cabildos', [CabildosController::class, 'filter']);
+Route::get('/data-list-cabildos', [CabildosController::class, 'getList']);
+Route::post('/changeCity', [CabildosController::class, 'changeCity']);
 
 
 
-        Route::get('/tipos-de-archivo', [TipoDocumentoController::class, 'index']);
-        Route::get('/index_tipo_d',[TipoDocumentoController::class, 'index_tipo_d']);
-        Route::post('modal_eliminar_tipoDocumento', [TipoDocumentoController::class, 'modal_eliminar_tipoDocumento'])->name('modal_eliminar_tipoDocumento');
-        Route::post('eliminar_tipoDocumento/{id}', [TipoDocumentoController::class, 'destroy'])->name('tipoDocumento.destroy');
-        Route::post('/modal_creartipoDocumento', [TipoDocumentoController::class, 'modal_crear_municipio'])->name('modal_crear_tipoDocumento');
-        Route::post('/crear_tipoDocumento', [TipoDocumentoController::class, 'store'])->name('tipoDocumento.store');
-        Route::post('/editar_tipoDocumento', [TipoDocumentoController::class, 'edit'])->name('tipoDocumento.edit');
-        Route::post('/update_tipoDocumento', [TipoDocumentoController::class, 'update'])->name('tipoDocumento.update');
-        Route::post('/buscar-tipoDocumento/{nombre}', [TipoDocumentoController::class, 'buscar_tipoDocumento'])->name('buscar_tipoDocumento');
+Route::get('/tipos-de-archivo', [TipoDocumentoController::class, 'index']);
+Route::get('/index_tipo_d', [TipoDocumentoController::class, 'index_tipo_d']);
+Route::post('modal_eliminar_tipoDocumento', [TipoDocumentoController::class, 'modal_eliminar_tipoDocumento'])->name('modal_eliminar_tipoDocumento');
+Route::post('eliminar_tipoDocumento/{id}', [TipoDocumentoController::class, 'destroy'])->name('tipoDocumento.destroy');
+Route::post('/modal_creartipoDocumento', [TipoDocumentoController::class, 'modal_crear_municipio'])->name('modal_crear_tipoDocumento');
+Route::post('/crear_tipoDocumento', [TipoDocumentoController::class, 'store'])->name('tipoDocumento.store');
+Route::post('/editar_tipoDocumento', [TipoDocumentoController::class, 'edit'])->name('tipoDocumento.edit');
+Route::post('/update_tipoDocumento', [TipoDocumentoController::class, 'update'])->name('tipoDocumento.update');
+Route::post('/buscar-tipoDocumento/{nombre}', [TipoDocumentoController::class, 'buscar_tipoDocumento'])->name('buscar_tipoDocumento');
 
-        //-------------------------------------------------------------------------------------------------------------------------
-        // Rutas J
-        //-------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------
+// Rutas J
+//-------------------------------------------------------------------------------------------------------------------------
 
-        Route::post('/listado-casos-data',[CasosController::class, 'listadoCasoData']);
-        Route::get('/ver-caso/{id}',[CasosController::class, 'verCasoData']);
-        Route::post('/asignar-caso',[CasosController::class, 'asignarCaso']);
-        Route::post('/casos-asignados-data',[CasosController::class, 'listadoCasosAsignadosData']);
-        Route::put('/gestion_en_tramite',[CasosController::class, 'gestion_en_tramite']);
-        Route::put('/gestion_en_finalizado',[CasosController::class, 'gestion_en_finalizado']);
+Route::post('/listado-casos-data', [CasosController::class, 'listadoCasoData']);
+Route::get('/ver-caso/{id}', [CasosController::class, 'verCasoData']);
+Route::post('/asignar-caso', [CasosController::class, 'asignarCaso']);
+Route::post('/casos-asignados-data', [CasosController::class, 'listadoCasosAsignadosData']);
+Route::put('/gestion_en_tramite', [CasosController::class, 'gestion_en_tramite']);
+Route::put('/gestion_en_finalizado', [CasosController::class, 'gestion_en_finalizado']);
+Route::post('/listado-historico-casos-data', [CasosController::class, 'listado_historico_casos_data']);
+Route::post('/gestionar_caso_estados',[CasosController::class, 'gestion_caso_admin']);
 

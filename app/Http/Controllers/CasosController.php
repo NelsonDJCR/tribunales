@@ -382,6 +382,175 @@ class CasosController extends Controller
         }
     }
 
+    public function listado_historico_casos_data()
+    {
+        $casos = $this->tabla_historico();
+        $tramite = TipoTramite::all();
+        $departamento = Departamentos::all();
+        $estado = Estado::all();
+        $tipoArchivo = TipoArchivo::all();
+        $personas = PersonaCentralizado::where('estado', 1)->get();
+        $estado1 = Estado::where('estado', 1)
+            ->where('id', '<>', 1)->get();
+
+        return response()->json([
+            'tipoArchivo' => $tipoArchivo,
+            'tramite' => $tramite,
+            'departamento' => $departamento,
+            'estado' => $estado,
+            'casos' => $casos,
+            'estado1' => $estado1,
+            'personas' => $personas,
+        ]);
+    }
+
+    public function tabla_historico()
+    {
+        $casos = DB::table('casos')
+            ->select(
+                'casos.*',
+                DB::raw('departamentos.nombre as dep_nombre'),
+                DB::raw('ciudades.nombre as ciu_nombre'),
+                DB::raw('estado.nombre as estado_nombre'),
+                DB::raw('tipo_tramite.nombre as tramite_nombre'),
+                DB::raw('prioridad.nombre as prioridad_nombre'),
+            )->join('departamentos', 'departamentos.id', 'casos.id_departamento')
+            ->join('ciudades', 'ciudades.id', 'casos.id_municipio')
+            ->join('estado', 'estado.id', 'casos.id_estado')
+            ->join('tipo_tramite', 'tipo_tramite.id', 'casos.id_tramite')
+            ->join('prioridad', 'prioridad.id', 'casos.id_prioridad')
+            ->orderBy("casos.fecha_recibido")
+            ->where('id_estado', '<>', 1)->get();
+        return $casos;
+    }
+
+    public function gestion_caso_admin(Request $request)
+    {
+        // return $request->all();
+        $estado = $request->estado;
+        switch ($estado) {
+            case 1:
+                $caso = Caso::find($request->id);
+                $caso->gestion = $request->observacion;
+                $caso->id_estado = $request->estado;
+                $caso->save();
+                $seguimiento = CasoSeguimiento::find($request->id);
+                $seguimiento->gestion = $request->observacion;
+                $seguimiento->fecha_gestion = date('Y-m-d');
+                $seguimiento->id_asesor_asignado = $request->asesor;
+                $seguimiento->id_caso = $caso->id;
+                $seguimiento->id_estado = $request->estado;
+                $seguimiento->save();
+                return response()->json([
+                    'status' => 200,
+                    'msg' => 'Datos actualizados con éxito',
+                    'caso' => $caso,
+                ]);
+                break;
+            case '2':
+                $caso = Caso::find($request->id);
+                $caso->gestion = $request->observacion;
+                $caso->id_asesor_asignado = $request->asesor;
+                $caso->id_estado = $request->estado;
+                $caso->save();
+                $seguimiento = CasoSeguimiento::find($request->id);
+                $seguimiento->gestion = $request->observacion;
+                $seguimiento->fecha_gestion = date('Y-m-d');
+                $seguimiento->id_asesor_asignado = $request->asesor;
+                $seguimiento->id_caso = $caso->id;
+                $seguimiento->id_estado = $request->estado;
+                $seguimiento->save();
+                return response()->json([
+                    'status' => 200,
+                    'msg' => 'Datos actualizados con éxito',
+                    'caso' => $caso,
+                ]);
+                break;
+            case '3':
+                $caso = Caso::find($request->id);
+                $caso->id_estado = 3;
+                $caso->observacion_asignacion = $request->observacion;
+                // $caso->id_asesor_asignado = Auth::user()->id;
+                $caso->save();
+                // $caso->fecha_respuesta = date('Y-m-d');
+
+                $seguimiento = new CasoSeguimiento();
+                $seguimiento->gestion = $request->observacion;
+                $seguimiento->fecha_gestion = date('Y-m-d');
+                // $seguimiento->id_asesor_asignado = Auth::user()->id;
+                $seguimiento->id_caso = $caso->id;
+                $seguimiento->id_estado = 3;
+                $seguimiento->save();
+
+                if ($request->hasFile('archivo')) {
+                    $file = $request->file('archivo');
+                    $fileName = time() . '_' . $file->getClientOriginalname();
+
+                    $documento = new Documento();
+                    $documento->nombre = $fileName;
+                    $documento->ruta = 'uploads/' . $fileName;
+                    $documento->estado = 1;
+                    $documento->id_subserie = 1;
+                    $documento->id_tipo_documento = $request->tipoArchivo;
+                    $documento->save();
+
+                    $soporte = new Soporte();
+                    // $soporte->estado = 1;
+                    $soporte->id_caso = $caso->id;
+                    $soporte->id_documento = $documento->id;
+                    $soporte->save();
+                    $request->archivo->move(public_path('uploads'), $fileName);
+                }
+                return response()->json([
+                    'status' => 200,
+                    'msg' => 'Datos actualizados con éxito',
+                    'caso' => $caso,
+                ]);
+                break;
+            case '4':
+                $caso = Caso::find($request->id);
+                $caso->id_estado = 4;
+                $caso->respuesta = $request->respuesta;
+                // $caso->id_asesor_asignado = $request->asesor;
+                $caso->fecha_respuesta = date('Y-m-d');
+                $caso->save();
+
+                $seguimiento = new CasoSeguimiento();
+                $seguimiento->gestion = $request->observacion;
+                $seguimiento->fecha_gestion = date('Y-m-d');
+                // $seguimiento->idAsesorGestion = $request->asesor;
+                $seguimiento->id_caso = $caso->id;
+                $seguimiento->id_estado = 4;
+                $seguimiento->save();
+
+                $file = $request->file('archivo');
+                if ($request->hasFile('archivo')) {
+                    $fileName = time() . '_' . $file->getClientOriginalname();
+                }
+                $documento = new Documento();
+                $documento->nombre = $fileName;
+                $documento->ruta = 'uploads/' . $fileName;
+                $documento->estado = 1;
+                $documento->id_subserie = 1;
+                $documento->id_tipo_documento = $request->tipoArchivo;
+                $documento->save();
+
+                $soporte = new Soporte();
+                // $soporte->estado = 1;
+                $soporte->id_caso = $caso->id;
+                $soporte->id_documento = $documento->id;
+                $soporte->save();
+
+                $request->archivo->move(public_path('uploads'), $fileName);
+                return response()->json([
+                    'status' => 200,
+                    'msg' => 'Datos actualizados con éxito',
+                    'caso' => $caso,
+                ]);
+                break;
+        }
+    }
+
 
     /**
      * Store a new assignement request for creating a new casos log.
