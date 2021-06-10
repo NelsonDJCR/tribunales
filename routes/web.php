@@ -292,6 +292,9 @@ Route::post('/listado-historico-casos-data', [CasosController::class, 'listado_h
 Route::post('/gestionar_caso_estados', [CasosController::class, 'gestion_caso_admin']);
 Route::post('/filtrar-casos',[CasosController::class, 'filtrar_listado_casos']);
 Route::post('/documentos-x-casos/{id}',[CasosController::class, 'documentoxcaso']);
+Route::post('/filtrar-casos-asignados',[CasosController::class, 'filtrar_listado_casos_asignados']);
+Route::post('/filtros_historico_casos', [CasosController::class, 'filtros_historico_casos']);
+
 
 Route::get('/informe_pdf_mis', function (Request $request) {
     // return $request->all();
