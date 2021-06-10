@@ -35,11 +35,13 @@ use App\Http\Controllers\CasosController;
 use App\Http\Resources\EstadosResource;
 use App\Models\Estado;
 use App\Http\Resources\TipoTramitesResource;
+use App\Models\Actividad;
 use App\Models\TipoTramite;
 use App\Models\Departamentos;
 use App\Models\Magistrado;
 use App\Models\TipoDocumento;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 // ----------FIN IMPORTACIÓN CONTROLADORES CABILDOS-----------
 
@@ -287,5 +289,20 @@ Route::post('/casos-asignados-data', [CasosController::class, 'listadoCasosAsign
 Route::put('/gestion_en_tramite', [CasosController::class, 'gestion_en_tramite']);
 Route::put('/gestion_en_finalizado', [CasosController::class, 'gestion_en_finalizado']);
 Route::post('/listado-historico-casos-data', [CasosController::class, 'listado_historico_casos_data']);
-Route::post('/gestionar_caso_estados',[CasosController::class, 'gestion_caso_admin']);
+Route::post('/gestionar_caso_estados', [CasosController::class, 'gestion_caso_admin']);
 
+Route::get('/informe_pdf_mis', function (Request $request) {
+    // return $request->all();
+    $min_fecha = $request->min_fecha;
+    $max_fecha = $request->max_fecha;
+    $data = Actividad::where('id_magistrado', Auth::user()->id_persona)->where('estado', '1')->get();
+    // return $data;
+    $delegado = Magistrado::find(Auth::user()->id_persona);
+    $pdf = \PDF::loadView('ReportePDF', [
+        'data' => $data,
+        'min_fecha' => $min_fecha,
+        'max_fecha' => $max_fecha,
+        'delegado' => $delegado,
+    ]);
+    return $pdf->stream('mis_actividades.pdf');
+});

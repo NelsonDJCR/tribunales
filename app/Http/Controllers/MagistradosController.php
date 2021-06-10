@@ -96,7 +96,7 @@ class MagistradosController extends Controller
             ->where(function ($query) use ($post) {
                 if (isset($post['nombre'])) {
                     if (!empty($post['nombre']))
-                        $query->orwhere("magistrados.nombre", 'like', "%" . $post['nombre'] . "%"); 
+                        $query->orwhere("magistrados.nombre", 'like', "%" . $post['nombre'] . "%");
                 }
             })
             ->where(function ($query) use ($post) {
@@ -126,13 +126,16 @@ class MagistradosController extends Controller
 
 	public function misActividades()
 	{
+        $actividades = Actividad::where('id_magistrado',Auth::user()->id)
+        ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento')
+        ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")
+        ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
+        ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
+        ->get();
         return response()->json([
-            'table' => Actividad::where('id_magistrado',Auth::user()->id)
-            ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento')
-            ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")
-            ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
-            ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
-            ->get()
+            'table' => $actividades,
+            'maximo' => $actividades->max("fecha"),
+            'minimo' => $actividades->min('fecha'),
         ]);
 	}
 
