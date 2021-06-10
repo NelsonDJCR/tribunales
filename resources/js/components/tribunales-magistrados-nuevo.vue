@@ -10,16 +10,26 @@
     <div class="container mt-5">
       <!-- Breadcrumb -->
       <ol class="breadcrumb">
-          <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Magistrados / Nuevo </label></li>
+        <li class="breadcrumb-item active">
+          <router-link :to="{ name: 'home' }"><span>Home</span></router-link> /
+          <label for="" class="p-2"
+            >Tribunales de Garantía / Listado de Magistrados / Nuevo
+          </label>
+        </li>
       </ol>
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-            <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                <h1 class="text-blue"><b>NUEVO MAGISTRADO</b></h1>
-            </div>
-            <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-                <router-link :to='`/tribunales-magistrados-listar`' @click.native="$router.go()" class="btn btn-danger text-white w-100 mt-2">Cancelar</router-link>
-            </div>
+          <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+            <h1 class="text-blue"><b>NUEVO MAGISTRADO</b></h1>
+          </div>
+          <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+            <router-link
+              :to="`/tribunales-magistrados-listar`"
+              @click.native="$router.go()"
+              class="btn btn-danger text-white w-100 mt-2"
+              >Cancelar</router-link
+            >
+          </div>
         </div>
       </div>
 
@@ -41,12 +51,7 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Cargo</b></label>
-                <select
-                  class="form-select"
-                  name=""
-                   v-model="form.cargo"
-
-                >
+                <select class="form-select" name="" v-model="form.cargo">
                   <option>Seleccione ...</option>
                   <option value="Funcionario">Funcionario</option>
                   <option value="Magistrado">Magistrado</option>
@@ -56,47 +61,46 @@
             <div class="row" v-if="form.cargo == 'Funcionario'">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
-                <select
-                  class="form-select"
-                  name=""
-                   v-model="form.tribunal_id">
+                <select class="form-select" name="" v-model="form.tribunal_id">
                   <option>Seleccione ...</option>
                   <option
-                        v-for="(i, index) in tribunales"
-                        :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                        ></option>
+                    v-for="(i, index) in tribunales"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
                 </select>
               </div>
             </div>
 
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Tipo de Identificación</b></label>
+                <label for="" class="form-label"
+                  ><b>Tipo de Identificación</b></label
+                >
                 <select
                   class="form-select"
                   name=""
-                   v-model="form.id_tipo_identificacion"
-
+                  v-model="form.id_tipo_identificacion"
                 >
                   <option>Seleccione ...</option>
                   <option
-                        v-for="(i, index) in tipo_identificacion"
-                        :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                        ></option>
-
+                    v-for="(i, index) in tipo_identificacion"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
                 </select>
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Número de Identificación</b></label>
+                <label for="" class="form-label"
+                  ><b>Número de Identificación</b></label
+                >
                 <input
                   type="number"
-                   v-model="form.numero_identificacion"
+                  v-model="form.numero_identificacion"
                   class="form-control"
                   maxlength="15"
                   name=""
@@ -164,70 +168,60 @@
                 <label for="" class="form-label"
                   ><b>Correo Electrónico</b>
                 </label>
-                  <input
+                <input
                   v-model="form.correo"
-                    type="email"
-                    class="form-control"
-
-                  />
+                  type="email"
+                  class="form-control"
+                />
               </div>
             </div>
 
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"
-                  ><b>Teléfono</b>
-                </label>
+                <label for="" class="form-label"><b>Teléfono</b> </label>
                 <div class="input-group">
                   <input
-                  v-model="form.telefono"
+                    v-model="form.telefono"
                     type="number"
                     class="form-control"
                   />
                 </div>
               </div>
             </div>
-               <div class="row">
-                <div class="mb-3">
-                    <label for="" class="form-label"><b>Banco</b></label>
-                    <select
-                    v-model="form.id_banco"
-                    class="form-select"
-                    name=""
-                    >
-                        <option>Seleccione ...</option>
-                        <option
-                        v-for="(i, index) in bancos"
-                        :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                        ></option>
-                    </select>
-                </div>
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Banco</b></label>
+                <select v-model="form.id_banco" class="form-select" name="">
+                  <option>Seleccione ...</option>
+                  <option
+                    v-for="(i, index) in bancos"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
             </div>
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-
-
-
             <div class="row">
-                <div class="mb-3">
-                    <label for="" class="form-label"><b>Tipo de Cuenta</b></label>
-                    <select
-                    class="form-select"
-                    v-model="form.id_tipo_cuenta"
-                    name=""
-                    >
-                        <option>Seleccione ...</option>
-                        <option
-                        v-for="(i, index) in tipo_cuentas"
-                        :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                        ></option>
-                    </select>
-                </div>
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Tipo de Cuenta</b></label>
+                <select
+                  class="form-select"
+                  v-model="form.id_tipo_cuenta"
+                  name=""
+                >
+                  <option>Seleccione ...</option>
+                  <option
+                    v-for="(i, index) in tipo_cuentas"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
             </div>
 
             <div class="row">
@@ -235,62 +229,64 @@
                 <label for="" class="form-label"
                   ><b>Número de Cuenta</b>
                 </label>
-                  <input
-                    v-model="form.numero_cuenta"
-                    type="number"
-                    class="form-control"
-                  />
+                <input
+                  v-model="form.numero_cuenta"
+                  type="number"
+                  class="form-control"
+                />
               </div>
             </div>
 
-
-
             <div class="row">
-                <div class="mb-3">
-                    <label for="" class="form-label"
-                        ><b>Tipo de archivo</b></label
-                    >
-                    <select
-                        class="form-select"
-                        name="type_file"
-                        v-model="form.id_tipo_archivo"
-                    >
-                    <option>Seleccione ...</option>
-                        <option
-                        v-for="(i, index) in tipo_archivos"
-                        :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                        ></option>
-                    </select>
-                </div>
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Tipo de archivo</b></label>
+                <select
+                  class="form-select"
+                  name="type_file"
+                  v-model="form.id_tipo_archivo"
+                >
+                  <option>Seleccione ...</option>
+                  <option
+                    v-for="(i, index) in tipo_archivos"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
             </div>
 
             <div class="row mt-2" @click="box_file()">
-                <div class="mb-3">
-                    <div
-                        class="form-group files border opacity-2 opacity-2h"
-                        role="button"
-                        id="box_file"
-                    >
-                        <div class="row mt-5">
-                        <img
-                            class="img_file mx-auto d-block"
-                            alt=""
-                            style="width: 100px"
-                            src="https://img.icons8.com/ios/452/google-docs.png"
-                        />
-                        </div>
-                        <div class="row mt-1 mb-5">
-                        <p class="text_file text-center">
-                            Ingresa aquí tus documentos .pdf .png .jpg
-                        </p>
-                        </div>
-                    </div>
+              <div class="mb-3">
+                <div
+                  class="form-group files border opacity-2 opacity-2h"
+                  role="button"
+                  id="box_file"
+                >
+                  <div class="row mt-5">
+                    <img
+                      class="img_file mx-auto d-block"
+                      alt=""
+                      style="width: 100px"
+                      src="https://img.icons8.com/ios/452/google-docs.png"
+                    />
+                  </div>
+                  <div class="row mt-1 mb-5">
+                    <p class="text_file text-center">
+                      Ingresa aquí tus documentos .pdf .png .jpg
+                    </p>
+                  </div>
                 </div>
+              </div>
             </div>
 
-            <input type="file" id="file" class="d-none" @change="upload_file($event)" accept=".pdf,.png,.jpg">
+            <input
+              type="file"
+              id="file"
+              class="d-none"
+              @change="upload_file($event)"
+              accept=".pdf,.png,.jpg"
+            />
 
             <div class="row">
               <div class="mb-1">
@@ -298,10 +294,21 @@
                 <div class="row">
                   <div class="btns-block d-grid gap-2">
                     <ul class="list-group btn-group-vertical">
-                      <li class="list-group-item" v-for="(i,index) in archivos" :key="index">
+                      <li
+                        class="list-group-item"
+                        v-for="(i, index) in archivos"
+                        :key="index"
+                      >
                         <button class="btn btn-light btn-sm mt-2">
-                          <span class="text-start float-start mt-1">{{ i.name }}</span>
-                          <button class="badge bg-danger float-end text-end m-1" @click="eliminar_archivo(index)"><i class="fa fa-trash fa-md"></i></button>
+                          <span class="text-start float-start mt-1">{{
+                            i.name
+                          }}</span>
+                          <button
+                            class="badge bg-danger float-end text-end m-1"
+                            @click="eliminar_archivo(index)"
+                          >
+                            <i class="fa fa-trash fa-md"></i>
+                          </button>
                           <!-- <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a> -->
                         </button>
                       </li>
@@ -319,7 +326,9 @@
             </div>
 
             <div class="d-grid gap-2 col-6 mx-auto">
-              <button type="submit"  class="btn btn-success">Crear Magistrado</button>
+              <button type="submit" class="btn btn-success">
+                Crear Magistrado
+              </button>
             </div>
           </div>
         </div>
@@ -393,12 +402,29 @@ export default {
       archivos: [],
       tipo_archivo: [],
       tribunales: [],
-      form: {id_tipo_archivo: ''},
+      form: {
+        cargo: "",
+        ciu_id: "",
+        correo: "",
+        dep_id: "",
+        direccion: "",
+        id_banco: "",
+        id_tipo_archivo: "",
+        id_tipo_cuenta: "",
+        id_tipo_identificacion: "",
+        nombre: "",
+        numero_cuenta: "",
+        numero_identificacion: "",
+        telefono: "",
+        tribunal_id: "",
+      },
       documentos: [],
+      usados: [],
       index: 0,
-  }},
+    };
+  },
   created() {
-     axios.get("/data-select").then((r) => {
+    axios.get("/data-select").then((r) => {
       this.tipo_documentos = r.data.tipo_documento;
       this.ciudades = r.data.ciudades;
       this.departament = r.data.departamentos;
@@ -410,48 +436,93 @@ export default {
     });
   },
   methods: {
-      eliminar_archivo(index){
-          this.archivos.splice(index)
-      },
-      upload_file(event){
-          this.archivo = event.target.files[0]
-          this.archivos.push(this.archivo)
-          this.tipo_archivo.push(this.form.id_tipo_archivo)
-          this.form.id_tipo_archivo = ''
-      },
-      box_file(){
-          if(this.form.id_tipo_archivo != ''){
-              $('#file').trigger('click');
-          }else{
-              Swal.fire('¡Error!','Selecciona un tipo de archivo','error')
-          }
-      },
+    eliminar_archivo(index) {
+      this.archivos.splice(index);
+      this.tipo_archivo.splice(index);
+    },
+    upload_file(event) {
+      for (let index = 0; index < this.tipo_archivo.length; index++) {
+        if (this.tipo_archivo[index] == this.form.id_tipo_archivo) {
+          Swal.fire(
+            "¡Advertencia!",
+            "Ya usaste este tipo de archivo",
+            "warning"
+          );
+          return;
+        }
+      }
+      this.archivo = event.target.files[0];
+      this.archivos.push(this.archivo);
+      this.tipo_archivo.push(this.form.id_tipo_archivo);
+      this.form.id_tipo_archivo = "";
+    //   console.log(this.archivos);
+    },
+    box_file() {
+      if (this.form.id_tipo_archivo != "") {
+        $("#file").trigger("click");
+      } else {
+        Swal.fire("¡Error!", "Selecciona un tipo de archivo", "error");
+      }
+    },
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
         this.ciudades = r.data;
       });
     },
-    save(){
-      axios.post("/guardarMagistrados", this.form).then((res) => {
+    save() {
+      console.log(this.form);
+      if (this.archivos.length == 0) {
+        Swal.fire("¡Error!", "Carga por lo menos un archivo", "error");
+        return;
+      }
+      // return
+      var formulario = new FormData();
+      formulario.append("cargo", this.form.cargo);
+      formulario.append("ciu_id", this.form.ciu_id);
+      formulario.append("correo", this.form.correo);
+      formulario.append("dep_id", this.form.dep_id);
+      formulario.append("direccion", this.form.direccion);
+      formulario.append("id_banco", this.form.id_banco);
+      formulario.append("id_tipo_cuenta", this.form.id_tipo_cuenta);
+      formulario.append(
+        "id_tipo_identificacion",
+        this.form.id_tipo_identificacion
+      );
+      formulario.append("nombre", this.form.nombre);
+      formulario.append("numero_cuenta", this.form.numero_cuenta);
+      formulario.append(
+        "numero_identificacion",
+        this.form.numero_identificacion
+      );
+      formulario.append("telefono", this.form.telefono);
+      formulario.append("tribunal_id", this.form.tribunal_id);
+      formulario.append("cantidad", this.archivos.length);
+
+      for (let index = 0; index < this.archivos.length; index++) {
+        formulario.append("archivo" + index, this.archivos[index]);
+      }
+      for (let index = 0; index < this.tipo_archivo.length; index++) {
+        formulario.append("tipo_archivo" + index, this.tipo_archivo[index]);
+      }
+
+      axios.post("/guardarMagistrados", formulario).then((res) => {
+        console.log(res.data);
         if (res.data.code == 200) {
           Swal.fire("¡Perfecto!", res.data.msg, "success").then(function () {
             location.reload();
           });
-        }else if(res.data.code == 406){
-          Swal.fire(res.data.msg, 'Ingrese todos los campos para continuar', "warning")
-        }else{
-          Swal.fire("¡Perfecto!", res.data.msg, "error")
+        } else if (res.data.code == 406) {
+          Swal.fire(
+            res.data.msg,
+            "Ingrese todos los campos para continuar",
+            "warning"
+          );
         }
       });
-    }
+    },
   },
 };
-
-
-
-
-
 </script>
 
 
