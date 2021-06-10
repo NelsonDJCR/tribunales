@@ -85,7 +85,7 @@
                       Buscar
                     </button>
                   </div>
-                  
+
 
                 </div>
               </div>
@@ -226,7 +226,7 @@
     </template>
     <template v-if="pantalla == 'nuevo'">
       <div>
-        <tribunales-magistrados-nuevo></tribunales-magistrados-nuevo>
+        <tribunales-magistrados-nuevo />
       </div>
 
     </template>
@@ -257,7 +257,8 @@ export default {
       action: 0,
       idEditar: 0,
       datos_edit: {},
-      pantalla: "lista",
+      pantalla: 'nuevo',
+    //   pantalla: "lista",
     };
   },
   created() {

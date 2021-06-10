@@ -13,8 +13,6 @@ class MagistradosController extends Controller
 {
     public function save()
     {
-
-
         // use Illuminate\Support\Facades\Validator;
         $rules = [
             'nombre'=>'required|max:30',

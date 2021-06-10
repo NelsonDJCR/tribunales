@@ -209,7 +209,7 @@
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
 
-         
+
 
             <div class="row">
                 <div class="mb-3">
@@ -243,7 +243,7 @@
               </div>
             </div>
 
-          
+
 
             <div class="row">
                 <div class="mb-3">
@@ -266,13 +266,12 @@
                 </div>
             </div>
 
-            <div class="row mt-2">
+            <div class="row mt-2" @click="box_file()">
                 <div class="mb-3">
                     <div
                         class="form-group files border opacity-2 opacity-2h"
                         role="button"
                         id="box_file"
-                        @click="openModalFile()"
                     >
                         <div class="row mt-5">
                         <img
@@ -291,32 +290,34 @@
                 </div>
             </div>
 
+            <input type="file" id="file" class="d-none" @change="upload_file($event)" accept=".pdf,.png,.jpg">
+
             <div class="row">
               <div class="mb-1">
                 <label for="" class="form-label"><b>Archivos</b></label>
                 <div class="row">
                   <div class="btns-block d-grid gap-2">
                     <ul class="list-group btn-group-vertical">
-                      <li class="list-group-item">
+                      <li class="list-group-item" v-for="(i,index) in archivos" :key="index">
                         <button class="btn btn-light btn-sm mt-2">
-                          <span class="text-start float-start mt-1">Nombre de Archivo 1</span>
-                          <a href="#" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
-                          <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a>
+                          <span class="text-start float-start mt-1">{{ i.name }}</span>
+                          <button class="badge bg-danger float-end text-end m-1" @click="eliminar_archivo(index)"><i class="fa fa-trash fa-md"></i></button>
+                          <!-- <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a> -->
                         </button>
                       </li>
-                      <li class="list-group-item">
+                      <!-- <li class="list-group-item">
                         <button class="btn btn-light btn-sm mt-2">
                           <span class="text-start float-start mt-1">Nombre de Archivo 2</span>
                           <a href="#" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
                           <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a>
                         </button>
-                      </li>
+                      </li> -->
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <div class="d-grid gap-2 col-6 mx-auto">
               <button type="submit"  class="btn btn-success">Crear Magistrado</button>
             </div>
@@ -388,8 +389,11 @@ export default {
       type_file: [],
       ciudades: [],
       departament: [],
+      archivo: {},
+      archivos: [],
+      tipo_archivo: [],
       tribunales: [],
-      form: {},
+      form: {id_tipo_archivo: ''},
       documentos: [],
       index: 0,
   }},
@@ -406,7 +410,22 @@ export default {
     });
   },
   methods: {
-    
+      eliminar_archivo(index){
+          this.archivos.splice(index)
+      },
+      upload_file(event){
+          this.archivo = event.target.files[0]
+          this.archivos.push(this.archivo)
+          this.tipo_archivo.push(this.form.id_tipo_archivo)
+          this.form.id_tipo_archivo = ''
+      },
+      box_file(){
+          if(this.form.id_tipo_archivo != ''){
+              $('#file').trigger('click');
+          }else{
+              Swal.fire('¡Error!','Selecciona un tipo de archivo','error')
+          }
+      },
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
