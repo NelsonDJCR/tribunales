@@ -55,7 +55,7 @@
                     <table cellspadding="50" style="width: 100%; border-left: 2px solid #000; border-right: 2px solid #000;">
                         <tbody style="display:block; width: 100%;">
                             <tr style="display:table; width: 100%; ">
-                                <td><strong style="display: block; padding: 10px;">DELEGADO:</strong></td>
+                                <td><strong style="display: block; padding: 10px;">MAGISTRADO:</strong></td>
                                 {{-- <td>---MES AQUI ----</td> --}}
                                 <td>{{ $delegado->nombre }}</td>
 
@@ -100,7 +100,7 @@
                 <td style="padding: 20px; border-left: 1px solid #000; border-bottom: 1px solid #000">{{ $row->fecha }}</td>
                 <td style="padding: 20px; vertical-align: middle; border-left: 1px solid #000;  border-right: 1px solid #000; border-bottom: 1px solid #000">
                     <ul style="list-style: none">
-                        <li style="list-style:none; display: block; height: 50px; line-height: 0.7em;"><strong>Tipo de actividad:</strong>  <p style="display: inline-block; margin-top: 2px; border-bottom: 1px solid #000">{{ $row->id_tipo_actividad }}</p></li>
+                        <li style="list-style:none; display: block; height: 50px; line-height: 0.7em;"><strong>Tipo de actividad:</strong>  <p style="display: inline-block; margin-top: 2px; border-bottom: 1px solid #000">{{ $row->tipoActividad->nombre }}</p></li>
                         <li style="list-style:none; display: block;  line-height: 0.7em; "><strong>Tema:</strong><p style="display: inline-block;  margin-top: 2px; text-align: justify; padding-right: 45px;">{{ $row->tema }} </p></li>
                     </ul>
                 </td>
