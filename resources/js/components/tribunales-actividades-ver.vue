@@ -253,8 +253,6 @@ export default {
       this.magistrado = r.data.magistrado;
       this.documentos = r.data.documentos
       this.type_file = r.data.tipo_archivos
-      console.log(this.documentos);
-      console.log(this.type_file);
     });
   },
 };

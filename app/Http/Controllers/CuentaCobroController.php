@@ -8,7 +8,9 @@ use App\Models\CuentaCobro;
 use App\Models\CuentaSoporte;
 use App\Models\Documento;
 use App\Models\Sorteo;
+use App\Models\TipoArchivo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CuentaCobroController extends Controller
@@ -112,11 +114,21 @@ class CuentaCobroController extends Controller
         ]);
     }
 
-    public function record()
+    public function record(Request $request)
     {
-
+        $documentos = DB::table('cuenta_soporte')
+        ->select(
+            'documento.id',
+            'documento.id_tipo_documento',
+            'documento.nombre',
+            'documento.ruta',
+        )->join('documento', 'documento.id', 'cuenta_soporte.id_documento')
+        ->where('documento.estado', '1')
+        ->where('id_cuenta', $request->id)->get();
         return response()->json([
-            'data' => CuentaCobro::where('id', request()->id)->with('magistrado', 'tribunal')->first(),
+            'data' => CuentaCobro::where('id', $request->id)->with('magistrado', 'tribunal')->first(),
+            'tipo_archivos' => TipoArchivo::all()->where('estado', 1),
+            'documentos' => $documentos,
         ]);
     }
 }
