@@ -21,50 +21,50 @@ use Illuminate\Support\Facades\Validator;
 class TribunalesController extends Controller
 {
 
-    
+
     public function store(Request $r)
     {
         $fechaInicio =  $r->fecha_inicio;
         $rules = [
-            'nombre'=>'required|max:20',
-            'direccion'=>'required|max:60',
-            'dep_id'=>'required',
-            'ciu_id'=>'required',
-            'fecha_inicio'=>'required|',
-            'fecha_final'=>"required|after:$fechaInicio",
+            'nombre' => 'required|max:20',
+            'direccion' => 'required|max:60',
+            'dep_id' => 'required',
+            'ciu_id' => 'required',
+            'fecha_inicio' => 'required|',
+            'fecha_final' => "required|after:$fechaInicio",
         ];
         $messages = [
-            'nombre.required'=>'El nombre es requerido',
-            'nombre.max'=>'El nombre no puede tener más de 20 carácteres',
-            'direccion.required'=> 'La dirección es quequerida ',
-            'direccion.max'=> 'La dirección no puede tener más de 60 carácteres',
-            'dep_id.required'=>'El departamento es quequerido ',
-            'ciu_id.required'=>'La ciudad es quequerida ',
-            'fecha_inicio.required'=>'La fecha de inicio es quequerida ',
-            'fecha_inicio.after'=>'Ingrese una fecha a partir de hoy',
-            'fecha_final.required'=>'La fecha final es quequerida ',
-            'fecha_final.after'=>'La fecha final debe que ser mayor a la inicial',
+            'nombre.required' => 'El nombre es requerido',
+            'nombre.max' => 'El nombre no puede tener más de 20 carácteres',
+            'direccion.required' => 'La dirección es quequerida ',
+            'direccion.max' => 'La dirección no puede tener más de 60 carácteres',
+            'dep_id.required' => 'El departamento es quequerido ',
+            'ciu_id.required' => 'La ciudad es quequerida ',
+            'fecha_inicio.required' => 'La fecha de inicio es quequerida ',
+            'fecha_inicio.after' => 'Ingrese una fecha a partir de hoy',
+            'fecha_final.required' => 'La fecha final es quequerida ',
+            'fecha_final.after' => 'La fecha final debe que ser mayor a la inicial',
         ];
         $validator = Validator::make(request()->all(), $rules, $messages);
         if ($validator->fails()) {
             return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
         }
 
-        
+
 
 
 
         if ($r->cantidad == 0) {
             return response()->json([
-                'code' =>406,
+                'code' => 406,
                 'msg' => 'Ingrese un documento',
             ]);
         }
 
-    
-        
+
+
         // php artisan make:request CreateTribunales
-        
+
 
 
         $x = new Tribunal();
@@ -77,17 +77,16 @@ class TribunalesController extends Controller
         $x->fecha_final = $r->fecha_final;
         $x->save();
 
-        for ($i=0; $i < $r->cantidad ; $i++) { 
+        for ($i = 0; $i < $r->cantidad; $i++) {
             $fileName = time() . '_' . $r["archivos$i"]->getClientOriginalname();
             $r["archivos$i"]->move(public_path('uploads'), $fileName);
             $ruta =  "uploads/$fileName";
         }
-        
+
         return response()->json([
             'code' => 200,
             'msg' => 'El tribunal guardado exitosamente'
         ]);
-        
     }
 
     public function data()
@@ -119,14 +118,14 @@ class TribunalesController extends Controller
                 ->join("departamentos", "departamentos.id", "$table.dep_id")
                 ->join("ciudades", "ciudades.id", "$table.ciu_id")
                 ->join("magistrados", "magistrados.id", "actividades.id_magistrado")
-                ->orderBy("$table.id",'DESC')
+                ->orderBy("$table.id", 'DESC')
                 ->get();
         } else {
             $tabla = DB::table($table)
                 ->select("$table.*", 'departamentos.nombre AS departamento', 'ciudades.nombre AS ciudad')
                 ->join("departamentos", "departamentos.id", "$table.dep_id")
                 ->join("ciudades", "ciudades.id", "$table.ciu_id")
-                ->orderBy("$table.id",'DESC')
+                ->orderBy("$table.id", 'DESC')
                 ->get();
         }
 
@@ -154,7 +153,7 @@ class TribunalesController extends Controller
             'tabla' => $tabla
         ]);
     }
-   
+
 
     public function estadoInactivar($id, $table, $estado)
     {
@@ -184,6 +183,7 @@ class TribunalesController extends Controller
 
     public function dataRecord($id, $table)
     {
+        // return $id;
         if ($table == 'actividades') {
             $x = DB::table('actividades')->where('id', $id)->first();
             return response()->json([
@@ -195,11 +195,23 @@ class TribunalesController extends Controller
                 'tipo_cuentas' => TipoCuenta::all()->where('estado', 1),
                 'tipo_archivos' => TipoArchivo::all()->where('estado', 1),
                 'tipo_identificacion' => TipoIdentificacion::all()->where('estado', 1),
-                'magistrado' => Magistrado::where('id',$x->id_magistrado)->select('magistrados.nombre AS magistrado')->first(),
-                
+                'magistrado' => Magistrado::where('id', $x->id_magistrado)->select('magistrados.nombre AS magistrado')->first(),
+
             ]);
         }
+
+        if ($table == 'magistrados') :
+            $documentos = DB::table('magistrados_soporte')
+                ->select(
+                    'documento.id_tipo_documento',
+                    'documento.nombre',
+                    'documento.ruta',
+                )->join('documento', 'documento.id', 'magistrados_soporte.id_documento')
+                ->where('id_magistrado', $id)->get();
+        endif;
+
         return response()->json([
+            'documentos' => $documentos,
             'formulario' => DB::table($table)->where('id', $id)->first(),
             'departamentos' => Departamentos::all()->where('estado', 1),
             'ciudades' => Ciudades::all()->where('estado', 1),
@@ -208,11 +220,11 @@ class TribunalesController extends Controller
             'tipo_cuentas' => TipoCuenta::all()->where('estado', 1),
             'tipo_archivos' => TipoArchivo::all()->where('estado', 1),
             'tipo_identificacion' => TipoIdentificacion::all()->where('estado', 1),
-            
+
 
         ]);
     }
-    
+
 
     public function editar(Request $r)
     {
@@ -247,7 +259,7 @@ class TribunalesController extends Controller
             ->where(function ($query) use ($post) {
                 if (isset($post['dep_id'])) {
                     if (!empty($post['dep_id']))
-                        $query->orwhere("tribunal.dep_id", '=', $post['dep_id'] );
+                        $query->orwhere("tribunal.dep_id", '=', $post['dep_id']);
                 }
             })
             ->where(function ($query) use ($post) {
@@ -262,15 +274,14 @@ class TribunalesController extends Controller
                         $query->where("tribunal.fecha_final",   '<=',  $post['fecha_final']);
                 }
             })
-            ->orderBy('tribunal.id','DESC')
+            ->orderBy('tribunal.id', 'DESC')
             ->get();
         return response()->json([
             'tabla' => $x
         ]);
     }
 
-	public function nuevaArchivo()
-	{
-		
-	}
+    public function nuevaArchivo()
+    {
+    }
 }

@@ -257,8 +257,8 @@ export default {
       action: 0,
       idEditar: 0,
       datos_edit: {},
-      pantalla: 'nuevo',
-    //   pantalla: "lista",
+    //   pantalla: 'ver',
+      pantalla: "lista",
     };
   },
   created() {

@@ -92,10 +92,10 @@ class MagistradosController extends Controller
             endif;
         }
 
-            return response()->json([
-                'status' =>'201',
-                'msg' => 'Magistrado guardado correctamente'
-            ]);
+        return response()->json([
+            'status' => '201',
+            'msg' => 'Magistrado guardado correctamente'
+        ]);
 
         // if (Magistrado::insert(request()->all())) {
         //     return response()->json([
@@ -105,26 +105,86 @@ class MagistradosController extends Controller
         // }
     }
 
-    public function editar(Request $r)
+    public function editar(Request $request)
     {
-        DB::table('magistrados')
-            ->where('id', $r->id)
-            ->update([
-                'nombre' => $r->nombre,
-                'id_tipo_identificacion' => $r->id_tipo_identificacion,
-                'numero_identificacion' => $r->numero_identificacion,
-                'dep_id' => $r->dep_id,
-                'ciu_id' => $r->ciu_id,
-                'direccion' => $r->direccion,
-                'correo' => $r->correo,
-                'telefono' => $r->telefono,
-                'id_banco' => $r->id_banco,
-                'id_tipo_cuenta' => $r->id_tipo_cuenta,
-                'numero_cuenta' => $r->numero_cuenta,
-                'id_tipo_archivo' => $r->id_tipo_archivo,
-            ]);
+        return $request->all();
+        $rules = [
+            'nombre' => 'required|max:30',
+            'id_tipo_identificacion' => 'required|',
+            'cargo' => 'required|',
+            'numero_identificacion' => 'required|max:15',
+            'dep_id' => 'required|',
+            'ciu_id' => 'required|',
+            'direccion' => 'required|max:60',
+            'correo' => 'required|',
+            'telefono' => 'required|max:10',
+            'id_banco' => 'required|',
+            'id_tipo_cuenta' => 'required|',
+            'numero_cuenta' => 'required|max:30',
+        ];
+        $messages = [
+            'nombre.required' => 'El nombre es requerido',
+            'id_tipo_identificacion.required' => 'El tipo de identificación es requerido ',
+            'cargo.required' => 'El cargo es requerido ',
+            'numero_identificacion.required' => 'Es número de identificación es requerido ',
+            'numero_identificacion.max' => 'El número de identificación no debe tener más de 15 carácteres',
+            'dep_id.required' => 'El departamento es requerido ',
+            'ciu_id.required' => 'La ciudad es requerida',
+            'direccion.required' => 'La dirección es requerida',
+            'direccion.max' => 'La dirección no debe tener más de 60 carácteres',
+            'correo.required' => ' El correo es requerido',
+            'telefono.required' => 'El teléfono es requerido',
+            'telefono.max' => 'El teléfono no debe tener más de 10 carácteres',
+            'id_banco.required' => 'El banco es requerido',
+            'id_tipo_cuenta.required' => 'El tipo de cuenta es requerido',
+            'numero_cuenta.required' => 'El número de cuenta es requerido',
+            'numero_cuenta.max' => 'El número de cuenta no debe tener más de 30 carácteres',
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return response()->json(['status' => 406, 'msg' => $validator->errors()->first()]);
+        }
+        // return $request->all();
+        $magistrado = Magistrado::find($request->id);
+        $magistrado->cargo = $request->cargo;
+        $magistrado->ciu_id = $request->ciu_id;
+        $magistrado->correo = $request->correo;
+        $magistrado->dep_id = $request->dep_id;
+        $magistrado->direccion = $request->direccion;
+        $magistrado->id_banco = $request->id_banco;
+        $magistrado->id_tipo_cuenta = $request->id_tipo_cuenta;
+        $magistrado->id_tipo_identificacion = $request->id_tipo_identificacion;
+        $magistrado->nombre = $request->nombre;
+        $magistrado->numero_cuenta = $request->numero_cuenta;
+        $magistrado->numero_identificacion = $request->numero_identificacion;
+        $magistrado->telefono = $request->telefono;
+        // Especial
+        $magistrado->tribunal_id = $request->tribunal_id;
+        // Fin especial
+        $magistrado->save();
+
+
+        for ($x = 0; $x < $request->cantidad; $x++) {
+            if ($request->hasFile("archivo$x")) :
+                $file = $request->file("archivo$x");
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $documento = new Documento();
+                $documento->id_subserie = 1;
+                $documento->id_tipo_documento = $request["tipo_archivo$x"];
+                $documento->nombre = $fileName;
+                $documento->ruta = 'uploads/' . $fileName;
+                $documento->estado = 1;
+                $documento->save();
+
+                $soporte = new MagistradoSoporte();
+                $soporte->id_magistrado = $magistrado->id;
+                $soporte->id_documento = $documento->id;
+                $soporte->save();
+                $request["archivo$x"]->move(public_path('uploads'), $fileName);
+            endif;
+        }
         return response()->json([
-            'code' => '200',
+            'status' => '200',
             'msg' => 'Datos actualizados correctamente'
         ]);
     }

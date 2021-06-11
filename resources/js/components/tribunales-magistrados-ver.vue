@@ -209,19 +209,11 @@
                 <div class="row">
                   <div class="btns-block d-grid gap-2">
                     <ul class="list-group btn-group-vertical">
-                      <li class="list-group-item">
-                        <button class="btn btn-light btn-sm mt-2">
-                          <span class="text-start float-start mt-1">Nombre de Archivo 1</span>
-                          <a href="#" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
-                          <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a>
-                        </button>
-                      </li>
-                      <li class="list-group-item">
-                        <button class="btn btn-light btn-sm mt-2">
-                          <span class="text-start float-start mt-1">Nombre de Archivo 2</span>
-                          <a href="#" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
-                          <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a>
-                        </button>
+                      <li class="list-group-item" v-for="(i,index) in documentos" :key="index">
+                        <div class="btn btn-light btn-sm mt-2">
+                          <span class="text-start float-start mt-1">{{ i.nombre }}</span>
+                          <a :href="i.ruta" :download="i.ruta" class="badge bg-info float-end text-end m-1" id="prueba"><i class="fa fa-download fa-md"></i></a>
+                        </div>
                       </li>
                     </ul>
                   </div>
@@ -291,9 +283,6 @@
   </div>
 </template>
 <script>
-// $('body').on('click', '.delete_file', function() {
-//   $(this).parent().parent().remove();
-// });
 export default {
   props: ['id'],
   data() {
@@ -309,7 +298,9 @@ export default {
   },
   created() {
     axios.get(`/data-rercord/${this.id}/magistrados`).then((r) => {
+    // axios.get('/data-rercord/26/magistrados').then((r) => {
       this.data_record = r.data.formulario;
+      this.documentos = r.data.documentos
     });
     axios.get("/data-select").then((r) => {
       this.tipo_documentos = r.data.tipo_documento;
@@ -320,17 +311,16 @@ export default {
       this.tipo_archivos = r.data.tipo_archivos;
       this.tipo_identificacion = r.data.tipo_identificacion;
     });
-    
+
   },
   methods: {
-    
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {
         this.ciudades = r.data;
       });
     },
-    
+
   },
 };
 </script>
