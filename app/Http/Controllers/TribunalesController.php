@@ -70,15 +70,15 @@ class TribunalesController extends Controller
         $tribunal->fecha_final = $request->fecha_final;
         $tribunal->save();
 
-        for ($x=0; $x < $request->cantidad; $x++) {
-            if($request->hasFile("archivos$x")):
+        for ($x = 0; $x < $request->cantidad; $x++) {
+            if ($request->hasFile("archivos$x")) :
                 $file = $request->file("archivos$x");
-                $fileName = time().'_'.$file->getClientOriginalName();
+                $fileName = time() . '_' . $file->getClientOriginalName();
                 $documento = new Documento();
                 $documento->id_subserie = 1;
                 $documento->id_tipo_documento = $request["tipo_archivo$x"];
                 $documento->nombre = $fileName;
-                $documento->ruta = 'uploads/'.$fileName;
+                $documento->ruta = 'uploads/' . $fileName;
                 $documento->estado = '1';
                 $documento->save();
 
@@ -189,8 +189,18 @@ class TribunalesController extends Controller
     {
         // return $id;
         if ($table == 'actividades') {
+            $documentos = DB::table('actividades_soporte')
+                ->select(
+                    'documento.id',
+                    'documento.id_tipo_documento',
+                    'documento.nombre',
+                    'documento.ruta',
+                )->join('documento', 'documento.id', 'actividades_soporte.id_documento')
+                ->where('documento.estado', '1')
+                ->where('id_actividad', $id)->get();
             $x = DB::table('actividades')->where('id', $id)->first();
             return response()->json([
+                'documentos' => $documentos,
                 'formulario' => DB::table($table)->where('id', $id)->first(),
                 'departamentos' => Departamentos::all()->where('estado', 1),
                 'ciudades' => Ciudades::all()->where('estado', 1),
