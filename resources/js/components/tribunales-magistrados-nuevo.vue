@@ -321,16 +321,8 @@
                           >
                             <i class="fa fa-trash fa-md"></i>
                           </button>
-                          <!-- <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a> -->
                         </button>
                       </li>
-                      <!-- <li class="list-group-item">
-                        <button class="btn btn-light btn-sm mt-2">
-                          <span class="text-start float-start mt-1">Nombre de Archivo 2</span>
-                          <a href="#" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
-                          <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a>
-                        </button>
-                      </li> -->
                     </ul>
                   </div>
                 </div>

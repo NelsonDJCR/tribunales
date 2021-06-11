@@ -216,6 +216,18 @@ class TribunalesController extends Controller
                 ->where('id_magistrado', $id)->get();
         endif;
 
+        if ($table == 'tribunal') :
+            $documentos = DB::table('tribunales_soporte')
+                ->select(
+                    'documento.id',
+                    'documento.id_tipo_documento',
+                    'documento.nombre',
+                    'documento.ruta',
+                )->join('documento', 'documento.id', 'tribunales_soporte.id_documento')
+                ->where('documento.estado', '1')
+                ->where('id_tribunal', $id)->get();
+        endif;
+
         return response()->json([
             'documentos' => $documentos,
             'formulario' => DB::table($table)->where('id', $id)->first(),

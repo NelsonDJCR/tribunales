@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Actividad;
+use App\Models\ActividadSoporte;
+use App\Models\Documento;
 use App\Models\Magistrado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +13,9 @@ use Illuminate\Support\Facades\Validator;
 
 class ActividadesController extends Controller
 {
-    public function save()
+    public function save(Request $request)
     {
+        // return $request->all();
         $data =  request()->all();
         if (isset($data['id_magistrado'])) {
             $data['id_magistrado'] = $data['id_magistrado'];
@@ -40,14 +43,43 @@ class ActividadesController extends Controller
 
         $validator = Validator::make(request()->all(), $rules, $messages);
         if ($validator->fails()) {
-            return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
+            return response()->json(['status' => 406, 'msg' => $validator->errors()->first()]);
         }
-        if (Actividad::insert($data)) {
-            return response()->json([
-                'code' =>'200',
-                'msg' => 'Datos Guardados correctamente'
-            ]);
+        $actividad = new Actividad();
+        $actividad->fecha = $request->fecha;
+        $actividad->tema = $request->tema;
+        $actividad->descripcion = $request->descripcion;
+        $actividad->dep_id = $request->dep_id;
+        $actividad->ciu_id = $request->ciu_id;
+        $actividad->id_magistrado = $request->id_magistrado;
+        $actividad->estado = 1;
+        $actividad->save();
+
+        for ($x=0; $x < $request->cantidad; $x++) {
+
+            if($request->hasFile("archivo$x")):
+                $file = $request->file("archivo$x");
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $documento = new Documento();
+                $documento->id_subserie = 1;
+                $documento->id_tipo_documento = $request["tipo_archivo$x"];
+                $documento->nombre = $fileName;
+                $documento->ruta = 'uploads/'.$fileName;
+                $documento->save();
+
+                $soporte = new ActividadSoporte();
+                $soporte->id_actividad = $actividad->id;
+                $soporte->id_documento = $documento->id;
+                $soporte->save();
+
+                $request["archivo$x"]->move(public_path('uploads'),$fileName);
+            endif;
         }
+
+        return response()->json([
+            'status' => 200,
+            'msg' => 'Actividad registrada con éxito',
+        ]);
     }
 
 	public function editar(Request $r)
@@ -73,7 +105,7 @@ class ActividadesController extends Controller
         if ($validator->fails()) {
             return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
         }
-        
+
 
         $x = Actividad::find($r->id);
         $x->fecha = $r->fecha;
@@ -101,7 +133,7 @@ class ActividadesController extends Controller
             ->where(function ($query) use ($post) {
                 if (isset($post['tema'])) {
                     if (!empty($post['tema']))
-                        $query->orwhere("actividades.tema", 'like', "%" . $post['tema'] . "%"); 
+                        $query->orwhere("actividades.tema", 'like', "%" . $post['tema'] . "%");
                 }
             })
             ->where(function ($query) use ($post) {
@@ -138,7 +170,7 @@ class ActividadesController extends Controller
             ->where(function ($query) use ($post) {
                 if (isset($post['tema'])) {
                     if (!empty($post['tema']))
-                        $query->orwhere("actividades.tema", 'like', "%" . $post['tema'] . "%"); 
+                        $query->orwhere("actividades.tema", 'like', "%" . $post['tema'] . "%");
                 }
             })
             ->where(function ($query) use ($post) {

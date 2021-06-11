@@ -287,7 +287,6 @@ export default {
       datos.append("direccion", this.form.direccion);
       datos.append("dep_id", this.form.dep_id);
       datos.append("ciu_id", this.form.ciu_id);
-    //   datos.append("tipo_archivo", this.form.tipo_archivo);
       datos.append("fecha_inicio", this.form.fecha_inicio);
       datos.append("fecha_final", this.form.fecha_final);
       datos.append("cantidad", this.archivos.length);
