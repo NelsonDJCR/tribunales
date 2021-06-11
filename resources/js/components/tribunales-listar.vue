@@ -200,6 +200,7 @@ export default {
       idEditar: 0,
       datos_edit: {},
       pantalla: "lista",
+    //   pantalla: "editar",
     };
   },
   created() {

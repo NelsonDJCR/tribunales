@@ -254,19 +254,43 @@ class TribunalesController extends Controller
     }
 
 
-    public function editar(Request $r)
+    public function editar(Request $request)
     {
-        DB::table('tribunal')
-            ->where('id', $r->id)
-            ->update([
-                'nombre' => $r->nombre,
-                'direccion' => $r->direccion,
-                'dep_id' => $r->dep_id,
-                'ciu_id' => $r->ciu_id,
-                'fecha_inicio' => $r->fecha_inicio,
-                'fecha_final' => $r->fecha_final,
-                'tipo_archivo' => $r->tipo_archivo,
-            ]);
+        for ($x=0; $x < $request->cantidad_eliminados; $x++) {
+            $documento = Documento::find($request["e_id$x"]);
+            $documento->estado = '0';
+            $documento->save();
+        }
+
+        $tribunal = Tribunal::find($request->id);
+        $tribunal->nombre = $request->nombre;
+        $tribunal->direccion = $request->direccion;
+        $tribunal->dep_id = $request->dep_id;
+        $tribunal->ciu_id = $request->ciu_id;
+        $tribunal->archivo = '';
+        $tribunal->fecha_inicio = $request->fecha_inicio;
+        $tribunal->fecha_final = $request->fecha_final;
+        $tribunal->save();
+
+        for ($x = 0; $x < $request->cantidad; $x++) {
+            if ($request->hasFile("archivos$x")) :
+                $file = $request->file("archivos$x");
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $documento = new Documento();
+                $documento->id_subserie = 1;
+                $documento->id_tipo_documento = $request["tipo_archivo$x"];
+                $documento->nombre = $fileName;
+                $documento->ruta = 'uploads/' . $fileName;
+                $documento->estado = '1';
+                $documento->save();
+
+                $soporte = new TribunalSoporte();
+                $soporte->id_tribunal = $tribunal->id;
+                $soporte->id_documento = $documento->id;
+                $soporte->save();
+                $request["archivos$x"]->move(public_path('uploads'), $fileName);
+            endif;
+        }
     }
 
     public function filtrar(Request $r)
