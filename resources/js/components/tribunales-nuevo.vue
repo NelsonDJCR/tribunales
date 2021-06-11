@@ -8,18 +8,28 @@
     />
 
     <div class="container mt-5">
-        <!-- Breadcrumb -->
+      <!-- Breadcrumb -->
       <ol class="breadcrumb">
-          <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Tribunales / Nuevo </label></li>
+        <li class="breadcrumb-item active">
+          <router-link :to="{ name: 'home' }"><span>Home</span></router-link> /
+          <label for="" class="p-2"
+            >Tribunales de Garantía / Listado de Tribunales / Nuevo
+          </label>
+        </li>
       </ol>
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-            <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                <h1 class="text-blue"><b>NUEVO TRIBUNAL</b></h1>
-            </div>
-            <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-                <router-link :to='`/tribunales-listar`' @click.native="$router.go()" class="btn btn-danger text-white w-100 mt-2">Cancelar</router-link>
-            </div>
+          <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+            <h1 class="text-blue"><b>NUEVO TRIBUNAL</b></h1>
+          </div>
+          <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+            <router-link
+              :to="`/tribunales-listar`"
+              @click.native="$router.go()"
+              class="btn btn-danger text-white w-100 mt-2"
+              >Cancelar</router-link
+            >
+          </div>
         </div>
       </div>
 
@@ -96,9 +106,7 @@
 
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"
-                  ><b>Fecha de inicio</b>
-                </label>
+                <label for="" class="form-label"><b>Fecha de inicio</b> </label>
                 <div class="input-group">
                   <input
                     v-model="form.fecha_inicio"
@@ -110,7 +118,9 @@
             </div>
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Fecha fin estimada</b></label>
+                <label for="" class="form-label"
+                  ><b>Fecha fin estimada</b></label
+                >
                 <div class="input-group">
                   <input
                     v-model="form.fecha_final"
@@ -123,25 +133,23 @@
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-
             <div class="row">
-                <div class="mb-3">
-                    <label for="" class="form-label"
-                        ><b>Tipo de archivo</b></label
-                    >
-                    <select
-                        class="form-select"
-                        name="type_file"
-                        v-model="form.tipo_archivo"
-                    >
-                        <option
-                        v-for="(i, index) in tipo_documento"
-                        :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                        ></option>
-                    </select>
-                </div>
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Tipo de archivo</b></label>
+                <select
+                  class="form-select"
+                  name="type_file"
+                  v-model="form.tipo_archivo"
+                >
+                  <option value="">Seleccione</option>
+                  <option
+                    v-for="(i, index) in tipo_documento"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
             </div>
 
             <div class="row mt-5">
@@ -166,8 +174,13 @@
                 </div>
               </div>
             </div>
-            <input type="file" class="d-none" @change="subirArchivo($event)" id="file">
-
+            <input
+              type="file"
+              class="d-none"
+              accept=".pdf, .png, .jpg"
+              @change="subirArchivo($event)"
+              id="file"
+            />
 
             <div class="row">
               <div class="mb-1">
@@ -175,11 +188,23 @@
                 <div class="row">
                   <div class="btns-block d-grid gap-2">
                     <ul class="list-group btn-group-vertical">
-                      <li class="list-group-item" v-for="(i, index) in archivos" :key="index">
-                        <button class="btn btn-light btn-sm mt-2">
-                          <span class="text-start float-start mt-1">{{ i.name }}</span>
-                          <a href="#" @click="eliminarArchivo(index)" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
-                        </button>
+                      <li
+                        class="list-group-item"
+                        v-for="(i, index) in archivos"
+                        :key="index"
+                      >
+                        <div class="btn btn-light btn-sm mt-2">
+                          <span class="text-start float-start mt-1">{{
+                            i.name
+                          }}</span>
+                          <button
+                            href="#"
+                            @click="eliminarArchivo(index)"
+                            class="badge bg-danger float-end text-end m-1"
+                          >
+                            <i class="fa fa-trash fa-md"></i>
+                          </button>
+                        </div>
                       </li>
                     </ul>
                   </div>
@@ -187,14 +212,14 @@
               </div>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
-              <button type="submit"  class="btn btn-success">Crear Tribunal</button>
+              <button type="submit" class="btn btn-success">
+                Crear Tribunal
+              </button>
             </div>
           </div>
         </div>
       </form>
     </div>
-
-
   </div>
 </template>
 <script>
@@ -205,8 +230,8 @@ export default {
       ciudades: [],
       departamentos: [],
       estado: [],
-
-      form: {},
+      tipo_archivo: [],
+      form: { tipo_archivo: "" },
       documentos: [],
       archivos: [],
       index: 0,
@@ -219,17 +244,36 @@ export default {
       this.departamentos = r.data.departamentos;
       this.estado = r.data.estado;
     });
-    this.form.token = Math.floor(Math.random() * (9999 - 5000)) + 5000
+    this.form.token = Math.floor(Math.random() * (9999 - 5000)) + 5000;
   },
   methods: {
-    eliminarArchivo(i){
-      this.archivos.splice(i,1)
+    eliminarArchivo(index) {
+      this.archivos.splice(index, 1);
+      this.tipo_archivo.splice(index, 1);
     },
     subirArchivo(event) {
-      this.archivos.push(event.target.files[0]);
+      for (let index = 0; index < this.tipo_archivo.length; index++) {
+        if (this.tipo_archivo[index] == this.form.tipo_archivo) {
+          Swal.fire(
+            "¡Advertencia!",
+            "Ya usaste este tipo de archivo",
+            "warning"
+          );
+          return;
+        }
+      }
+      let archivo = event.target.files[0];
+      archivo["tipo_archivo"] = this.form.tipo_archivo;
+      this.archivos.push(archivo);
+      this.tipo_archivo.push(this.form.tipo_archivo);
+      this.form.tipo_archivo = "";
     },
     box_file() {
-      $("#file").trigger("click");
+      if (this.form.tipo_archivo != "") {
+        $("#file").trigger("click");
+      } else {
+        Swal.fire("¡Error!", "Selecciona un tipo de archivo", "error");
+      }
     },
     changeCity() {
       var id = $("#departamento_id").val();
@@ -243,25 +287,31 @@ export default {
       datos.append("direccion", this.form.direccion);
       datos.append("dep_id", this.form.dep_id);
       datos.append("ciu_id", this.form.ciu_id);
-      datos.append("tipo_archivo", this.form.tipo_archivo);
+    //   datos.append("tipo_archivo", this.form.tipo_archivo);
       datos.append("fecha_inicio", this.form.fecha_inicio);
       datos.append("fecha_final", this.form.fecha_final);
       datos.append("cantidad", this.archivos.length);
-      
-      for(let i=0; i < this.archivos.length ;i++){
-        datos.append("archivos"+i, this.archivos[i]);
 
+      for (let index = 0; index < this.tipo_archivo.length; index++) {
+          datos.append('tipo_archivo'+index, this.tipo_archivo[index])
+      }
+
+      for (let i = 0; i < this.archivos.length; i++) {
+        datos.append("archivos" + i, this.archivos[i]);
       }
       axios.post("/guardarTribunal", datos).then((res) => {
-        if (res.data.code == 200) {
+        if (res.data.status == 200) {
           Swal.fire("Perfecto!", res.data.msg, "success").then(function () {
             location.reload();
           });
-        }else if(res.data.code == 406){
-           Swal.fire(res.data.msg, 'Complete todos los campos de forma correcta', "warning").then(function () {
-            });
-        }else{
-          Swal.fire("¡xxxx!", 'error', "error")
+        } else if (res.data.status == 406) {
+          Swal.fire(
+            res.data.msg,
+            "Complete todos los campos de forma correcta",
+            "warning"
+          );
+        } else {
+          Swal.fire("¡Error!", res.data.msg, "error");
         }
       });
     },

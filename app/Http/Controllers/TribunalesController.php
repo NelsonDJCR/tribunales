@@ -6,6 +6,7 @@ use App\Http\Requests\CreateTribunales;
 use App\Models\Banco;
 use App\Models\Ciudades;
 use App\Models\Departamentos;
+use App\Models\Documento;
 use App\Models\Estado;
 use App\Models\Magistrado;
 use App\Models\TipoArchivo;
@@ -14,6 +15,7 @@ use App\Models\TipoDocumento;
 use App\Models\TipoEleccion;
 use App\Models\TipoIdentificacion;
 use App\Models\Tribunal;
+use App\Models\TribunalSoporte;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -22,9 +24,10 @@ class TribunalesController extends Controller
 {
 
 
-    public function store(Request $r)
+    public function store(Request $request)
     {
-        $fechaInicio =  $r->fecha_inicio;
+        // return $request->all();
+        $fechaInicio =  $request->fecha_inicio;
         $rules = [
             'nombre' => 'required|max:20',
             'direccion' => 'required|max:60',
@@ -47,44 +50,48 @@ class TribunalesController extends Controller
         ];
         $validator = Validator::make(request()->all(), $rules, $messages);
         if ($validator->fails()) {
-            return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
+            return response()->json(['status' => 406, 'msg' => $validator->errors()->first()]);
         }
 
-
-
-
-
-        if ($r->cantidad == 0) {
+        if ($request->cantidad == 0) {
             return response()->json([
-                'code' => 406,
+                'status' => 406,
                 'msg' => 'Ingrese un documento',
             ]);
         }
 
+        $tribunal = new Tribunal();
+        $tribunal->nombre = $request->nombre;
+        $tribunal->direccion = $request->direccion;
+        $tribunal->dep_id = $request->dep_id;
+        $tribunal->ciu_id = $request->ciu_id;
+        $tribunal->archivo = '';
+        $tribunal->fecha_inicio = $request->fecha_inicio;
+        $tribunal->fecha_final = $request->fecha_final;
+        $tribunal->save();
 
+        for ($x=0; $x < $request->cantidad; $x++) {
+            if($request->hasFile("archivos$x")):
+                $file = $request->file("archivos$x");
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $documento = new Documento();
+                $documento->id_subserie = 1;
+                $documento->id_tipo_documento = $request["tipo_archivo$x"];
+                $documento->nombre = $fileName;
+                $documento->ruta = 'uploads/'.$fileName;
+                $documento->estado = '1';
+                $documento->save();
 
-        // php artisan make:request CreateTribunales
-
-
-
-        $x = new Tribunal();
-        $x->nombre = $r->nombre;
-        $x->direccion = $r->direccion;
-        $x->dep_id = $r->dep_id;
-        $x->ciu_id = $r->ciu_id;
-        $x->archivo = '';
-        $x->fecha_inicio = $r->fecha_inicio;
-        $x->fecha_final = $r->fecha_final;
-        $x->save();
-
-        for ($i = 0; $i < $r->cantidad; $i++) {
-            $fileName = time() . '_' . $r["archivos$i"]->getClientOriginalname();
-            $r["archivos$i"]->move(public_path('uploads'), $fileName);
-            $ruta =  "uploads/$fileName";
+                $soporte = new TribunalSoporte();
+                $soporte->id_tribunal = $tribunal->id;
+                $soporte->id_documento = $documento->id;
+                $soporte->save();
+                $request["archivos$x"]->move(public_path('uploads'), $fileName);
+            endif;
         }
 
         return response()->json([
-            'code' => 200,
+            'status' => 200,
             'msg' => 'El tribunal guardado exitosamente'
         ]);
     }
@@ -109,9 +116,6 @@ class TribunalesController extends Controller
 
     public function listar($table)
     {
-
-
-
         if ($table == 'actividades') {
             $tabla = DB::table($table)
                 ->select("$table.*", 'departamentos.nombre AS departamento', 'ciudades.nombre AS ciudad', 'magistrados.nombre AS magistrado')
