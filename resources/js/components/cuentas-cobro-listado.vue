@@ -478,6 +478,7 @@ export default {
       idrecord: 0,
       datos_edit: {},
       pantalla: "lista",
+    //   pantalla: "nuevo",
     };
   },
   created() {
