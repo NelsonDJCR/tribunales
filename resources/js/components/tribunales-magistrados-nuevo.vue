@@ -300,9 +300,21 @@
                         :key="index"
                       >
                         <button class="btn btn-light btn-sm mt-2">
-                          <span class="text-start float-start mt-1">{{
-                            i.name
-                          }}</span>
+                          <span class="text-start float-start mt-1">
+                            <select
+                              class="form-control bg-transparent text-dark"
+                              style="outline: none"
+                              v-model="i.id_tipo_archivo"
+                              disabled
+                            >
+                              <option
+                                v-for="(item, index) in tipo_archivos"
+                                :key="index"
+                                :value="item.id"
+                                v-text="item.nombre"
+                              ></option>
+                            </select>
+                          </span>
                           <button
                             class="badge bg-danger float-end text-end m-1"
                             @click="eliminar_archivo(index)"
@@ -452,10 +464,11 @@ export default {
         }
       }
       this.archivo = event.target.files[0];
+      this.archivo["id_tipo_archivo"] = this.form.id_tipo_archivo
       this.archivos.push(this.archivo);
       this.tipo_archivo.push(this.form.id_tipo_archivo);
       this.form.id_tipo_archivo = "";
-    //   console.log(this.archivos);
+      //   console.log(this.archivos);
     },
     box_file() {
       if (this.form.id_tipo_archivo != "") {

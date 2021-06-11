@@ -203,10 +203,12 @@ class TribunalesController extends Controller
         if ($table == 'magistrados') :
             $documentos = DB::table('magistrados_soporte')
                 ->select(
+                    'documento.id',
                     'documento.id_tipo_documento',
                     'documento.nombre',
                     'documento.ruta',
                 )->join('documento', 'documento.id', 'magistrados_soporte.id_documento')
+                ->where('documento.estado', '1')
                 ->where('id_magistrado', $id)->get();
         endif;
 

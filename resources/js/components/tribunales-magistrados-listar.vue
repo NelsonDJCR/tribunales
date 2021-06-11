@@ -257,7 +257,7 @@ export default {
       action: 0,
       idEditar: 0,
       datos_edit: {},
-    //   pantalla: 'ver',
+    //   pantalla: 'editar',
       pantalla: "lista",
     };
   },
@@ -283,7 +283,8 @@ export default {
       })
     },
     editar(x) {
-      this.idEditar = x
+        this.idEditar = x
+        // alert(this.idEditar)
       this.pantalla = "editar";
     },
     view(x) {

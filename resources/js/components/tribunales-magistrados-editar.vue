@@ -396,11 +396,8 @@
   </div>
 </template>
 <script>
-// $('body').on('click', '.delete_file', function() {
-//   $(this).parent().parent().remove();
-// });
 export default {
-  props: ["id"],
+    props: ["id"],
   data() {
     return {
       type_file: [],
@@ -434,7 +431,13 @@ export default {
   },
   created() {
     axios.get(`/data-rercord/${this.id}/magistrados`).then((r) => {
+    // axios.get(`/data-rercord/26/magistrados`).then((r) => {
+      //   this.documentos = r.data.documentos;
+      //   for (let index = 0; index < r.data.documentos.length; index++) {
+      //       this.documentos.push(r.documentos[index])
+      //   }
       this.documentos = r.data.documentos;
+      console.log(this.documentos);
       this.type_file = r.data.tipo_archivo;
       this.ciudades = r.data.ciudades;
       this.departament = r.data.departamentos;
@@ -458,7 +461,7 @@ export default {
       }
     },
     upload_file(event) {
-        console.log(this.tipo_documentos);
+      console.log(this.documentos);
       for (let index = 0; index < this.tipo_documentos.length; index++) {
         if (this.tipo_documentos[index] == this.form.id_tipo_documento) {
           Swal.fire(
@@ -474,19 +477,21 @@ export default {
       } else {
         let archivo = event.target.files[0];
         archivo["id_tipo_documento"] = this.form.id_tipo_documento;
-        archivo["id"] = 0
+        archivo["id"] = 0;
         this.documentos.push(archivo);
         this.tipo_documentos.push(this.form.id_tipo_documento);
         this.form.id_tipo_documento = "";
       }
     },
     eliminar_archivo(index) {
-        console.log(this.documentos);
-      if (this.documentos[index].id != 0) {
+        // console.log(this.documentos[0])
+        if (this.documentos[index].id != 0) {
+        //   console.log(this.documentos[index]);
         this.eliminados.push(this.documentos[index].id);
       }
       this.documentos.splice(index, 1);
       this.tipo_documentos.splice(index, 1);
+    //   console.log(this.eliminados);
     },
     edit() {
       if (this.documentos.length == 0) {
@@ -494,6 +499,8 @@ export default {
         return;
       }
       var formulario = new FormData();
+    //   formulario.append('id', 26)
+      formulario.append('id', this.id)
       formulario.append("cargo", this.form.cargo);
       formulario.append("ciu_id", this.form.ciu_id);
       formulario.append("correo", this.form.correo);
@@ -514,6 +521,7 @@ export default {
       formulario.append("telefono", this.form.telefono);
       formulario.append("tribunal_id", this.form.tribunal_id);
       formulario.append("cantidad", this.documentos.length);
+      formulario.append('cantidad_eliminados', this.eliminados.length)
 
       for (let index = 0; index < this.documentos.length; index++) {
         formulario.append("archivo" + index, this.documentos[index]);
@@ -523,7 +531,7 @@ export default {
       }
 
       for (let index = 0; index < this.eliminados.length; index++) {
-          formulario.append('e_id'+index, this.eliminados[index])
+        formulario.append("e_id" + index, this.eliminados[index]);
       }
 
       axios.post("/editar-magistrado", formulario).then((res) => {
@@ -531,8 +539,8 @@ export default {
           Swal.fire("¡Perfecto!", res.data.msg, "success").then(function () {
             location.reload();
           });
-        }else if(res.data.status == 406){
-            Swal.fire('¡Error!',res.data.msg,'error')
+        } else if (res.data.status == 406) {
+          Swal.fire("¡Error!", res.data.msg, "error");
         }
       });
     },

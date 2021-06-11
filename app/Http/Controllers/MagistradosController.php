@@ -107,7 +107,13 @@ class MagistradosController extends Controller
 
     public function editar(Request $request)
     {
-        return $request->all();
+        // return $request->all();
+        for ($x=0; $x < $request->cantidad_eliminados; $x++) {
+            $documento = Documento::find($request["e_id$x"]);
+            $documento->estado = '0';
+            $documento->save();
+        }
+        // return '1';
         $rules = [
             'nombre' => 'required|max:30',
             'id_tipo_identificacion' => 'required|',
@@ -146,7 +152,7 @@ class MagistradosController extends Controller
         }
         // return $request->all();
         $magistrado = Magistrado::find($request->id);
-        $magistrado->cargo = $request->cargo;
+        // $magistrado->cargo = $request->cargo;
         $magistrado->ciu_id = $request->ciu_id;
         $magistrado->correo = $request->correo;
         $magistrado->dep_id = $request->dep_id;
