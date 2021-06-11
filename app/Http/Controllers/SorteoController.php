@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Magistrado;
 use App\Models\Sorteo;
+use App\Models\SorteoDepartamento;
 use App\Models\TipoEleccion;
 use App\Models\Tribunal;
 use Illuminate\Http\Request;
@@ -87,7 +88,7 @@ class SorteoController extends Controller
             $tribunal = Tribunal::all()->where('estado',1)->where('asignados','<',$limite_asignados)->random();
         }
         $sorteo =  count(Magistrado::all()->where('estado',1)->where('asignado',0)->where('cargo','Magistrado'));
-        for ($i=0; $i < $sorteo; $i++) { 
+        for ($i=0; $i < $sorteo; $i++) {
             $tribunal = Tribunal::all()->where('estado',1)->where('asignados','<',$limite_asignados)->random();
             $magistrado = Magistrado::all()->where('estado',1)->where('asignado',0)->where('cargo','Magistrado')->random();
             $x = Tribunal::find($tribunal->id);
@@ -108,5 +109,33 @@ class SorteoController extends Controller
             'code' =>200,
             'msg' => 'El sorteo se ha realizado satisfactoriamente'
         ]);
+    }
+
+
+    public function sortear()
+    {
+        $dep_prueba = [5,8,25];
+        $can_mag_prueba = [3,5,1];
+        // $magistrados = Magistrado::where('estado',1)->where('cargo', 1)->get();
+        $magistrados = Magistrado::where('estado',1)->get();
+        $asignados = [];
+        for ($i=0; $i < sizeof($magistrados); $i++) {
+            $asignados[$i] = $i;
+        }
+        // $sorteo = ['dep_id'];
+
+        for ($x=0; $x < sizeof($can_mag_prueba); $x++) {
+            $dep_id = $dep_prueba[$x];
+            for ($z=0; $z <$can_mag_prueba[$x] ; $z++) {
+                // $magistrado
+                $numero = array_rand($asignados,1);
+                unset($asignados[$numero]);
+                $mag_id = $magistrados[$numero]->id;
+                $sorteo = new SorteoDepartamento();
+                $sorteo->dep_id = $dep_id;
+                $sorteo->mag_id = $mag_id;
+                $sorteo->save();
+            }
+        }
     }
 }
