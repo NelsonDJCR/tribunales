@@ -103,17 +103,21 @@
           <table class="table table-bordered table-striped" id="datos">
             <thead>
               <th>Sorteo</th>
-              <th>Nombre de magistrado</th>
-              <th>Tribunal</th>
               <th>Tipo de elección</th>
+              <th>Usuario</th>
               <th>Fecha de Asignación</th>
             </thead>
             <tbody>
               <tr v-for="(i, index) in tabla" :key="index">
                 <td>{{ i.nombre }}</td>
-                <td>{{ i.magistrado }}</td>
-                <td>{{ i.tribunal }}</td>
-                <td>{{ i.tipo_eleccion }}</td>
+                <td>{{ i.nom_eleccion }}</td>
+              <!--  <td>{{ i.tribunal }}</td> -->
+              <!--  <td>{{ i.usuario }}</td> -->
+                <td>
+                    <select class="form-control bg-transparent text-dark" v-model="i.usuario" disabled style="outline: none;">
+                        <option v-for="(item, index) in usuarios" :key="index" :value="item.id" v-text="item.nombre"></option>
+                    </select>
+                </td>
                 <td>{{ i.fecha }}</td>
               </tr>
             </tbody>
@@ -214,11 +218,12 @@ export default {
   data() {
     return {
       tabla: [],
+      usuarios: [],
       tipo_eleccion: [],
       filter: {},
       nuevoSorteo: {},
-    //   pantalla: "lista",
-      pantalla: "nuevo",
+      pantalla: "lista",
+    //   pantalla: "nuevo",
     };
   },
   created() {
@@ -229,6 +234,9 @@ export default {
       axios.get("/listar-sorteos").then((r) => {
         this.tabla = r.data.tabla;
         this.tipo_eleccion = r.data.tipo_eleccion;
+        this.usuarios = r.data.usuarios
+        this.formatear_fecha()
+        // console.log(r.data);
       });
     },
     nuevo_sorteo() {
@@ -246,6 +254,17 @@ export default {
       axios.post("/filtro-sorteo", this.filter).then((r) => {
         this.tabla = r.data.tabla;
       });
+    },
+    formatear_fecha(){
+        let fecha = ''
+        let fecha_format = ''
+        let array = []
+        for (let index = 0; index < this.tabla.length; index++) {
+            fecha = this.tabla[index].fecha
+            array = fecha.split('-')
+            fecha_format = array[2] + '-' + array[1] + '-' + array[0]
+            this.tabla[index].fecha = fecha_format
+        }
     },
     sorteo() {
       Swal.fire({

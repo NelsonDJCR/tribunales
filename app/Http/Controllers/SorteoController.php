@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Departamentos;
 use App\Models\Magistrado;
+use App\Models\PersonaCentralizado;
 use App\Models\Sorteo;
 use App\Models\SorteoDepartamento;
 use App\Models\TipoEleccion;
 use App\Models\Tribunal;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,15 +19,23 @@ class SorteoController extends Controller
 {
     public function listarSorteos()
     {
+
         $tabla = DB::table('sorteo')
-            ->select("sorteo.*", 'magistrados.nombre AS magistrado', 'tribunal.nombre AS tribunal', 'tipo_eleccion.nombre AS tipo_eleccion')
-            ->leftjoin("tribunal", "tribunal.id", "sorteo.id_tribunal")
-            ->leftjoin("magistrados", "magistrados.id", "sorteo.id_magistrado")
-            ->leftjoin("tipo_eleccion", "tipo_eleccion.id", "sorteo.id_tipo_eleccion")
-            ->get();
+        ->select('sorteo.*', 'tipo_eleccion.nombre as nom_eleccion')
+        ->join('tipo_eleccion','tipo_eleccion.id', 'sorteo.id_tipo_eleccion')
+        ->orderByDesc('sorteo.id')
+        ->get();
+
+        // $tabla = DB::table('sorteo')
+        //     ->select("sorteo.*", 'magistrados.nombre AS magistrado', 'tribunal.nombre AS tribunal', 'tipo_eleccion.nombre AS tipo_eleccion')
+        //     ->leftjoin("tribunal", "tribunal.id", "sorteo.id_tribunal")
+        //     ->leftjoin("magistrados", "magistrados.id", "sorteo.id_magistrado")
+        //     ->leftjoin("tipo_eleccion", "tipo_eleccion.id", "sorteo.id_tipo_eleccion")
+        //     ->get();
         return response()->json([
             'tabla' => $tabla,
             'tipo_eleccion' => TipoEleccion::all()->where('estado',1),
+            'usuarios' => PersonaCentralizado::all(),
         ]);
     }
     public function filtroSorteo(Request $r)
@@ -150,6 +161,7 @@ class SorteoController extends Controller
         $sor = new Sorteo();
         $sor->nombre = $request->nombre;
         $sor->id_tipo_eleccion = $request->id_tipo_eleccion;
+        $sor->usuario = Auth::user()->id_persona;
         $sor->fecha = date('Y-m-d');
         $sor->save();
 
@@ -166,6 +178,8 @@ class SorteoController extends Controller
         for ($i=0; $i < sizeof($magistrados); $i++) {
             $asignados[$i] = $i;
         }
+
+
 
         $copia_asignados = $asignados;
         for ($x=0; $x < sizeof($cantidad); $x++) {
