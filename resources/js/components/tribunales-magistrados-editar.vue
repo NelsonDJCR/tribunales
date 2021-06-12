@@ -297,6 +297,7 @@
                             </select>
                           </span>
                           <button
+                            type="button"
                             @click="eliminar_archivo(index)"
                             class="badge bg-danger float-end text-end m-1"
                           >
@@ -397,7 +398,7 @@
 </template>
 <script>
 export default {
-    props: ["id"],
+  props: ["id"],
   data() {
     return {
       type_file: [],
@@ -431,7 +432,7 @@ export default {
   },
   created() {
     axios.get(`/data-rercord/${this.id}/magistrados`).then((r) => {
-    // axios.get(`/data-rercord/26/magistrados`).then((r) => {
+      // axios.get(`/data-rercord/26/magistrados`).then((r) => {
       //   this.documentos = r.data.documentos;
       //   for (let index = 0; index < r.data.documentos.length; index++) {
       //       this.documentos.push(r.documentos[index])
@@ -484,14 +485,14 @@ export default {
       }
     },
     eliminar_archivo(index) {
-        // console.log(this.documentos[0])
-        if (this.documentos[index].id != 0) {
+      // console.log(this.documentos[0])
+      if (this.documentos[index].id != 0) {
         //   console.log(this.documentos[index]);
         this.eliminados.push(this.documentos[index].id);
       }
       this.documentos.splice(index, 1);
       this.tipo_documentos.splice(index, 1);
-    //   console.log(this.eliminados);
+      //   console.log(this.eliminados);
     },
     edit() {
       if (this.documentos.length == 0) {
@@ -499,8 +500,8 @@ export default {
         return;
       }
       var formulario = new FormData();
-    //   formulario.append('id', 26)
-      formulario.append('id', this.id)
+      //   formulario.append('id', 26)
+      formulario.append("id", this.id);
       formulario.append("cargo", this.form.cargo);
       formulario.append("ciu_id", this.form.ciu_id);
       formulario.append("correo", this.form.correo);
@@ -521,7 +522,7 @@ export default {
       formulario.append("telefono", this.form.telefono);
       formulario.append("tribunal_id", this.form.tribunal_id);
       formulario.append("cantidad", this.documentos.length);
-      formulario.append('cantidad_eliminados', this.eliminados.length)
+      formulario.append("cantidad_eliminados", this.eliminados.length);
 
       for (let index = 0; index < this.documentos.length; index++) {
         formulario.append("archivo" + index, this.documentos[index]);
