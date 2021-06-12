@@ -102,6 +102,7 @@
           </div>
           <table class="table table-bordered table-striped" id="datos">
             <thead>
+              <th>Opciones</th>
               <th>Sorteo</th>
               <th>Tipo de elección</th>
               <th>Usuario</th>
@@ -109,14 +110,31 @@
             </thead>
             <tbody>
               <tr v-for="(i, index) in tabla" :key="index">
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-success btn-sm"
+                    @click="view(i)"
+                  >
+                    <i class="typcn typcn-eye"></i>
+                  </button>
+                </td>
                 <td>{{ i.nombre }}</td>
                 <td>{{ i.nom_eleccion }}</td>
-              <!--  <td>{{ i.tribunal }}</td> -->
-              <!--  <td>{{ i.usuario }}</td> -->
                 <td>
-                    <select class="form-control bg-transparent text-dark" v-model="i.usuario" disabled style="outline: none;">
-                        <option v-for="(item, index) in usuarios" :key="index" :value="item.id" v-text="item.nombre"></option>
-                    </select>
+                  <select
+                    class="form-control bg-transparent text-dark"
+                    v-model="i.usuario"
+                    disabled
+                    style="outline: none"
+                  >
+                    <option
+                      v-for="(item, index) in usuarios"
+                      :key="index"
+                      :value="item.id"
+                      v-text="item.nombre"
+                    ></option>
+                  </select>
                 </td>
                 <td>{{ i.fecha }}</td>
               </tr>
@@ -223,7 +241,7 @@ export default {
       filter: {},
       nuevoSorteo: {},
       pantalla: "lista",
-    //   pantalla: "nuevo",
+      //   pantalla: "nuevo",
     };
   },
   created() {
@@ -234,13 +252,16 @@ export default {
       axios.get("/listar-sorteos").then((r) => {
         this.tabla = r.data.tabla;
         this.tipo_eleccion = r.data.tipo_eleccion;
-        this.usuarios = r.data.usuarios
-        this.formatear_fecha()
+        this.usuarios = r.data.usuarios;
+        this.formatear_fecha();
         // console.log(r.data);
       });
     },
     nuevo_sorteo() {
       this.pantalla = "nuevo";
+    },
+    view(i){
+
     },
     openModalNew() {
       $("#modal_new").modal("show");
@@ -255,16 +276,16 @@ export default {
         this.tabla = r.data.tabla;
       });
     },
-    formatear_fecha(){
-        let fecha = ''
-        let fecha_format = ''
-        let array = []
-        for (let index = 0; index < this.tabla.length; index++) {
-            fecha = this.tabla[index].fecha
-            array = fecha.split('-')
-            fecha_format = array[2] + '-' + array[1] + '-' + array[0]
-            this.tabla[index].fecha = fecha_format
-        }
+    formatear_fecha() {
+      let fecha = "";
+      let fecha_format = "";
+      let array = [];
+      for (let index = 0; index < this.tabla.length; index++) {
+        fecha = this.tabla[index].fecha;
+        array = fecha.split("-");
+        fecha_format = array[2] + "-" + array[1] + "-" + array[0];
+        this.tabla[index].fecha = fecha_format;
+      }
     },
     sorteo() {
       Swal.fire({
