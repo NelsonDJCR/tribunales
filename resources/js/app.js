@@ -25,6 +25,7 @@ Vue.component('tribunales-casos-ver', require('./components/tribunales-casos-ver
 Vue.component('magistrados-casos-asignados-ver', require('./components/magistrados-casos-asignados-ver.vue').default);
 Vue.component('magistrados-cuentas-cobro-ver', require('./components/magistrados-cuentas-cobro-ver.vue').default);
 Vue.component('magistrados-mis-actividades-ver', require('./components/magistrados-mis-actividades-ver.vue').default);
+Vue.component('nuevo-sorteo', require('./components/Nuevo-sorteo.vue').default);
 
 // Vue.component('tipo-documento', require('./components/tipoDocumento_J/index.vue').default);
 

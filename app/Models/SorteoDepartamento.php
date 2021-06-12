@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SorteoDepartamento extends Model
 {
     use HasFactory;
+
+    protected $connection = 'dinamico';
+    protected $table = 'sorteo_departamentos';
 }

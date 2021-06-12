@@ -153,6 +153,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/editar-tibunal', [TribunalesController::class, 'editar']);
         Route::get('/data-rercord/{id}/{table}', [TribunalesController::class, 'dataRecord']);
         Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
+        Route::post('/departamentos_sorteo',[SorteoController::class, 'departamentos_sorteo']);
+        Route::post('/departamentos_sortear',[SorteoController::class, 'sortear']);
 
         // Magistrados
         Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
