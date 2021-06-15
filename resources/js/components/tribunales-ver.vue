@@ -9,21 +9,25 @@
     <div class="container mt-5">
       <!-- Breadcrumb -->
       <ol class="breadcrumb">
-          <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Tribunales / Editar tribunal </label></li>
+        <li class="breadcrumb-item active">
+          <router-link :to="{ name: 'home' }"><span>Home</span></router-link> /
+          <label for="" class="p-2"
+            >Tribunales de Garantía / Listado de Tribunales / Editar tribunal
+          </label>
+        </li>
       </ol>
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-          <h1 class="text-blue" ><b>VER TRIBUNAL</b></h1>
+          <h1 class="text-blue"><b>VER TRIBUNAL</b></h1>
         </div>
       </div>
-      <form >
+      <form>
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Nombre</b></label>
                 <input
-
                   type="text"
                   class="form-control"
                   v-model="data_record.nombre"
@@ -34,7 +38,7 @@
                 />
               </div>
             </div>
-             <div class="row">
+            <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Departamento</b></label>
                 <select
@@ -54,7 +58,6 @@
                     {{ i.nombre }}
                   </option>
                 </select>
-                
               </div>
             </div>
             <div class="row">
@@ -82,11 +85,11 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Dirección</b></label>
                 <input
-                disabled
+                  disabled
                   type="text"
                   class="form-control"
                   maxlength="250"
-                   v-model="data_record.direccion"
+                  v-model="data_record.direccion"
                   name="theme"
                   placeholder=""
                 />
@@ -94,12 +97,10 @@
             </div>
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"
-                  ><b>Fecha de inicio</b>
-                </label>
+                <label for="" class="form-label"><b>Fecha de inicio</b> </label>
                 <div class="input-group">
                   <input
-                  disabled
+                    disabled
                     v-model="data_record.fecha_inicio"
                     type="date"
                     class="form-control"
@@ -109,10 +110,12 @@
             </div>
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Fecha fin estimada</b></label>
+                <label for="" class="form-label"
+                  ><b>Fecha fin estimada</b></label
+                >
                 <div class="input-group">
                   <input
-                  disabled
+                    disabled
                     v-model="data_record.fecha_final"
                     type="date"
                     class="form-control"
@@ -123,23 +126,62 @@
           </div>
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
-                <div class="mb-3">
-                    <label for="" class="form-label"
-                        ><b>Tipo de archivo</b></label
-                    >
-                    <select
-                        class="form-select"
-                        name="type_file"
-                        v-model="data_record.tipo_archivo"
-                    >
-                        <option
-                        v-for="(i, index) in type_file"
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Tipo de archivo</b></label>
+                <select
+                  class="form-select"
+                  name="type_file"
+                  v-model="data_record.tipo_archivo"
+                >
+                  <option
+                    v-for="(i, index) in type_file"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-1">
+                <label for="" class="form-label"><b>Archivos</b></label>
+                <div class="row">
+                  <div class="btns-block d-grid gap-2">
+                    <ul class="list-group btn-group-vertical">
+                      <li
+                        class="list-group-item"
+                        v-for="(i, index) in documentos"
                         :key="index"
-                        :value="i.id"
-                        v-text="i.nombre"
-                        ></option>
-                    </select>
+                      >
+                        <div class="btn btn-light btn-sm mt-2">
+                          <span class="text-start float-start mt-1">
+                            <select
+                              class="form-control bg-transparent text-dark"
+                              style="outline: none"
+                              v-model="i.id_tipo_documento"
+                              disabled
+                            >
+                              <option
+                                v-for="(item, index) in type_file"
+                                :key="index"
+                                :value="item.id"
+                                v-text="item.nombre"
+                              ></option>
+                            </select>
+                          </span>
+                          <a
+                            :href="i.ruta"
+                            :download="i.ruta"
+                            class="badge bg-info float-end text-end m-1"
+                            ><i class="fa fa-download fa-md"></i
+                          ></a>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
+              </div>
             </div>
           </div>
         </div>
@@ -203,9 +245,8 @@
   </div>
 </template>
 <script>
-
 export default {
-  props: ['id'],
+  props: ["id"],
   data() {
     return {
       type_file: [],
@@ -223,6 +264,8 @@ export default {
       this.departament = r.data.departamentos;
       this.ciudades = r.data.ciudades;
       this.type_file = r.data.tipo_archivos;
+      this.documentos = r.data.documentos
+      console.log(this.documentos);
     });
   },
   methods: {
@@ -232,8 +275,6 @@ export default {
         this.ciudades = r.data;
       });
     },
-    
-   
   },
 };
 </script>

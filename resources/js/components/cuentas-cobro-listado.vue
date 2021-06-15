@@ -458,6 +458,7 @@ export default {
         cuentas_cobro_id: 0,
       },
       pantalla: "lista",
+    //   pantalla: "nuevo",
     };
   },
   created() {

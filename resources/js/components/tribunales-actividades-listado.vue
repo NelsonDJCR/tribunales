@@ -246,6 +246,7 @@ export default {
       id_record: 0,
       datos_edit: {},
       pantalla: "lista",
+    //   pantalla: "nuevo",
     };
   },
   created() {
