@@ -25,11 +25,12 @@ class MagistradosController extends Controller
             'dep_id' => 'required|',
             'ciu_id' => 'required|',
             'direccion' => 'required|max:60',
-            'correo' => 'required|',
+            'correo' => 'required|email',
             'telefono' => 'required|max:10',
             'id_banco' => 'required|',
             'id_tipo_cuenta' => 'required|',
             'numero_cuenta' => 'required|max:30',
+            'tribunal_id' => 'required|integer',
         ];
         $messages = [
             'nombre.required' => 'El nombre es requerido',
@@ -48,6 +49,9 @@ class MagistradosController extends Controller
             'id_tipo_cuenta.required' => 'El tipo de cuenta es requerido',
             'numero_cuenta.required' => 'El número de cuenta es requerido',
             'numero_cuenta.max' => 'El número de cuenta no debe tener más de 30 carácteres',
+            'correo.email' => 'Verifica el formato de tu correo electrónico',
+            'tribunal_id.required' => 'El campo tribunal es requerido',
+            'tribunal_id.integer' => 'El campo tribunal debe ser númerico',
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {
@@ -93,7 +97,7 @@ class MagistradosController extends Controller
         }
 
         return response()->json([
-            'status' => '201',
+            'status' => '200',
             'msg' => 'Magistrado guardado correctamente'
         ]);
 

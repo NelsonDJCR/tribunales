@@ -257,7 +257,7 @@ export default {
       action: 0,
       idEditar: 0,
       datos_edit: {},
-    //   pantalla: 'editar',
+    //   pantalla: 'nuevo',
       pantalla: "lista",
     };
   },

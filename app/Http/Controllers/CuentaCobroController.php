@@ -7,6 +7,7 @@ use App\Models\ActividadSoporte;
 use App\Models\CuentaCobro;
 use App\Models\CuentaSoporte;
 use App\Models\Documento;
+use App\Models\Magistrado;
 use App\Models\Sorteo;
 use App\Models\TipoArchivo;
 use Illuminate\Http\Request;
@@ -129,6 +130,14 @@ class CuentaCobroController extends Controller
             'data' => CuentaCobro::where('id', $request->id)->with('magistrado', 'tribunal')->first(),
             'tipo_archivos' => TipoArchivo::all()->where('estado', 1),
             'documentos' => $documentos,
+        ]);
+    }
+
+    public function magistradosxtribunal($id)
+    {
+        $funcionarios = Magistrado::where('tribunal_id',$id)->get();
+        return response()->json([
+            'funcionarios' => $funcionarios,
         ]);
     }
 }

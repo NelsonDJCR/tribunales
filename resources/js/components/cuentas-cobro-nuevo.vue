@@ -41,6 +41,7 @@
                   class="form-select"
                   name="tribu_id"
                   v-model="form.id_tribunal"
+                  @change="magistradosxtribunal(form.id_tribunal)"
                 >
                   <option value="">Selecciona</option>
                   <option
@@ -54,7 +55,7 @@
             </div>
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Magistrado</b></label>
+                <label for="" class="form-label"><b>Funcionarios</b></label>
                 <select class="form-select" v-model="form.id_magistrado">
                   <option value="">Selecciona</option>
                   <option
@@ -375,6 +376,13 @@ export default {
         Swal.fire("¡Error!", "Seleccione un tipo de archivo", "error");
       }
     },
+    magistradosxtribunal(i) {
+        let url = '/magistradosxtribunal/'+ i;
+      axios.get(url).then(res => {
+          console.log(res.data);
+          this.magistrados = res.data.funcionarios
+      })
+    },
     upload_file(event) {
       for (let index = 0; index < this.tipo_archivo.length; index++) {
         if (this.tipo_archivo[index] == this.form.id_tipo_documento) {
@@ -398,9 +406,9 @@ export default {
     },
     select() {
       axios.get(`/data-select`).then((r) => {
-        console.log(r.data);
+        // console.log(r.data);
         this.tribunales = r.data.tribunales;
-        this.magistrados = r.data.magistrados;
+        // this.magistrados = r.data.magistrados;
         this.type_file = r.data.tipo_archivos;
       });
     },

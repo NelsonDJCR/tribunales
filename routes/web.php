@@ -36,6 +36,7 @@ use App\Http\Resources\EstadosResource;
 use App\Models\Estado;
 use App\Http\Resources\TipoTramitesResource;
 use App\Models\Actividad;
+use App\Models\CuentaCobro;
 use App\Models\TipoTramite;
 use App\Models\Departamentos;
 use App\Models\Magistrado;
@@ -184,6 +185,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class, 'table']);
         Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class, 'save']);
         Route::post('/record-cuenta-cobro', [CuentaCobroController::class, 'record']);
+        Route::get('/magistradosxtribunal/{id}', [CuentaCobroController::class, 'magistradosxtribunal']);
 
 
 

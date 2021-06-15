@@ -10,9 +10,17 @@
         />
         <!-- <template v-if="action == 0"> -->
         <div class="container mt-5">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de tribunales </label></li>
-            </ol>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item active">
+              <router-link :to="{ name: 'home' }"
+                ><span>Home</span></router-link
+              >
+              /
+              <label for="" class="p-2"
+                >Tribunales de Garantía / Listado de tribunales
+              </label>
+            </li>
+          </ol>
           <div class="row p-2 text-center border shadow rounded-3">
             <div class="row">
               <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
@@ -123,8 +131,6 @@
                   <i class="typcn typcn-edit" style="color: white"></i>
                 </button>
 
-
-
                 <button
                   type="button"
                   class="btn btn-success btn-sm"
@@ -133,20 +139,23 @@
                   <i class="typcn typcn-eye"></i>
                 </button>
 
-
-               <template v-if="i.estado == 1">
-                    <button
-                      type="button"
-                      class="btn btn-danger btn-sm"
-                      @click="inacive(i.id)"
-                    >
-                      <i class="typcn typcn-trash"></i>
-                    </button>
+                <template v-if="i.estado == 1">
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    @click="inacive(i.id)"
+                  >
+                    <i class="typcn typcn-trash"></i>
+                  </button>
                 </template>
                 <template v-else>
-                    <button type="button" class="btn btn-info btn-sm" @click="active(i.id)">
-                        <i class="typcn typcn-tick-outline"></i>
-                    </button>
+                  <button
+                    type="button"
+                    class="btn btn-info btn-sm"
+                    @click="active(i.id)"
+                  >
+                    <i class="typcn typcn-tick-outline"></i>
+                  </button>
                 </template>
               </td>
               <td>{{ i.nombre }}</td>
@@ -200,27 +209,46 @@ export default {
       idEditar: 0,
       datos_edit: {},
       pantalla: "lista",
-    //   pantalla: "editar",
+        // pantalla: "nuevo",
     };
   },
   created() {
     axios.get(`/listar/tribunal`).then((r) => {
       this.tabla = r.data.tabla;
       this.departament = r.data.departments;
+      this.fecha_format()
+      console.log(r.data.tabla);
     });
   },
   methods: {
-    filter(){
-      axios.post('/filtros-tribunales', this.dataFilter).then((r)=>{
+    fecha_format() {
+        var fecha = ''
+        var fecha_format = ''
+        var array = []
+
+        for (let index = 0; index < this.tabla.length; index++) {
+            fecha = this.tabla[index].fecha_inicio
+            array = fecha.split('-')
+            fecha_format = array[2] + '-' + array[1] + '-' + array[0]
+            this.tabla[index].fecha_inicio = fecha_format
+
+            fecha = this.tabla[index].fecha_final
+            array = fecha.split('-')
+            fecha_format = array[2] + '-' + array[1] + '-' + array[0]
+            this.tabla[index].fecha_final = fecha_format
+        }
+    },
+    filter() {
+      axios.post("/filtros-tribunales", this.dataFilter).then((r) => {
         this.tabla = r.data.tabla;
-      })
+      });
     },
     editar(i) {
-      this.idEditar = i.id
+      this.idEditar = i.id;
       this.pantalla = "editar";
     },
     view(x) {
-      this.idEditar = x
+      this.idEditar = x;
       this.pantalla = "ver";
     },
     pantallaNuevo() {
@@ -266,11 +294,7 @@ export default {
           axios
             .post(`/modificar-estado/${id}/tribunal/1`, { id: id })
             .then((r) => {
-              Swal.fire(
-                "Activado!",
-                "El tribunal ha sido activado",
-                "success"
-              );
+              Swal.fire("Activado!", "El tribunal ha sido activado", "success");
               this.tabla = r.data.tabla;
             });
         }
