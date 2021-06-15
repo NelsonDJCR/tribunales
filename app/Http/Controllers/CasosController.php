@@ -13,6 +13,7 @@ use App\Models\Ciudades;
 use App\Models\Departamentos;
 use App\Models\Documento;
 use App\Models\Estado;
+use App\Models\Magistrado;
 use App\Models\MedioRecepcion;
 use App\Models\PersonaCentralizado;
 use App\Models\Prioridad;
@@ -21,6 +22,7 @@ use App\Models\TipoArchivo;
 use App\Models\TipoEleccion;
 use App\Models\TipoIdentificacion;
 use App\Models\TipoTramite;
+use App\Models\Tribunal;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -129,6 +131,7 @@ class CasosController extends Controller
         $departamento = Departamentos::all();
         $estado = Estado::all();
         $tipoArchivo = TipoArchivo::all();
+        $tribunales = Tribunal::where('estado',1)->get();
         $estado1 = Estado::where('estado', 1)
             ->where('id', '<>', 1)->get();
 
@@ -140,6 +143,7 @@ class CasosController extends Controller
             'casos' => $casos,
             'usuarios' => $usuarios,
             'estado1' => $estado1,
+            'tribunales' => $tribunales,
         ]);
     }
 
@@ -236,7 +240,9 @@ class CasosController extends Controller
         // echo "<pre>";
         // var_dump($caso);die;
 
-        $caso->id_asesor_asignado = $request->asesor;
+        // $caso->id_asesor_asignado = $request->asesor;
+        $caso->id_magistrado = $request->magistrado;
+        $caso->id_tribunal = $request->tribunal;
         $caso->id_estado = 2;
         $caso->observacion_asignacion = $request->observacion;
         $caso->fecha_gestion = date('Y-m-d');
@@ -395,6 +401,7 @@ class CasosController extends Controller
         $estado = Estado::all();
         $tipoArchivo = TipoArchivo::all();
         $personas = PersonaCentralizado::where('estado', 1)->get();
+        $tribunales = Tribunal::where('estado',1)->get();
         $estado1 = Estado::where('estado', 1)
             ->where('id', '<>', 1)->get();
 
@@ -406,6 +413,7 @@ class CasosController extends Controller
             'casos' => $casos,
             'estado1' => $estado1,
             'personas' => $personas,
+            'tribunales' => $tribunales,
         ]);
     }
 
@@ -455,7 +463,9 @@ class CasosController extends Controller
             case '2':
                 $caso = Caso::find($request->id);
                 $caso->gestion = $request->observacion;
-                $caso->id_asesor_asignado = $request->asesor;
+                $caso->id_asesor_asignado = $request->magistrado;
+                $caso->id_tribunal = $request->tribunal;
+                $caso->id_magistrado = $request->magistrado;
                 $caso->id_estado = $request->estado;
                 $caso->save();
                 $seguimiento = CasoSeguimiento::find($request->id);
@@ -1117,5 +1127,13 @@ class CasosController extends Controller
                 ]
             );
         }
+    }
+
+    public function magistradoxdepartamento($id)
+    {
+        $magistrados = Magistrado::where('tribunal_id',$id)->where('estado',1)->get();
+        return response()->json([
+            'magistrados' => $magistrados,
+        ]);
     }
 }

@@ -191,7 +191,6 @@ Route::middleware('auth')->group(function () {
 
 
         // Cuenta de cobro
-<<<<<<< HEAD
         Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class,'table']);
         Route::post('/tabla-cuentas-cobro-magistrado', [CuentaCobroController::class,'tableMagistrado']);
         Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class,'save']);
@@ -204,13 +203,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/comision-editar-data', [ComisionController::class,'dataEdit']);
         Route::post('/comision-editar', [ComisionController::class,'edit']);
 
-=======
-        Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class, 'table']);
-        Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class, 'save']);
-        Route::post('/record-cuenta-cobro', [CuentaCobroController::class, 'record']);
-        Route::post('/update-cuenta-cobro', [CuentaCobroController::class, 'update']);
-        Route::get('/magistradosxtribunal/{id}', [CuentaCobroController::class, 'magistradosxtribunal']);
->>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
 
 
 
@@ -325,6 +317,7 @@ Route::post('/filtros_historico_casos', [CasosController::class, 'filtros_histor
 Route::post('/nuevo-caso-data',[CasosController::class, 'nuevoCasoData']);
 Route::post('/ciudadxdepartamento/{id}',[CasosController::class, 'ciudadxdepartamento']);
 Route::post('/guardar-caso',[CasosController::class, 'guardarCaso']);
+Route::get('magistradoxdepartamento/{id}', [CasosController::class, 'magistradoxdepartamento']);
 
 
 
