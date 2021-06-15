@@ -304,6 +304,11 @@ Route::post('/filtrar-casos', [CasosController::class, 'filtrar_listado_casos'])
 Route::post('/documentos-x-casos/{id}', [CasosController::class, 'documentoxcaso']);
 Route::post('/filtrar-casos-asignados', [CasosController::class, 'filtrar_listado_casos_asignados']);
 Route::post('/filtros_historico_casos', [CasosController::class, 'filtros_historico_casos']);
+Route::post('/nuevo-caso-data',[CasosController::class, 'nuevoCasoData']);
+Route::post('/ciudadxdepartamento/{id}',[CasosController::class, 'ciudadxdepartamento']);
+Route::post('/guardar-caso',[CasosController::class, 'guardarCaso']);
+
+
 
 
 Route::get('/informe_pdf_mis', function (Request $request) {

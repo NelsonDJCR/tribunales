@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CasoRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Caso;
 use App\Models\CasoSeguimiento;
+use App\Models\Ciudad;
 use App\Models\Ciudades;
 use App\Models\Departamentos;
 use App\Models\Documento;
 use App\Models\Estado;
+use App\Models\MedioRecepcion;
 use App\Models\PersonaCentralizado;
+use App\Models\Prioridad;
 use App\Models\Soporte;
 use App\Models\TipoArchivo;
+use App\Models\TipoEleccion;
 use App\Models\TipoIdentificacion;
 use App\Models\TipoTramite;
 use Carbon\Carbon;
@@ -993,5 +998,124 @@ class CasosController extends Controller
             'status' => 200,
             'casos' => $casos,
         ]);
+    }
+
+    public function nuevoCasoData()
+    {
+        $tramite = TipoTramite::where('estado', 1)->get();
+        $eleccion = TipoEleccion::where('estado', 1)->get();
+        $prioridad = Prioridad::where('estado', 1)->get();
+        $ciudad = Ciudad::all();
+        $departamento = Departamentos::all();
+        $identificacion = TipoIdentificacion::where('estado', 1)->get();
+        $estado = Estado::all(); //No se usa
+        $recepcion = MedioRecepcion::where('estado', 1)->get();
+
+        return response()->json([
+            'tramite' => $tramite,
+            'eleccion' => $eleccion,
+            'prioridad' => $prioridad,
+            'ciudad' => $ciudad,
+            'departamento' => $departamento,
+            'identificacion' => $identificacion,
+            'recepcion' => $recepcion,
+            'estado' => $estado, //No se usa
+        ]);
+    }
+
+    public function ciudadxdepartamento($id)
+    {
+        $ciudad = Ciudad::where('id_departamento', $id)->get();
+        return $ciudad;
+    }
+
+    public function guardarCaso(Request $request)
+    {
+        // return $request->all();
+        $rules = [
+            'id_tipo_tramite' => 'required',
+            'fecha_eleccion' => 'required|date',
+            'id_tipo_eleccion' => 'required',
+            'id_prioridad' => 'required',
+            'fecha_recibido' => 'required|date',
+            'id_medio_recepcion' => 'required',
+            'correo_notificacion' => 'required|email',
+            'informante_anonimo' => 'required|in:Si,No',
+            'id_departamento' => 'required',
+            'id_ciudad' => 'required',
+            'direccion' => 'required',
+            'barrio' => 'required',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date',
+            'puesto_votacion' => 'required',
+            'mesa_votacion' => 'required',
+            'asunto' => 'required',
+            'hechos' => 'required',
+            'nombres_solicitante' => 'required',
+            'id_tipo_identificacion' => 'required',
+            'numero_identificacion' => 'required',
+            'id_departamento_recidencia' => 'required',
+            'id_ciudad_recidencia' => 'required',
+            'direccion_recidencia' => 'required',
+            'telefono' => 'required',
+            // 'id_estado' => 'required',
+            // 'id_asesor_asignado' => 'required',
+            // 'fecha_gestion' => 'required|date',
+            // 'fecha_respuesta' => 'required|date',
+            // 'gestion' => 'required'
+        ];
+        // return response()->json(['request' => $r]);
+        $validator = Validator::make($request->all(),$rules);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 406, 'msg' => $validator->errors()->first()]);
+        }
+
+        $caso = new Caso();
+        $caso->id_tramite = $request->id_tipo_tramite;
+        $caso->fecha_eleccion = $request->fecha_eleccion;
+        $caso->id_eleccion = $request->id_tipo_eleccion;
+        $caso->id_prioridad = $request->id_prioridad;
+        $caso->fecha_recibido = $request->fecha_recibido;
+        $caso->id_recepcion = $request->id_medio_recepcion;
+        $caso->correo_notificacion = $request->correo_notificacion;
+        $caso->informante_anonimo = $request->informante_anonimo;
+        $caso->id_departamento = $request->id_departamento;
+        $caso->id_municipio = $request->id_ciudad;
+        $caso->direccion = $request->direccion;
+        $caso->barrio = $request->barrio;
+        $caso->fecha_inicio = $request->fecha_inicio;
+        $caso->fecha_fin = $request->fecha_fin;
+        $caso->puesto_votacion = $request->puesto_votacion;
+        $caso->mesa_votacion = $request->mesa_votacion;
+        $caso->asunto = $request->asunto;
+        $caso->hechos = $request->hechos;
+        $caso->nombres_solicitante = $request->nombres_solicitante;
+        $caso->id_identificacion = $request->id_tipo_identificacion;
+        $caso->num_identificacion = $request->numero_identificacion;
+        $caso->id_departamento_residencia = $request->id_departamento_recidencia;
+        $caso->id_municipio_residencia = $request->id_ciudad_recidencia;
+        $caso->direccion_residencia = $request->direccion_recidencia;
+        $caso->telefono = $request->telefono;
+        $caso->id_estado = 1;
+        $caso->save();
+
+        if ($caso) {
+            return response()->json(
+                [
+                    'status' => 200,
+                    'msg' => 'Los datos han sido guardados exitosamente',
+                    'url' => '/listado-casos',
+                    'id' => $caso->id
+                ]
+            );
+        } else {
+            return response()->json(
+                [
+                    'status' => 500,
+                    'msg' => 'Ingrese de forma correcta todos los campos',
+                ]
+            );
+        }
     }
 }
