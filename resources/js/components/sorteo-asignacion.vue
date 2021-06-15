@@ -230,7 +230,7 @@
     </template>
     <template v-if="pantalla == 'ver'">
         <div>
-            <ver-sorteo :id="id"/>
+            <ver-sorteo @pantalla="pantalla = $event" :id="id"/>
         </div>
     </template>
   </div>

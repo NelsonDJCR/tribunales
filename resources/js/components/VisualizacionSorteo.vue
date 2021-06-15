@@ -61,6 +61,10 @@
         </tbody>
       </table>
     </div>
+
+    <div class="mt-3">
+        <button class="btn btn-secondary active" @click="regresar">Regresar</button>
+    </div>
   </div>
 </template>
 
@@ -82,5 +86,10 @@ export default {
       this.eleccion = res.data.eleccion;
     });
   },
+  methods: {
+      regresar(){
+          this.$emit("pantalla", 'lista')
+      }
+  }
 };
 </script>
