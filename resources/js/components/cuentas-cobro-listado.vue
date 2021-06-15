@@ -179,6 +179,7 @@
         <cuentas-cobro-ver :id="idrecord"></cuentas-cobro-ver>
       </div>
     </template>
+
     <template v-if="pantalla == 'comisiones'">
       <div>
         <div class="container mt-5">

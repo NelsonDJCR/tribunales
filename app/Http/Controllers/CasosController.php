@@ -927,4 +927,71 @@ class CasosController extends Controller
             'tipo_identificacion' => TipoIdentificacion::all()->where('estado',1),
         ]);*/
     }
+
+    public function filtro_detalles_trazabilidad(Request $request)
+    {
+        if ($request->n_casos == '') :
+            $casos = DB::select(
+                " select
+                id
+                , psp.id_estado
+                ,(
+                    select  MAX(`fecha_gestion`) as fecha
+                    from `casos_seguimientos` ps1
+                    where ps1.id_caso = psp.id and ps1.id_estado = 1
+                ) as recibido,
+                (
+                    select  MAX(`fecha_gestion`) as fecha
+                    from `casos_seguimientos` ps1
+                    where ps1.id_caso = psp.id and ps1.id_estado = 2
+                ) as asignado,
+                (
+                    select  MAX(`fecha_gestion`) as fecha
+                    from `casos_seguimientos` ps1
+                    where ps1.id_caso = psp.id and ps1.id_estado = 3
+                ) as tramite,
+                (
+                    select  MAX(`fecha_gestion`) as fecha
+                    from `casos_seguimientos` ps1
+                    where ps1.id_caso = psp.id and ps1.id_estado = 4
+                ) as finalizado
+            from casos as psp
+            order by id asc"
+            );
+        else :
+            $casos = DB::select(
+                " select
+                id
+                , psp.id_estado
+                ,(
+                    select  MAX(`fecha_gestion`) as fecha
+                    from `casos_seguimientos` ps1
+                    where ps1.id_caso = psp.id and ps1.id_estado = 1
+                ) as recibido,
+                (
+                    select  MAX(`fecha_gestion`) as fecha
+                    from `casos_seguimientos` ps1
+                    where ps1.id_caso = psp.id and ps1.id_estado = 2
+                ) as asignado,
+                (
+                    select  MAX(`fecha_gestion`) as fecha
+                    from `casos_seguimientos` ps1
+                    where ps1.id_caso = psp.id and ps1.id_estado = 3
+                ) as tramite,
+                (
+                    select  MAX(`fecha_gestion`) as fecha
+                    from `casos_seguimientos` ps1
+                    where ps1.id_caso = psp.id and ps1.id_estado = 4
+                ) as finalizado
+            from casos as psp
+            where id = $request->n_casos
+            order by id asc"
+            );
+        endif;
+
+        return response()->json([
+            'status' => 200,
+            'casos' => $casos,
+        ]);
+    }
 }

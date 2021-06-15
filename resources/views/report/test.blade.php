@@ -19,8 +19,8 @@
                 Nacional
                 Electoral,
                 mediante oficio radicado interno No. {{ $radicado }}, la Secretaría General del Concejo Municipal de
-                {{ $data->city }},
-                {{ $data->departamento }},
+                {{ $data->city ?? '' }},
+                {{ $data->departamento ?? '' }},
                 allegó al Consejo Nacional Electoral copia del registro realizado en relación del Cabildo Abierto
                 realizado
                 el {{ substr($data->fecha_realizacion, 8, 2) }} de
@@ -62,7 +62,7 @@
                         diciembre
                 @endswitch
                 de {{ substr($data->fecha_realizacion, 0, 4) }}, en el cual se abordó el tema de:
-                “{{ $data->nombre_tema }}”, de conformidad a
+                “{{ $data->nombre_tema ?? '' }}”, de conformidad a
                 lo establecido en el artículo 30 de la Ley 1757 de 2015.
                 <br><br>
                 Se expide en la ciudad de Bogotá D.C, a solicitud del ciudadano {{ $ciudadano }} a los

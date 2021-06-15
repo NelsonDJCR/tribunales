@@ -154,8 +154,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/editar-tibunal', [TribunalesController::class, 'editar']);
         Route::get('/data-rercord/{id}/{table}', [TribunalesController::class, 'dataRecord']);
         Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
-        Route::post('/departamentos_sorteo',[SorteoController::class, 'departamentos_sorteo']);
-        Route::post('/departamentos_sortear',[SorteoController::class, 'sortear']);
+        Route::post('/departamentos_sorteo', [SorteoController::class, 'departamentos_sorteo']);
+        Route::post('/departamentos_sortear', [SorteoController::class, 'sortear']);
 
         // Magistrados
         Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
@@ -180,6 +180,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/nuevo-sorteo', [SorteoController::class, 'nuevoSorteo']);
 
 
+        //Trazabilidad
+
+        Route::post('/filtro_detalles_trazabilidad/{id?}', [CasosController::class, 'filtro_detalles_trazabilidad']);
+
+
+
 
         // Cuenta de cobro
         Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class, 'table']);
@@ -187,7 +193,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/record-cuenta-cobro', [CuentaCobroController::class, 'record']);
         Route::post('/update-cuenta-cobro', [CuentaCobroController::class, 'update']);
         Route::get('/magistradosxtribunal/{id}', [CuentaCobroController::class, 'magistradosxtribunal']);
-
 
 
 
@@ -295,9 +300,9 @@ Route::put('/gestion_en_tramite', [CasosController::class, 'gestion_en_tramite']
 Route::put('/gestion_en_finalizado', [CasosController::class, 'gestion_en_finalizado']);
 Route::post('/listado-historico-casos-data', [CasosController::class, 'listado_historico_casos_data']);
 Route::post('/gestionar_caso_estados', [CasosController::class, 'gestion_caso_admin']);
-Route::post('/filtrar-casos',[CasosController::class, 'filtrar_listado_casos']);
-Route::post('/documentos-x-casos/{id}',[CasosController::class, 'documentoxcaso']);
-Route::post('/filtrar-casos-asignados',[CasosController::class, 'filtrar_listado_casos_asignados']);
+Route::post('/filtrar-casos', [CasosController::class, 'filtrar_listado_casos']);
+Route::post('/documentos-x-casos/{id}', [CasosController::class, 'documentoxcaso']);
+Route::post('/filtrar-casos-asignados', [CasosController::class, 'filtrar_listado_casos_asignados']);
 Route::post('/filtros_historico_casos', [CasosController::class, 'filtros_historico_casos']);
 
 
