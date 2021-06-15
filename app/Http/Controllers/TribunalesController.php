@@ -99,7 +99,6 @@ class TribunalesController extends Controller
 
     public function data()
     {
-        // return '1';
         return response()->json([
             'departamentos' => Departamentos::all()->where('estado', 1),
             'ciudades' => Ciudades::all()->where('estado', 1),

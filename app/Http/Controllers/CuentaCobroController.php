@@ -23,6 +23,43 @@ class CuentaCobroController extends Controller
             'table' => CuentaCobro::where('estado', 1)->with('tribunal', 'magistrado')->orderBy('id', 'DESC')->get()
         ]);
     }
+    public function tableMagistrado(Request $r)
+    {
+        $table = CuentaCobro::where('estado',1)
+        ->where(function ($query) use ($r) {
+            if (isset($r['tribunal_id'])) {
+                if (!empty($r['tribunal_id']))
+                    $query->orwhere("cuentas_cobro.id_tribunal", "=" , $r['tribunal_id']);
+            }
+        })
+        ->where(function ($query) use ($r) {
+            if (isset($r['fecha_inicio'])) {
+                if (!empty($r['fecha_inicio']))
+                    $query->orwhere("cuentas_cobro.fecha_inicio", ">=" , $r['fecha_inicio']);
+            }
+        })
+        ->where(function ($query) use ($r) {
+            if (isset($r['fecha_fin'])) {
+                if (!empty($r['fecha_fin']))
+                    $query->orwhere("cuentas_cobro.fecha_fin", "<=" , $r['fecha_fin']);
+            }
+        })
+        ->where(function ($query) use ($r) {
+            if (isset($r['valor_honorarios'])) {
+                if (!empty($r['valor_honorarios']))
+                    $query->orwhere("cuetas_cobro.valor_honorarios", "like", "%".$r['valor_honorarios']."%");
+            }
+        })
+        ->where('id_magistrado',Auth::user()->id)
+        ->with('tribunal','magistrado')
+        ->orderBy('id','DESC')
+        ->get();
+
+
+        return response()->json([
+            'table' => $table           
+        ]);
+    }
 
     public function update(Request $request)
     {

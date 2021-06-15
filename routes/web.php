@@ -32,6 +32,7 @@ use App\Http\Controllers\TribunalesController;
 use App\Models\CabildoAbierto;
 use App\Models\Caso;
 use App\Http\Controllers\CasosController;
+use App\Http\Controllers\ComisionController;
 use App\Http\Resources\EstadosResource;
 use App\Models\Estado;
 use App\Http\Resources\TipoTramitesResource;
@@ -179,6 +180,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/detalles_sorteo/{id}', [SorteoController::class, 'show']);
         Route::post('/filtro-sorteo', [SorteoController::class, 'filtroSorteo']);
         Route::post('/nuevo-sorteo', [SorteoController::class, 'nuevoSorteo']);
+        Route::post('/guardar-cantidad-departamento', [SorteoController::class, 'agregarCantidad']);
 
 
         //Trazabilidad
@@ -189,11 +191,26 @@ Route::middleware('auth')->group(function () {
 
 
         // Cuenta de cobro
+<<<<<<< HEAD
+        Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class,'table']);
+        Route::post('/tabla-cuentas-cobro-magistrado', [CuentaCobroController::class,'tableMagistrado']);
+        Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class,'save']);
+        Route::post('/cuenta-cobro-editar', [CuentaCobroController::class,'edit']);
+        Route::post('/record-cuenta-cobro', [CuentaCobroController::class,'record']);
+        // Comisiones
+        Route::post('/nueva-comision', [ComisionController::class,'store']);
+        Route::post('/comision-listar', [ComisionController::class,'listar']);
+        Route::post('/comision-eliminar', [ComisionController::class,'delete']);
+        Route::post('/comision-editar-data', [ComisionController::class,'dataEdit']);
+        Route::post('/comision-editar', [ComisionController::class,'edit']);
+
+=======
         Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class, 'table']);
         Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class, 'save']);
         Route::post('/record-cuenta-cobro', [CuentaCobroController::class, 'record']);
         Route::post('/update-cuenta-cobro', [CuentaCobroController::class, 'update']);
         Route::get('/magistradosxtribunal/{id}', [CuentaCobroController::class, 'magistradosxtribunal']);
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
 
 
 

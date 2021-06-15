@@ -58,7 +58,10 @@
                 </select>
               </div>
             </div>
+<<<<<<< HEAD
+=======
             <div class="row">
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
                 <select class="form-select" name="" v-model="form.tribunal_id">
@@ -71,7 +74,6 @@
                   ></option>
                 </select>
               </div>
-            </div>
 
             <div class="row">
               <div class="mb-3">

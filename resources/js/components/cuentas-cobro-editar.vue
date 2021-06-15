@@ -34,7 +34,7 @@
       <form @submit.prevent="newForm">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-            <div class="row">
+          <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
                 <select
@@ -53,7 +53,7 @@
                 </select>
               </div>
             </div>
-            <div class="row">
+            <div class="row" v-if="validacion == '0'">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Funcionarios</b></label>
                 <select class="form-select" v-model="form.id_magistrado">
@@ -377,6 +377,11 @@ export default {
     };
   },
   created() {
+    if (this.solicitud) {
+      this.validacion = ''
+    }else{
+      this.validacion = '0'
+    }
     this.getRecord();
     // this.select();
   },
