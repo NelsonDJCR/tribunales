@@ -29,6 +29,7 @@ class ActividadesController extends Controller
             'dep_id' => 'required|',
             'ciu_id' => 'required|',
             'tribunal_id' => 'required|',
+            'id_tipo_actividad' => 'required|integer',
         ];
         $messages = [
             'fecha.required' => 'La fecha es requerida',
@@ -39,6 +40,8 @@ class ActividadesController extends Controller
             'ciu_id.required' => 'La ciudad es requerida',
             'id_magistrado.required' => 'El magistrado es requerido',
             'tribunal_id.required' => 'El tribunal es requerido',
+            'id_tipo_actividad.required' => 'El tipo de actividad es requerido',
+            'id_tipo_actividad.integer' => 'El tipo de actividad debe ser numérico',
         ];
 
         $validator = Validator::make(request()->all(), $rules, $messages);
@@ -52,6 +55,7 @@ class ActividadesController extends Controller
         $actividad->dep_id = $request->dep_id;
         $actividad->ciu_id = $request->ciu_id;
         $actividad->id_magistrado = $request->id_magistrado;
+        $actividad->id_tipo_actividad = $request->id_tipo_actividad;
         $actividad->estado = 1;
         $actividad->save();
 

@@ -519,8 +519,8 @@ export default {
       action: 0,
       idrecord: 0,
       datos_edit: {},
-      // pantalla: "lista",
-      pantalla: "nuevo",
+      pantalla: "lista",
+    //   pantalla: "nuevo",
     };
   },
   created() {
@@ -559,6 +559,8 @@ export default {
       });
     },
     editar(x) {
+        // alert('llego')
+        // return
       this.idrecord = x;
       this.pantalla = "editar";
     },

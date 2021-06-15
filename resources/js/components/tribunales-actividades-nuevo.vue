@@ -113,9 +113,46 @@
                 </select>
               </div>
             </div>
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Tipo de actividad</b> </label>
+                <select
+                  v-model="form.id_tipo_actividad"
+                  class="form-select"
+                  name="dep_id"
+                  id="dep_id"
+                >
+                  <option value="">Selecciona</option>
+                  <option
+                    v-for="(i, index) in tipo_actividad"
+                    :key="index"
+                    v-text="i.nombre"
+                    :value="i.id"
+                  ></option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Tribunal</b></label>
+                <select
+                  v-model="form.tribunal_id"
+                  class="form-select"
+                  @change="magistradosxtribunal(form.tribunal_id)"
+                >
+                  <option value="">Selecciona</option>
+                  <option
+                    v-for="(i, index) in tribunales"
+                    :key="index"
+                    v-text="i.nombre"
+                    :value="i.id"
+                  ></option>
+                </select>
+              </div>
+            </div>
             <div class="row" v-if="origen == 'actividades'">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Magistrado</b></label>
@@ -128,21 +165,6 @@
                   <option value="">Selecciona</option>
                   <option
                     v-for="(i, index) in magistrados"
-                    :key="index"
-                    v-text="i.nombre"
-                    :value="i.id"
-                  ></option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="mb-3">
-                <label for="" class="form-label"><b>Tribunal</b></label>
-                <select v-model="form.tribunal_id" class="form-select">
-                  <option value="">Selecciona</option>
-                  <option
-                    v-for="(i, index) in tribunales"
                     :key="index"
                     v-text="i.nombre"
                     :value="i.id"
@@ -262,6 +284,7 @@ export default {
       archivos: [],
       tribunales: [],
       magistrados: [],
+      tipo_actividad: [],
       form: { id_tipo_archivo: "" },
       documentos: [],
       origen: "",
@@ -278,12 +301,20 @@ export default {
       this.ciudades = r.data.ciudades;
       this.departament = r.data.departamentos;
       this.type_file = r.data.tipo_archivos;
-      this.magistrados = r.data.magistrados;
+      this.tipo_actividad = r.data.tipo_actividad
+      //   this.magistrados = r.data.magistrados;
       this.tribunales = r.data.tribunales;
     });
     this.form.token = Math.floor(Math.random() * (9999 - 5000)) + 5000;
   },
   methods: {
+    magistradosxtribunal(i) {
+      let url = "/magistradosxtribunal/" + i;
+      axios.get(url).then((res) => {
+        console.log(res.data);
+        this.magistrados = res.data.funcionarios;
+      });
+    },
     box_file() {
       if (this.form.id_tipo_archivo != "") {
         $("#file").trigger("click");
@@ -317,32 +348,33 @@ export default {
       });
     },
     save() {
-        if(this.archivos.length == 0){
-            Swal.fire('¡Error!','Carga por lo menos un archivo','error')
-            return
-        }
-        // console.log(this.form);
-        // return
-        let formulario = new FormData()
-        formulario.append('ciu_id', this.form.ciu_id)
-        formulario.append('dep_id', this.form.dep_id)
-        formulario.append('descripcion', this.form.descripcion)
-        formulario.append('fecha', this.form.fecha)
-        formulario.append('id_magistrado', this.form.id_magistrado)
-        formulario.append('tema', this.form.tema)
-        formulario.append('tribunal_id', this.form.tribunal_id)
-        formulario.append('cantidad', this.archivos.length)
+      if (this.archivos.length == 0) {
+        Swal.fire("¡Error!", "Carga por lo menos un archivo", "error");
+        return;
+      }
+      // console.log(this.form);
+      // return
+      let formulario = new FormData();
+      formulario.append("ciu_id", this.form.ciu_id);
+      formulario.append("dep_id", this.form.dep_id);
+      formulario.append("descripcion", this.form.descripcion);
+      formulario.append("fecha", this.form.fecha);
+      formulario.append("id_magistrado", this.form.id_magistrado);
+      formulario.append("tema", this.form.tema);
+      formulario.append("tribunal_id", this.form.tribunal_id);
+      formulario.append('id_tipo_actividad', this.form.id_tipo_actividad)
+      formulario.append("cantidad", this.archivos.length);
 
-        for (let index = 0; index < this.archivos.length; index++) {
-            formulario.append('archivo'+index, this.archivos[index])
-        }
+      for (let index = 0; index < this.archivos.length; index++) {
+        formulario.append("archivo" + index, this.archivos[index]);
+      }
 
-        for (let index = 0; index < this.tipo_archivo.length; index++) {
-            formulario.append('tipo_archivo'+index, this.tipo_archivo[index])
-        }
+      for (let index = 0; index < this.tipo_archivo.length; index++) {
+        formulario.append("tipo_archivo" + index, this.tipo_archivo[index]);
+      }
 
       axios.post("/guardar-actividad", formulario).then((r) => {
-        if (r.data.code == 200) {
+        if (r.data.status == 200) {
           Swal.fire(
             "¡Perfecto!",
             "Datos guardados exitosamente",
@@ -350,7 +382,7 @@ export default {
           ).then(function () {
             location.reload();
           });
-        } else if (r.data.code == 406) {
+        } else if (r.data.status == 406) {
           Swal.fire(
             r.data.msg,
             "Ingrese todos los datos para continuar",

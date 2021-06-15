@@ -9,6 +9,7 @@ use App\Models\Departamentos;
 use App\Models\Documento;
 use App\Models\Estado;
 use App\Models\Magistrado;
+use App\Models\TipoActividad;
 use App\Models\TipoArchivo;
 use App\Models\TipoCuenta;
 use App\Models\TipoDocumento;
@@ -110,6 +111,7 @@ class TribunalesController extends Controller
             'tipo_identificacion' => TipoIdentificacion::all()->where('estado', 1),
             'magistrados' => Magistrado::all()->where('estado', 1),
             'tribunales' => Tribunal::all()->where('estado', 1),
+            'tipo_actividad' => TipoActividad::where('estado',1)->get()
 
         ]);
     }
@@ -209,6 +211,7 @@ class TribunalesController extends Controller
                 'tipo_cuentas' => TipoCuenta::all()->where('estado', 1),
                 'tipo_archivos' => TipoArchivo::all()->where('estado', 1),
                 'tipo_identificacion' => TipoIdentificacion::all()->where('estado', 1),
+                'tipo_actividad' => TipoActividad::where('estado',1)->get(),
                 'magistrado' => Magistrado::where('id', $x->id_magistrado)->select('magistrados.nombre AS magistrado')->first(),
 
             ]);

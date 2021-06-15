@@ -438,11 +438,11 @@ export default {
       }
 
       axios.post(`/guardar-cuenta-cobro`, formulario).then((r) => {
-        if (r.data.code == 200) {
+        if (r.data.status == 200) {
           swal.fire(r.data.msg, "", "success").then(function () {
             location.reload();
           });
-        } else if (r.data.code == 406) {
+        } else if (r.data.status == 406) {
           swal.fire(r.data.msg, "", "warning");
         } else {
           swal.fire("Fallo en el sevidor!", "error", "error");
