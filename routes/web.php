@@ -176,6 +176,7 @@ Route::middleware('auth')->group(function () {
 
         // Sorteo
         Route::get('/listar-sorteos', [SorteoController::class, 'listarSorteos']);
+        Route::get('/detalles_sorteo/{id}', [SorteoController::class, 'show']);
         Route::post('/filtro-sorteo', [SorteoController::class, 'filtroSorteo']);
         Route::post('/nuevo-sorteo', [SorteoController::class, 'nuevoSorteo']);
 

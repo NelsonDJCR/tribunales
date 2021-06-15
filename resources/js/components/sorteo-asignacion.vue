@@ -228,6 +228,11 @@
         <nuevo-sorteo />
       </div>
     </template>
+    <template v-if="pantalla == 'ver'">
+        <div>
+            <ver-sorteo :id="id"/>
+        </div>
+    </template>
   </div>
 </template>
 
@@ -241,7 +246,8 @@ export default {
       filter: {},
       nuevoSorteo: {},
       pantalla: "lista",
-      //   pantalla: "nuevo",
+      id: 0,
+        // pantalla: "ver",
     };
   },
   created() {
@@ -261,7 +267,8 @@ export default {
       this.pantalla = "nuevo";
     },
     view(i){
-
+        this.id = i.id
+        this.pantalla = 'ver'
     },
     openModalNew() {
       $("#modal_new").modal("show");

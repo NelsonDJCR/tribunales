@@ -27,6 +27,7 @@ Vue.component('magistrados-cuentas-cobro-ver', require('./components/magistrados
 Vue.component('magistrados-mis-actividades-ver', require('./components/magistrados-mis-actividades-ver.vue').default);
 Vue.component('nuevo-sorteo', require('./components/Nuevo-sorteo.vue').default);
 Vue.component('nuevo-caso', require('./components/NuevoCaso.vue').default);
+Vue.component('ver-sorteo', require('./components/VisualizacionSorteo.vue').default);
 
 
 // Vue.component('tipo-documento', require('./components/tipoDocumento_J/index.vue').default);

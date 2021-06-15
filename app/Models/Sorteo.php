@@ -9,4 +9,9 @@ class Sorteo extends Model
 {
     protected $table = 'sorteo';
     use HasFactory;
+
+    public function eleccion()
+    {
+        return $this->hasOne(TipoEleccion::class, 'id', 'id_tipo_eleccion');
+    }
 }
