@@ -306,6 +306,7 @@ export default {
   },
   created() {
     axios.get(`/data-rercord/${this.id}/actividades`).then((r) => {
+    // axios.get(`/data-rercord/7/actividades`).then((r) => {
       this.ciudades = r.data.ciudades;
       this.type_file = r.data.tipo_archivo;
       this.departament = r.data.departamentos;
@@ -324,7 +325,7 @@ export default {
     save() {
       let formulario = new FormData();
       formulario.append('id', this.id)
-    //   formulario.append('id', 7)
+    //   formulario.append('id', id)
       formulario.append("ciu_id", this.formulario.ciu_id);
       formulario.append("dep_id", this.formulario.dep_id);
       formulario.append("descripcion", this.formulario.descripcion);

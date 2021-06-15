@@ -485,14 +485,11 @@ export default {
       }
     },
     eliminar_archivo(index) {
-      // console.log(this.documentos[0])
       if (this.documentos[index].id != 0) {
-        //   console.log(this.documentos[index]);
         this.eliminados.push(this.documentos[index].id);
       }
       this.documentos.splice(index, 1);
       this.tipo_documentos.splice(index, 1);
-      //   console.log(this.eliminados);
     },
     edit() {
       if (this.documentos.length == 0) {

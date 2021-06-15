@@ -189,7 +189,7 @@ class TribunalesController extends Controller
 
     public function dataRecord($id, $table)
     {
-        // return $id;
+        // return $table;
         if ($table == 'actividades') {
             $documentos = DB::table('actividades_soporte')
                 ->select(
@@ -200,7 +200,10 @@ class TribunalesController extends Controller
                 )->join('documento', 'documento.id', 'actividades_soporte.id_documento')
                 ->where('documento.estado', '1')
                 ->where('id_actividad', $id)->get();
-            $x = DB::table('actividades')->where('id', $id)->first();
+                $x = DB::table('actividades')->where('id', $id)->get();
+                foreach ($x as $row) {
+                    $id_magistrado = $row->id_magistrado;
+                }
             return response()->json([
                 'documentos' => $documentos,
                 'formulario' => DB::table($table)->where('id', $id)->first(),
@@ -212,7 +215,7 @@ class TribunalesController extends Controller
                 'tipo_archivos' => TipoArchivo::all()->where('estado', 1),
                 'tipo_identificacion' => TipoIdentificacion::all()->where('estado', 1),
                 'tipo_actividad' => TipoActividad::where('estado',1)->get(),
-                'magistrado' => Magistrado::where('id', $x->id_magistrado)->select('magistrados.nombre AS magistrado')->first(),
+                'magistrado' => Magistrado::where('id', $id_magistrado)->select('magistrados.nombre AS magistrado')->first(),
 
             ]);
         }
