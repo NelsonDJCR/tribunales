@@ -58,6 +58,10 @@
                 </select>
               </div>
             </div>
+<<<<<<< HEAD
+=======
+            <div class="row">
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
                 <select class="form-select" name="" v-model="form.tribunal_id">
@@ -511,11 +515,11 @@ export default {
 
       axios.post("/guardarMagistrados", formulario).then((res) => {
         console.log(res.data);
-        if (res.data.code == 200) {
+        if (res.data.status == 200) {
           Swal.fire("¡Perfecto!", res.data.msg, "success").then(function () {
             location.reload();
           });
-        } else if (res.data.code == 406) {
+        } else if (res.data.status == 406) {
           Swal.fire(
             res.data.msg,
             "Ingrese todos los campos para continuar",

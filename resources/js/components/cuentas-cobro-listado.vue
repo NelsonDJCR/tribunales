@@ -77,7 +77,11 @@
               </div>
 
               <div class="mb-3 col-3">
+<<<<<<< HEAD
                 <label for="" class="form-label"><b>Magistrado</b></label>
+=======
+                <label for="" class="form-label"><b>Funcionario</b></label>
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                 <input
                   type="text"
                   class="form-control"
@@ -128,7 +132,11 @@
               <td class="aling_btn_options" style="width: 190px">
                 <button
                   type="button"
+<<<<<<< HEAD
                   @click="editarRecord(i.id)"
+=======
+                  @click="editar(i.id)"
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                   class="btn btn-info btn-sm"
                 >
                   <i
@@ -182,12 +190,15 @@
 
     <template v-if="pantalla == 'comisiones'">
       <div>
+<<<<<<< HEAD
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
           crossorigin="anonymous"
         />
+=======
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
         <div class="container mt-5">
           <!-- Breadcrumb -->
           <ol class="breadcrumb">
@@ -205,7 +216,11 @@
           <div class="row p-2 text-center border shadow rounded-3">
             <div class="row">
               <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+<<<<<<< HEAD
                 <h1 class="text-blue"><b>NUEVA CUENTA DE COBRO</b></h1>
+=======
+                <h1 class="text-blue"><b>COMISIONES</b></h1>
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
               </div>
               <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
                 <div
@@ -218,22 +233,58 @@
             </div>
           </div>
 
+<<<<<<< HEAD
           <form @submit.prevent="newComision">
+=======
+          <form @submit.prevent="newForm">
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
             <div class="row">
               <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
                 <div class="row">
                   <div class="mb-3">
+<<<<<<< HEAD
                     <label for="" class="form-label"><b>Concepto</b></label>
                     <input
                       type="text"
                       class="form-control"
                       v-model="new_com.consepto"
                     />
+=======
+                    <label for="" class="form-label"><b>Tribunal</b></label>
+                    <select
+                      class="form-select"
+                      name="tribu_id"
+                      v-model="form.id_tribunal"
+                    >
+                      <option value="">Selecciona</option>
+                      <option
+                        v-for="(i, index) in tribunales"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                      ></option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="mb-3">
+                    <label for="" class="form-label"><b>Magistrado</b></label>
+                    <select class="form-select" v-model="form.id_magistrado">
+                      <option value="">Selecciona</option>
+                      <option
+                        v-for="(i, index) in magistrados"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                      ></option>
+                    </select>
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                   </div>
                 </div>
                 <div class="row">
                   <div class="mb-3">
                     <label for="" class="form-label"
+<<<<<<< HEAD
                       ><b>Valor honorarios</b></label
                     >
                     <input
@@ -241,16 +292,44 @@
                       class="form-control"
                       v-model="new_com.valor_honorarios"
                     />
+=======
+                      ><b>Fecha inicio</b>
+                    </label>
+                    <div class="input-group">
+                      <input
+                        v-model="form.fecha_inicio"
+                        type="date"
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="mb-3">
+                    <label for="" class="form-label"><b>Fecha fin</b> </label>
+                    <div class="input-group">
+                      <input
+                        v-model="form.fecha_fin"
+                        type="date"
+                        class="form-control"
+                      />
+                    </div>
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                   </div>
                 </div>
                 <div class="row">
                   <div class="mb-3">
                     <label for="" class="form-label"
+<<<<<<< HEAD
                       ><b>Número de días</b></label
+=======
+                      ><b>Valor honorarios</b></label
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                     >
                     <input
                       type="number"
                       class="form-control"
+<<<<<<< HEAD
                       v-model="new_com.numero_dias"
                     />
                   </div>
@@ -267,23 +346,47 @@
                       type="number"
                       class="form-control"
                       v-model="new_com.valor_bruto"
+=======
+                      v-model="form.valor_honorarios"
                     />
                   </div>
                 </div>
                 <div class="row">
                   <div class="mb-3">
                     <label for="" class="form-label"
-                      ><b>Valor factura</b></label
+                      ><b>Valor Conseptos</b></label
                     >
                     <input
                       type="number"
                       class="form-control"
-                      v-model="new_com.valor_factura"
+                      v-model="form.valor_honorarios"
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                     />
                   </div>
                 </div>
                 <div class="row">
                   <div class="mb-3">
+                    <label for="" class="form-label"
+<<<<<<< HEAD
+                      ><b>Valor factura</b></label
+=======
+                      ><b>Número de días</b></label
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+<<<<<<< HEAD
+                      v-model="new_com.valor_factura"
+=======
+                      v-model="form.numero_dias"
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
+                    />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="mb-3">
+<<<<<<< HEAD
                     <label for="" class="form-label"
                       ><b>Valor total a pagar</b></label
                     >
@@ -293,6 +396,54 @@
                       step="any"
                       class="form-control"
                       v-model="new_com.total_pagar"
+=======
+                    <label for="" class="form-label"><b>Valor bruto</b></label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      v-model="form.valor_bruto"
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
+                    />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="mb-3">
+<<<<<<< HEAD
+                    <label for="" class="form-label"><b>Rete fuente</b></label>
+                    <input
+                      type="number"
+                      min="1"
+                      step="any"
+                      class="form-control"
+                      v-model="new_com.retefuente"
+=======
+                    <label for="" class="form-label"
+                      ><b>Valor factura</b></label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      v-model="form.valor_factura"
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
+                <div class="row">
+                  <div class="mb-3">
+<<<<<<< HEAD
+=======
+                    <label for="" class="form-label"
+                      ><b>Valor total a pagar</b></label
+                    >
+                    <input
+                      type="number"
+                      min="1"
+                      step="any"
+                      class="form-control"
+                      v-model="form.total_pagar"
                     />
                   </div>
                 </div>
@@ -304,22 +455,24 @@
                       min="1"
                       step="any"
                       class="form-control"
-                      v-model="new_com.retefuente"
+                      v-model="form.rete_fuente"
                     />
                   </div>
                 </div>
-              </div>
-
-              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
                 <div class="row">
                   <div class="mb-3">
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                     <label for="" class="form-label"><b>Rete IVA</b></label>
                     <input
                       type="number"
                       min="1"
                       step="any"
                       class="form-control"
+<<<<<<< HEAD
                       v-model="new_com.rete_iva"
+=======
+                      v-model="form.rete_iva"
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                     />
                   </div>
                 </div>
@@ -331,7 +484,11 @@
                       min="1"
                       step="any"
                       class="form-control"
+<<<<<<< HEAD
                       v-model="new_com.rete_ica"
+=======
+                      v-model="form.rete_ica"
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                     />
                   </div>
                 </div>
@@ -343,7 +500,11 @@
                       min="1"
                       step="any"
                       class="form-control"
+<<<<<<< HEAD
                       v-model="new_com.neto_pagar"
+=======
+                      v-model="form.neto_pagar"
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                     />
                   </div>
                 </div>
@@ -354,6 +515,15 @@
                     >
                     <select class="form-select" name="type_file">
                       <option>Seleccione ...</option>
+<<<<<<< HEAD
+=======
+                      <option
+                        v-for="(i, index) in tipo_archivos"
+                        :key="index"
+                        :value="i.id"
+                        v-text="i.nombre"
+                      ></option>
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                     </select>
                   </div>
                 </div>
@@ -379,6 +549,7 @@
                     </div>
                   </div>
                 </div>
+<<<<<<< HEAD
 
                 <div v-if="editar == 0">
                   <div class="d-grid gap-2 col-6 mx-auto">
@@ -402,11 +573,18 @@
                       Cancelar
                     </button>
                   </div>
+=======
+                <div class="d-grid gap-2 col-6 mx-auto">
+                  <button type="submit" class="btn btn-success">
+                    Crear Cuenta de Cobro
+                  </button>
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
                 </div>
               </div>
             </div>
           </form>
         </div>
+<<<<<<< HEAD
         <h1>Comisiones</h1>
         <diV class="btns-block d-grid gap-2 mt-5">
           <ul class="list-group btn-group-vertical">
@@ -433,6 +611,68 @@
             </li>
           </ul>
         </diV>
+=======
+
+        <div
+          class="modal fade"
+          id="modal_file"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">
+                  Agregar Documentos
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  @click="closeAddFile()"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="row mb-2">
+                  <div class="col-11">
+                    <label class="form-label"
+                      >Agrege todos los documentos</label
+                    >
+                  </div>
+                  <div class="col-1">
+                    <button
+                      class="btn-more btn"
+                      id="add_file"
+                      @click="add_file()"
+                      type="button"
+                    >
+                      <!-- <i class="fas fa-plus"></i> -->
+                      <i
+                        class="typcn typcn-document-add"
+                        style="color: green"
+                      ></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-12" id="box_files"></div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  @click="closeAddFile()"
+                >
+                  Aceptar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
       </div>
     </template>
   </div>
@@ -458,7 +698,7 @@ export default {
         cuentas_cobro_id: 0,
       },
       pantalla: "lista",
-    //   pantalla: "nuevo",
+    //   pantalla: "editar",
     };
   },
   created() {
@@ -466,12 +706,33 @@ export default {
     this.getTable();
   },
   methods: {
+<<<<<<< HEAD
+=======
+    fecha_format() {
+      var fecha = "";
+      var fecha_format = "";
+      var array = [];
+
+      for (let index = 0; index < this.table.length; index++) {
+        fecha = this.table[index].fecha_inicio;
+        array = fecha.split("-");
+        fecha_format = array[2] + "-" + array[1] + "-" + array[0];
+        this.table[index].fecha_inicio = fecha_format;
+
+        fecha = this.table[index].fecha_final;
+        array = fecha.split("-");
+        fecha_format = array[2] + "-" + array[1] + "-" + array[0];
+        this.table[index].fecha_final = fecha_format;
+      }
+    },
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
     getSelect() {
       axios.get("/data-select").then((r) => {
         this.tribunales = r.data.tribunales;
         this.magistrados = r.data.magistrados;
       });
     },
+<<<<<<< HEAD
     getComisiones() {
       axios
         .post(`/comision-listar`, { id: this.new_com.cuentas_cobro_id })
@@ -479,12 +740,22 @@ export default {
           this.comisiones = r.data.table;
         });
     },
+=======
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
     getTable() {
       axios.post("/tabla-cuentas-cobro").then((r) => {
         this.table = r.data.table;
+        this.fecha_format();
+        console.log(this.table);
       });
     },
+<<<<<<< HEAD
     editarRecord(x) {
+=======
+    editar(x) {
+        // alert('llego')
+        // return
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
       this.idrecord = x;
       this.pantalla = "editar";
     },
@@ -496,9 +767,13 @@ export default {
       this.pantalla = "nuevo";
     },
     comision(x) {
+<<<<<<< HEAD
       this.id_comision = x;
       this.new_com.cuentas_cobro_id = this.id_comision;
 
+=======
+      this.idrecord = x;
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
       this.pantalla = "comisiones";
       this.getComisiones();
     },

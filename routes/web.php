@@ -37,6 +37,7 @@ use App\Http\Resources\EstadosResource;
 use App\Models\Estado;
 use App\Http\Resources\TipoTramitesResource;
 use App\Models\Actividad;
+use App\Models\CuentaCobro;
 use App\Models\TipoTramite;
 use App\Models\Departamentos;
 use App\Models\Magistrado;
@@ -154,8 +155,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/editar-tibunal', [TribunalesController::class, 'editar']);
         Route::get('/data-rercord/{id}/{table}', [TribunalesController::class, 'dataRecord']);
         Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
-        Route::post('/departamentos_sorteo',[SorteoController::class, 'departamentos_sorteo']);
-        Route::post('/departamentos_sortear',[SorteoController::class, 'sortear']);
+        Route::post('/departamentos_sorteo', [SorteoController::class, 'departamentos_sorteo']);
+        Route::post('/departamentos_sortear', [SorteoController::class, 'sortear']);
 
         // Magistrados
         Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
@@ -176,13 +177,21 @@ Route::middleware('auth')->group(function () {
 
         // Sorteo
         Route::get('/listar-sorteos', [SorteoController::class, 'listarSorteos']);
+        Route::get('/detalles_sorteo/{id}', [SorteoController::class, 'show']);
         Route::post('/filtro-sorteo', [SorteoController::class, 'filtroSorteo']);
         Route::post('/nuevo-sorteo', [SorteoController::class, 'nuevoSorteo']);
         Route::post('/guardar-cantidad-departamento', [SorteoController::class, 'agregarCantidad']);
 
 
+        //Trazabilidad
+
+        Route::post('/filtro_detalles_trazabilidad/{id?}', [CasosController::class, 'filtro_detalles_trazabilidad']);
+
+
+
 
         // Cuenta de cobro
+<<<<<<< HEAD
         Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class,'table']);
         Route::post('/tabla-cuentas-cobro-magistrado', [CuentaCobroController::class,'tableMagistrado']);
         Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class,'save']);
@@ -195,6 +204,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/comision-editar-data', [ComisionController::class,'dataEdit']);
         Route::post('/comision-editar', [ComisionController::class,'edit']);
 
+=======
+        Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class, 'table']);
+        Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class, 'save']);
+        Route::post('/record-cuenta-cobro', [CuentaCobroController::class, 'record']);
+        Route::post('/update-cuenta-cobro', [CuentaCobroController::class, 'update']);
+        Route::get('/magistradosxtribunal/{id}', [CuentaCobroController::class, 'magistradosxtribunal']);
+>>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
 
 
 
@@ -302,10 +318,15 @@ Route::put('/gestion_en_tramite', [CasosController::class, 'gestion_en_tramite']
 Route::put('/gestion_en_finalizado', [CasosController::class, 'gestion_en_finalizado']);
 Route::post('/listado-historico-casos-data', [CasosController::class, 'listado_historico_casos_data']);
 Route::post('/gestionar_caso_estados', [CasosController::class, 'gestion_caso_admin']);
-Route::post('/filtrar-casos',[CasosController::class, 'filtrar_listado_casos']);
-Route::post('/documentos-x-casos/{id}',[CasosController::class, 'documentoxcaso']);
-Route::post('/filtrar-casos-asignados',[CasosController::class, 'filtrar_listado_casos_asignados']);
+Route::post('/filtrar-casos', [CasosController::class, 'filtrar_listado_casos']);
+Route::post('/documentos-x-casos/{id}', [CasosController::class, 'documentoxcaso']);
+Route::post('/filtrar-casos-asignados', [CasosController::class, 'filtrar_listado_casos_asignados']);
 Route::post('/filtros_historico_casos', [CasosController::class, 'filtros_historico_casos']);
+Route::post('/nuevo-caso-data',[CasosController::class, 'nuevoCasoData']);
+Route::post('/ciudadxdepartamento/{id}',[CasosController::class, 'ciudadxdepartamento']);
+Route::post('/guardar-caso',[CasosController::class, 'guardarCaso']);
+
+
 
 
 Route::get('/informe_pdf_mis', function (Request $request) {

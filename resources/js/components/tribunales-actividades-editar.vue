@@ -62,6 +62,28 @@
                 ></textarea>
               </div>
             </div>
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Tipo de actividad</b>
+                </label>
+                <select
+                  v-model="formulario.id_tipo_actividad"
+                  class="form-select"
+                  name="dep_id"
+                  id="dep_id"
+                >
+                  <option value="">Selecciona</option>
+                  <option
+                    v-for="(i, index) in tipo_actividad"
+                    :key="index"
+                    v-text="i.nombre"
+                    :value="i.id"
+                  ></option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
@@ -301,16 +323,19 @@ export default {
       documentos: [],
       eliminados: [],
       tipo_documentos: [],
+      tipo_actividad: [],
       index: 0,
     };
   },
   created() {
     axios.get(`/data-rercord/${this.id}/actividades`).then((r) => {
+      // axios.get(`/data-rercord/7/actividades`).then((r) => {
       this.ciudades = r.data.ciudades;
       this.type_file = r.data.tipo_archivo;
       this.departament = r.data.departamentos;
       this.documentos = r.data.documentos;
       this.formulario = r.data.formulario;
+      this.tipo_actividad = r.data.tipo_actividad
       for (let index = 0; index < this.documentos.length; index++) {
         this.tipo_documentos.push(this.documentos[index].id_tipo_documento);
       }
@@ -323,8 +348,8 @@ export default {
   methods: {
     save() {
       let formulario = new FormData();
-      formulario.append('id', this.id)
-    //   formulario.append('id', 7)
+      formulario.append("id", this.id);
+      //   formulario.append('id', id)
       formulario.append("ciu_id", this.formulario.ciu_id);
       formulario.append("dep_id", this.formulario.dep_id);
       formulario.append("descripcion", this.formulario.descripcion);

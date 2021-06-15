@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Framework\Constraint\Count;
 
 class SorteoController extends Controller
 {
@@ -200,6 +201,35 @@ class SorteoController extends Controller
         return response()->json([
             'status' => 200,
             'msg' => 'El sorteo fue un éxito',
+        ]);
+    }
+
+    public function show($id)
+    {
+        $sorteo = DB::table('sorteo_departamentos')
+        ->select(
+            'sorteo_departamentos.*',
+            'departamentos.nombre as dep_nombre',
+            'magistrados.nombre as mag_nombre',
+            'magistrados.id as mag_id',
+            // 'departamentos.id as dep_id',
+            // DB::raw("count('sorteo_departamentos.magistrado_id') as cantidad")
+        )
+        ->join('departamentos','departamentos.id', 'sorteo_departamentos.departamentos_id')
+        ->join('magistrados','magistrados.id', 'sorteo_departamentos.magistrado_id')
+        ->where('sorteo_id', $id)
+        ->groupBy('mag_id')
+        ->get();
+
+        $sor = Sorteo::find($id);
+
+        $eleccion = Sorteo::find($id)->eleccion;
+        // return $eleccion;
+
+        return response()->json([
+            'sorteo' => $sorteo,
+            'sor' => $sor,
+            'eleccion' => $eleccion
         ]);
     }
 }

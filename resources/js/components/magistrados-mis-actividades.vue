@@ -153,11 +153,24 @@ export default {
   created() {
     axios.get("/magistrado/mis-actividades").then((r) => {
       this.tabla = r.data.table;
+      this.formatear_fecha()
       this.fechas.min_fecha = r.data.minimo;
       this.fechas.max_fecha = r.data.maximo;
     });
   },
   methods: {
+    formatear_fecha() {
+      var fecha = "";
+      var array = [];
+      var fecha_format = "";
+
+      for (let index = 0; index < this.tabla.length; index++) {
+        fecha = this.tabla[index].fecha;
+        array = fecha.split("-");
+        fecha_format = array[2] + "-" + array[1] + "-" + array[0];
+        this.tabla[index].fecha = fecha_format;
+      }
+    },
     ver(id) {
       this.id_record = id;
       this.pantalla = "ver";

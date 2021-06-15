@@ -77,6 +77,17 @@
                 ></textarea>
               </div>
             </div>
+
+            <div class="row">
+                <div class="mb-3">
+                    <label for="" class="form-label">Tipo de actividad</label>
+                    <select class="form-control" v-model="formulario.id_tipo_actividad" disabled>
+                        <option value="">Seleccione</option>
+                        <option v-for="(i,index) in tipo_actividad" :key="index" :value="i.id" v-text="i.nombre"></option>
+                    </select>
+                </div>
+            </div>
+
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
@@ -241,6 +252,7 @@ export default {
       departament: [],
       formulario: {},
       documentos: [],
+      tipo_actividad: [],
       type_file: [],
       magistrado: "",
     };
@@ -253,6 +265,7 @@ export default {
       this.magistrado = r.data.magistrado;
       this.documentos = r.data.documentos
       this.type_file = r.data.tipo_archivos
+      this.tipo_actividad = r.data.tipo_actividad
     });
   },
 };
