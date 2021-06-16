@@ -312,7 +312,7 @@
                 </div>
 
                 <div class="mb-3 col-12">
-                  <label for="" class="form-label"><b>Magistrados</b></label>
+                  <label for="" class="form-label"><b>Funcionarios</b></label>
                   <select
                     class="form-select obliGes"
                     name=""

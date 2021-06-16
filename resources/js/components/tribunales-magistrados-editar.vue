@@ -13,7 +13,7 @@
         <li class="breadcrumb-item active">
           <router-link :to="{ name: 'home' }"><span>Home</span></router-link> /
           <label for="" class="p-2"
-            >Tribunales de Garantía / Listado de Magistrados / Editar
+            >Tribunales de Garantía / Listado de Funcionarios / Editar
             Magistrado</label
           >
         </li>
@@ -432,8 +432,9 @@ export default {
   },
   created() {
     axios.get(`/data-rercord/${this.id}/magistrados`).then((r) => {
+        console.log(r.data);
       this.documentos = r.data.documentos;
-      console.log(this.documentos);
+    //   console.log(this.documentos);
       this.type_file = r.data.tipo_archivo;
       this.ciudades = r.data.ciudades;
       this.departament = r.data.departamentos;

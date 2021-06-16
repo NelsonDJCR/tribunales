@@ -164,7 +164,7 @@ export default {
     },
     sorteo() {
       Swal.fire({
-        title: "¿Sortear Magistrados?",
+        title: "¿Sortear Funcionarios?",
         icon: "question",
         showCancelButton: true,
         confirmButtonText: "Aceptar",

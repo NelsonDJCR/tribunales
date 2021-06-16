@@ -16,7 +16,7 @@
               <router-link :to="{ name: 'home' }"
                 ><span>Home</span></router-link
               >
-              / <label for="" class="p-2">Magistrados / Mis actividades </label>
+              / <label for="" class="p-2">Funcionarios / Mis actividades </label>
             </li>
           </ol>
           <div class="row p-2 text-center border shadow rounded-3">

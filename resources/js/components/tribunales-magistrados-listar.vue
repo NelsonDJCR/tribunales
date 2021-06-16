@@ -12,7 +12,7 @@
           <div class="container mt-5">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Magistrados</label></li>
+                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Funcionarios</label></li>
             </ol>
             <div class="row p-2 text-center border shadow rounded-3">
               <div class="row">

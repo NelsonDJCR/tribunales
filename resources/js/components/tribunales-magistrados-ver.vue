@@ -13,7 +13,7 @@
         <li class="breadcrumb-item active">
           <router-link :to="{ name: 'home' }"><span>Home</span></router-link> /
           <label for="" class="p-2"
-            >Tribunales de Garantía / Listado de Magistrados / Ver
+            >Tribunales de Garantía / Listado de Funcionarios / Ver
             Magistrado</label
           >
         </li>
