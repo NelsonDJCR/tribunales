@@ -54,12 +54,12 @@ class TribunalesController extends Controller
             return response()->json(['status' => 406, 'msg' => $validator->errors()->first()]);
         }
 
-        if ($request->cantidad == 0) {
-            return response()->json([
-                'status' => 406,
-                'msg' => 'Ingrese un documento',
-            ]);
-        }
+        // if ($request->cantidad == 0) {
+        //     return response()->json([
+        //         'status' => 406,
+        //         'msg' => 'Ingrese un documento',
+        //     ]);
+        // }
 
         $tribunal = new Tribunal();
         $tribunal->nombre = $request->nombre;

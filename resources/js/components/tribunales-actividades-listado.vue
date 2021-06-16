@@ -286,6 +286,7 @@ export default {
     filter() {
       axios.post("/filtros-actividad", this.dataFilter).then((r) => {
         this.tabla = r.data.tabla;
+        this.formatear_fecha()
       });
     },
     editar(id) {
@@ -349,120 +350,6 @@ export default {
         }
       });
     },
-
-    // modal_export(id) {
-    //   $("#cabildos_id").val(id);
-    //   this.dataPdf.cabildo_id = id;
-    //   this.dataPdf.radicado = "";
-    //   this.dataPdf.ciudadano = "";
-    //   $("#modal_export").modal("show");
-    // },
-    // exportPdf() {
-    //   window.open(
-    //     "/download?id=" +
-    //       this.dataPdf.cabildo_id +
-    //       "&radicado=" +
-    //       this.dataPdf.radicado +
-    //       "&ciudadano=" +
-    //       this.dataPdf.ciudadano
-    //   );
-    //   $("#modal_export").modal("hide");
-    // },
-    // export_exel() {
-    //   let url = "/excel-cabildos";
-    //   let filtros = this.dataFilter;
-    //   axios.post(url, filtros).then((res) => {
-    //     let blob = new Blob([res.data]);
-    //     let link = document.createElement("a");
-    //     link.href = window.URL.createObjectURL(blob);
-    //     link.download = "ReporteCabildos.xls";
-    //     link.click();
-    //   });
-    // },
-    // changeCity() {
-    //   var id = $("#departamento_id").val();
-    //   axios.post("/changeCity", { id: id }).then((r) => {
-    //     this.ciudades = r.data;
-    //   });
-    // },
-    // filter() {
-    //   let filtros = this.dataFilter;
-    //   axios.post("/filter-list-cabildos", filtros).then((r) => {
-    //     console.log(r.data.cabildos);
-    //     this.cabildos = r.data.cabildos;
-    //   });
-    // },
-    // report() {
-    //   var form = new FormData();
-    //   form.append("nombre_tema", $("#nombre_tema").val());
-    //   form.append("dep_id", $("#dep_id").val());
-    //   form.append("fecha_realizacion", $("#fecha_realizacion").val());
-    //   form.append("fecha_final", $("#fecha_final").val());
-    //   axios.post("/excel-cabildos", form).then((r) => {});
-    // },
-    // deleteSesion(id) {
-    //   Swal.fire({
-    //     title: "¿Eliminar registro?",
-    //     text: "Esta acción no se puede revertir",
-    //     icon: "question",
-    //     showCancelButton: true,
-    //     confirmButtonColor: "#3085d6",
-    //     cancelButtonColor: "#757575",
-    //     confirmButtonText: "Aceptar",
-    //     cancelButtonText: "Cancelar",
-    //   }).then((result) => {
-    //     console.log(result);
-    //     if (result.value) {
-    //       const url = "/delete-session/" + id;
-    //       axios.get(url).then((r) => {
-    //         this.cabildos = r.data.cabildos;
-    //         Swal.fire(
-    //           "¡Perfecto!",
-    //           "Datos eliminados correctamente",
-    //           "success"
-    //         );
-    //       });
-    //     }
-    //   });
-    // },
-    // editSession(id) {
-    //   this.action = 1;
-    //   this.idEditar = id;
-    //   axios
-    //     .get("/edit-sesion/" + id)
-    //     .then((r) => {
-    //       this.datos_edit = r.data.datos;
-    //       this.departament = r.data.departament;
-    //       this.ciudades = r.data.ciudades;
-    //       this.type_file = r.data.type_file;
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     });
-    // },
-    // saveEdit() {
-    //   let datos = this.datos_edit;
-    //   let url = "/editSesion";
-    //   axios.post(url, datos).then((res) => {
-    //     if (res.data.status == 406) {
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "¡Error!",
-    //         text: res.data.msg,
-    //       });
-    //     } else {
-    //       this.action = 0;
-    //       this.cabildos = res.data.table;
-    //       // console.log(r.data);
-    //       // return false;
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "¡Perfercto!",
-    //         text: "Datos guardados exitosamente",
-    //       });
-    //     }
-    //   });
-    // },
   },
 };
 </script>

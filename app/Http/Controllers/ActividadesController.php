@@ -23,7 +23,7 @@ class ActividadesController extends Controller
             $data['id_magistrado'] = Auth::user()->id;
         }
         $rules = [
-            'fecha' => 'required|after:today',
+            'fecha' => 'required',
             'tema' => 'required|',
             'descripcion' => 'required|',
             'dep_id' => 'required|',
@@ -33,7 +33,7 @@ class ActividadesController extends Controller
         ];
         $messages = [
             'fecha.required' => 'La fecha es requerida',
-            'fecha.after' => 'La fecha debe ser mayor a hoy',
+            // 'fecha.after' => 'La fecha debe ser mayor a hoy',
             'tema.required' => 'El tema es requerido',
             'descripcion.required' => 'La descripción es requerida',
             'dep_id.required' => 'El departamento es requerido',
@@ -100,7 +100,7 @@ class ActividadesController extends Controller
         // return '1';
 
         $rules = [
-            'fecha' => 'required|after:today',
+            'fecha' => 'required',
             'tema' => 'required|',
             'descripcion' => 'required|',
             'dep_id' => 'required|',
@@ -109,7 +109,7 @@ class ActividadesController extends Controller
         ];
         $messages = [
             'fecha.required' => 'La fecha es requerida',
-            'fecha.after' => 'La fecha debe ser mayor a hoy',
+            // 'fecha.after' => 'La fecha debe ser mayor a hoy',
             'tema.required' => 'El tema es requerido',
             'descripcion.required' => 'La descripción es requerida',
             'dep_id.required' => 'El departamento es requerido',

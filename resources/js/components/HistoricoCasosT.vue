@@ -560,8 +560,6 @@ export default {
         if (
           this.gestion.estado == "4" &&
           (this.gestion.observacion == "" ||
-            this.gestion.tipoArchivo == "" ||
-            this.archivo.name == "" ||
             this.gestion.observacion == "")
         ) {
           Swal.fire("¡Advertencia!", "Completa todos los campos", "warning");
@@ -631,9 +629,7 @@ export default {
       });
     },
     gestionarCaso() {
-      console.log(this.gestion);
       if (
-        this.gestion.asesor != "" &&
         this.gestion.id != 0 &&
         this.gestion.observacion != ""
       ) {

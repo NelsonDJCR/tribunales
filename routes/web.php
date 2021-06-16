@@ -328,7 +328,50 @@ Route::get('/informe_pdf_mis', function (Request $request) {
     // return $request->all();
     $min_fecha = $request->min_fecha;
     $max_fecha = $request->max_fecha;
-    $data = Actividad::where('id_magistrado', Auth::user()->id_persona)->where('estado', '1')->get();
+    $data = Actividad::where('id_magistrado', Auth::user()->id)
+    ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento', 'tipo_actividad.nombre as tipo_nombre')
+    ->join('tipo_actividad', 'tipo_actividad.id', 'actividades.id_tipo_actividad')
+    ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")
+    ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
+    ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
+    ->orderBy('actividades.id','DESC')
+    ->where(function ($query) use ($request) {
+        if (isset($request['tema'])) {
+            if (!empty($request['tema']))
+                $query->orwhere("actividades.tema", 'like', "%" . $request['tema'] . "%");
+        }
+    })
+    ->where(function ($query) use ($request) {
+        if (isset($request['fecha_inicial'])) {
+            if (!empty($request['fecha_inicial']))
+                $query->orwhere("actividades.fecha", ">=", $request['fecha_inicial']);
+        }
+    })
+    ->where(function ($query) use ($request) {
+        if (isset($request['fecha_final'])) {
+            if (!empty($request['fecha_final']))
+                $query->orwhere("actividades.fecha", "<=", $request['fecha_final']);
+        }
+    })
+    ->where(function ($query) use ($request) {
+        if (isset($request['id_tipo_actividad'])) {
+            if (!empty($request['id_tipo_actividad']))
+                $query->orwhere("actividades.id_tipo_actividad", $request['id_tipo_actividad']);
+        }
+    })
+    ->where(function ($query) use ($request) {
+        if (isset($request['dep_id'])) {
+            if (!empty($request['dep_id']))
+                $query->orwhere("actividades.dep_id", $request['dep_id']);
+        }
+    })
+    ->where(function ($query) use ($request) {
+        if (isset($request['ciu_id'])) {
+            if (!empty($request['ciu_id']))
+                $query->orwhere("actividades.ciu_id", $request['ciu_id']);
+        }
+    })
+    ->get();
     // return $data;
     $delegado = Magistrado::find(Auth::user()->id_persona);
     $pdf = \PDF::loadView('ReportePDF', [
@@ -337,5 +380,5 @@ Route::get('/informe_pdf_mis', function (Request $request) {
         'max_fecha' => $max_fecha,
         'delegado' => $delegado,
     ]);
-    return $pdf->download('mis_actividades.pdf');
+    return $pdf->stream('mis_actividades.pdf');
 });

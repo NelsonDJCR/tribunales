@@ -16,7 +16,8 @@
               <router-link :to="{ name: 'home' }"
                 ><span>Home</span></router-link
               >
-              / <label for="" class="p-2">Funcionarios / Mis actividades </label>
+              /
+              <label for="" class="p-2">Funcionarios / Mis actividades </label>
             </li>
           </ol>
           <div class="row p-2 text-center border shadow rounded-3">
@@ -34,54 +35,92 @@
               </div>
             </div>
           </div>
-          <form @submit.prevent="filter">
-            <div class="row mt-5">
-              <div class="mb-3 col-3">
-                <label for="" class="form-label"><b>Tema</b></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="nombre_tema"
-                  name="nombre_tema"
-                  v-model="dataFilter.tema"
-                />
-              </div>
-              <div class="mb-3 col-3">
-                <label for="" class="form-label"><b>Fecha inicial</b></label>
-                <input
-                  type="date"
-                  class="form-control"
-                  id="fecha_realizacion"
-                  v-model="dataFilter.fecha_inicial"
-                />
-              </div>
-              <div class="mb-3 col-3">
-                <label for="" class="form-label"><b>Fecha final</b></label>
-                <input
-                  type="date"
-                  class="form-control"
-                  id="fecha_realizacion"
-                  v-model="dataFilter.fecha_final"
-                />
-              </div>
-
-              <div class="mb-3 col-3">
-                <div class="row">
-                  <div class="mb-12 col-12 mt-4">
-                    <button
-                      type="submit"
-                      class="btn btn-secondary active btn_search w-100 mt-2"
-                    >
-                      Buscar
-                    </button>
-                  </div>
-                  <div class="mb-5 col-9"></div>
-                </div>
-              </div>
-
-              <div class="mb-3 col-3"></div>
+          <div class="row mt-5">
+            <div class="mb-3 col-3">
+              <label for="" class="form-label"><b>Tema</b></label>
+              <input
+                type="text"
+                class="form-control"
+                id="nombre_tema"
+                name="nombre_tema"
+                v-model="filtros.tema"
+              />
             </div>
-          </form>
+            <div class="mb-3 col-3">
+              <label for="" class="form-label"><b>Fecha inicial</b></label>
+              <input
+                type="date"
+                class="form-control"
+                id="fecha_realizacion"
+                v-model="filtros.fecha_inicial"
+              />
+            </div>
+            <div class="mb-3 col-3">
+              <label for="" class="form-label"><b>Fecha final</b></label>
+              <input
+                type="date"
+                class="form-control"
+                id="fecha_realizacion"
+                v-model="filtros.fecha_final"
+              />
+            </div>
+
+            <div class="mb-3 col-3">
+              <label for="" class="form-label"><b>Tipo de actividad</b></label>
+              <select class="form-select" v-model="filtros.id_tipo_actividad">
+                <option value="">Seleccione</option>
+                <option
+                  v-for="(i, index) in actividades"
+                  :key="index"
+                  :value="i.id"
+                  v-text="i.nombre"
+                ></option>
+              </select>
+            </div>
+
+            <div class="mb-3 col-3">
+              <label for="" class="form-label"><b>Departamento</b></label>
+              <select class="form-select" v-model="filtros.dep_id">
+                <option value="">Seleccione</option>
+                <option
+                  v-for="(i, index) in departamentos"
+                  :key="index"
+                  :value="i.id"
+                  v-text="i.nombre"
+                ></option>
+              </select>
+            </div>
+
+            <div class="mb-3 col-3">
+              <label for="" class="form-label"><b>Ciudad</b></label>
+              <select class="form-select" v-model="filtros.ciu_id">
+                <option value="">Seleccione</option>
+                <option
+                  v-for="(i, index) in ciudades"
+                  :key="index"
+                  :value="i.id"
+                  v-text="i.nombre"
+                ></option>
+              </select>
+            </div>
+
+            <div class="mb-3 col-3">
+              <div class="row">
+                <div class="mb-12 col-12 mt-4">
+                  <button
+                    type="button"
+                    @click="filter"
+                    class="btn btn-secondary active btn_search w-100 mt-2"
+                  >
+                    Buscar
+                  </button>
+                </div>
+                <div class="mb-5 col-9"></div>
+              </div>
+            </div>
+
+            <div class="mb-3 col-3"></div>
+          </div>
         </div>
         <div class="justify-content-end d-flex mb-3">
           <button class="btn btn-danger" @click="informe_PDF">
@@ -93,7 +132,7 @@
             <th>Opciones</th>
             <th>Fecha</th>
             <th>Tema</th>
-            <th class="w-25">Descripcion</th>
+            <th class="w-25">Tipo de actividad</th>
             <th>Departamento</th>
             <th>Ciudad</th>
           </thead>
@@ -111,7 +150,7 @@
               </td>
               <td>{{ i.fecha }}</td>
               <td>{{ i.tema }}</td>
-              <td class="w-25">{{ i.descripcion }}</td>
+              <td>{{ i.tipo_nombre }}</td>
               <td>{{ i.departamento }}</td>
               <td>{{ i.ciudad }}</td>
             </tr>
@@ -143,7 +182,17 @@ export default {
   data() {
     return {
       tabla: [],
-      dataFilter: { fecha_inicial: "", fecha_final: "" },
+      actividades: [],
+      departamentos: [],
+      ciudades: [],
+      filtros: {
+        tema: "",
+        fecha_inicial: "",
+        fecha_final: "",
+        id_tipo_actividad: "",
+        dep_id: "",
+        ciu_id: "",
+      },
       fechas: { min_fecha: "", max_fecha: "" },
       pantalla: "lista",
       id_record: 0,
@@ -153,9 +202,13 @@ export default {
   created() {
     axios.get("/magistrado/mis-actividades").then((r) => {
       this.tabla = r.data.table;
-      this.formatear_fecha()
+      this.formatear_fecha();
       this.fechas.min_fecha = r.data.minimo;
       this.fechas.max_fecha = r.data.maximo;
+      this.actividades = r.data.actividades;
+      this.departamentos = r.data.departamentos;
+      this.ciudades = r.data.ciudades;
+      //   console.log(this.actividades);
     });
   },
   methods: {
@@ -176,31 +229,42 @@ export default {
       this.pantalla = "ver";
     },
     filter() {
-      axios.post("/filtros-mis-actividades", this.dataFilter).then((r) => {
+      axios.post("/filtros-mis-actividades", this.filtros).then((r) => {
         this.tabla = r.data.tabla;
         this.fechas.min_fecha = r.data.minimo;
         this.fechas.max_fecha = r.data.maximo;
-        console.log(this.fechas);
+        this.formatear_fecha();
       });
     },
     informe_PDF() {
       let fecha_inicial = "";
       let fecha_final = "";
-      if (this.dataFilter.fecha_inicial == "") {
+      let tema = "";
+      let id_tipo_actividad = "";
+      if (this.filtros.tema != "") {
+        tema = this.filtros.tema;
+      }
+      if (this.filtros.id_tipo_actividad == "") {
+        id_tipo_actividad = this.filtros.id_tipo_actividad;
+      }
+      if (this.filtros.fecha_inicial == "") {
         fecha_inicial = this.fechas.min_fecha;
       } else {
-        fecha_inicial = this.dataFilter.fecha_inicial;
+        fecha_inicial = this.filtros.fecha_inicial;
       }
-      if (this.dataFilter.fecha_final == "") {
+      if (this.filtros.fecha_final == "") {
         fecha_final = this.fechas.min_fecha;
       } else {
-        fecha_final = this.dataFilter.fecha_final;
+        fecha_final = this.filtros.fecha_final;
       }
       window.open(
         "/informe_pdf_mis?min_fecha=" +
           fecha_inicial +
           "&max_fecha=" +
-          fecha_final
+          fecha_final +
+          "&tema=" +
+          tema +
+          "&id_tipo_actividad=" + id_tipo_actividad
       );
     },
     pantallaNuevo(x) {

@@ -541,22 +541,24 @@ class CasosController extends Controller
                 $file = $request->file('archivo');
                 if ($request->hasFile('archivo')) {
                     $fileName = time() . '_' . $file->getClientOriginalname();
+                    $documento = new Documento();
+                    $documento->nombre = $fileName;
+                    $documento->ruta = 'uploads/' . $fileName;
+                    $documento->estado = 1;
+                    $documento->id_subserie = 1;
+                    $documento->id_tipo_documento = $request->tipoArchivo;
+                    $documento->save();
+
+                    $soporte = new Soporte();
+                    // $soporte->estado = 1;
+                    $soporte->id_caso = $caso->id;
+                    $soporte->id_documento = $documento->id;
+                    $soporte->save();
+
+                    $request->archivo->move(public_path('uploads'), $fileName);
                 }
-                $documento = new Documento();
-                $documento->nombre = $fileName;
-                $documento->ruta = 'uploads/' . $fileName;
-                $documento->estado = 1;
-                $documento->id_subserie = 1;
-                $documento->id_tipo_documento = $request->tipoArchivo;
-                $documento->save();
 
-                $soporte = new Soporte();
-                // $soporte->estado = 1;
-                $soporte->id_caso = $caso->id;
-                $soporte->id_documento = $documento->id;
-                $soporte->save();
 
-                $request->archivo->move(public_path('uploads'), $fileName);
                 return response()->json([
                     'status' => 200,
                     'msg' => 'Datos actualizados con éxito',
