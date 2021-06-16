@@ -118,7 +118,7 @@ class ActividadesController extends Controller
         ];
         $validator = Validator::make(request()->all(), $rules, $messages);
         if ($validator->fails()) {
-            return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
+            return response()->json(['status' => 406, 'msg' => $validator->errors()->first()]);
         }
 
         $actividad = Actividad::find($request->id);
@@ -129,6 +129,7 @@ class ActividadesController extends Controller
         $actividad->ciu_id = $request->ciu_id;
         $actividad->id_magistrado = $request->id_magistrado;
         $actividad->id_tipo_archivo = $request->id_tipo_archivo;
+        $actividad->id_tipo_actividad = $request->id_tipo_actividad;
         $actividad->save();
 
         for ($x = 0; $x < $request->cantidad; $x++) {
@@ -153,7 +154,7 @@ class ActividadesController extends Controller
         }
 
         return response()->json([
-            'code' => '200',
+            'status' => '200',
             'msg' => 'Datos actualizados correctamente'
         ]);
     }
@@ -229,5 +230,13 @@ class ActividadesController extends Controller
             ->get();
         return view('sessions.report')
             ->with('data', $x);
+    }
+
+    public function magistradosxtribunal($id)
+    {
+        $magistrados = Magistrado::where('estado',1)->where('tribunal_id',$id)->get();
+        return response()->json([
+            'funcionarios' => $magistrados,
+        ]);
     }
 }

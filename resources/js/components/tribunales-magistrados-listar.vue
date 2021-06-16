@@ -17,7 +17,7 @@
             <div class="row p-2 text-center border shadow rounded-3">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-9 col-xl-9 p-2">
-                  <h1 class="text-blue"><b>LISTADO DE MAGISTRADOS</b></h1>
+                  <h1 class="text-blue"><b>LISTADO DE FUNCIONARIOS</b></h1>
                 </div>
                 <div class="col-12 col-md-12 col-lg-3 col-xl-3 p-2">
                   <button
@@ -25,7 +25,7 @@
                     class="btn btn-warning text-white w-100 mt-2"
                   >
 
-                    Nuevo Magistrado
+                    Nuevo Funcionario
                   </button>
                 </div>
               </div>

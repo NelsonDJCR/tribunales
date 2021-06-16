@@ -90,14 +90,18 @@
                 <div class="row">
                   <div class="btns-block d-grid gap-2">
                     <ul class="list-group btn-group-vertical">
-                      <li class="list-group-item">
-                        <button class="btn btn-secondary btn-sm">
-                          <span class="text-start float-start">Nombre de Archivo 1</span>
-                          <span class="badge bg-secondary float-end"><i class="fa fa-download fa-lg"></i></span>
-                          <a class="text-end" href="#">
+                      <li class="list-group-item" v-for="(i,index) in documentos" :key="index">
+                        <div class="btn btn-light btn-sm mt-2">
+                          <span class="text-start float-start">
+                            <select class="form-control text-dark bg-transparent" disabled style="outline: none;">
+                                <option v-for="(item,index) in tipo_archivo" :key="index" :value="item.id" v-text="item.nombre"></option>
+                            </select>
+                          </span>
+                          <span class="badge bg-info float-end text-end m-1"> <a class="" :href="i.ruta" :download="i.ruta"><i class="fa fa-download fa-md"></i></a></span>
+                          <a class="text-end">
                             <span class="badge bg-primary badge-dot"></span>
                           </a>
-                        </button>
+                        </div>
                       </li>
                     </ul>
                   </div>
@@ -115,12 +119,16 @@ export default {
   props:['id'],
   data() {
     return {
-      data:[]
+      data:[],
+      documentos:[],
+      tipo_archivo: [],
     };
   },
   created() {
      axios.get(`/magistrado/mis-actividades-ver/${this.id}`).then((r) => {
       this.data = r.data.data;
+      this.documentos = r.data.documentos
+      this.tipo_archivo = r.data.tipo_archivo
     });
   },
   methods:{

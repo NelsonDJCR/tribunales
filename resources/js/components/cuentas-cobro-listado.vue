@@ -505,7 +505,7 @@ export default {
       this.getComisiones();
     },
     reload() {
-      alert("");
+    //   alert("");
       this.pantalla = "lista";
     },
     newComision() {

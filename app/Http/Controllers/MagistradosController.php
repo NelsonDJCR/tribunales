@@ -6,6 +6,7 @@ use App\Models\Actividad;
 use App\Models\Documento;
 use App\Models\Magistrado;
 use App\Models\MagistradoSoporte;
+use App\Models\TipoArchivo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -256,7 +257,16 @@ class MagistradosController extends Controller
 
     public function verActividad($id)
     {
+        $documentos = DB::table('actividades_soporte')
+        ->select(
+            'documento.*',
+        )->join('documento', 'documento.id','actividades_soporte.id_documento')
+        ->where('documento.estado','1')
+        ->where('actividades_soporte.id_actividad',$id)
+        ->get();
         return response()->json([
+            'documentos' => $documentos,
+            'tipo_archivo' => TipoArchivo::where('estado',1)->get(),
             'data' => Actividad::where('id_magistrado', Auth::user()->id)
                 ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento')
                 ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")

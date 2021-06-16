@@ -296,65 +296,65 @@
       </form>
     </div>
 
-              <div
-                class="modal fade"
-                id="modal_file"
-                data-bs-backdrop="static"
-                data-bs-keyboard="false"
-                tabindex="-1"
-                aria-labelledby="staticBackdropLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">
-                        Agregar Documentos
-                      </h5>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        @click="closeAddFile()"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="row mb-2">
-                        <div class="col-11">
-                          <label class="form-label">Agrege todos los documentos</label>
-                        </div>
-                        <div class="col-1">
-                          <button
-                            class="btn-more btn"
-                            id="add_file"
-                            @click="add_file()"
-                            type="button"
-                          >
-                            <!-- <i class="fas fa-plus"></i> -->
-                            <i class="typcn typcn-document-add" style="color: green"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="col-12" id="box_files"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button
-                        type="submit"
-                        class="btn btn-primary"
-                        @click="closeAddFile()"
-                      >
-                        Aceptar
-                      </button>
-                    </div>
-                  </div>
-                </div>
+    <div
+      class="modal fade"
+      id="modal_file"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Agregar Documentos
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              @click="closeAddFile()"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row mb-2">
+              <div class="col-11">
+                <label class="form-label">Agrege todos los documentos</label>
               </div>
+              <div class="col-1">
+                <button
+                  class="btn-more btn"
+                  id="add_file"
+                  @click="add_file()"
+                  type="button"
+                >
+                  <!-- <i class="fas fa-plus"></i> -->
+                  <i class="typcn typcn-document-add" style="color: green"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-12" id="box_files"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              @click="closeAddFile()"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 export default {
-  props:['id'],
+  props: ["id"],
   data() {
     return {
       tribunales: [],
@@ -367,13 +367,12 @@ export default {
     };
   },
   created() {
-    
-    if(this.id){
-      this.origen = 'magistrado'
-    }else{
-      this.origen = 'tribunal'
-    }   
-     this.select()
+    if (this.id) {
+      this.origen = "magistrado";
+    } else {
+      this.origen = "tribunal";
+    }
+    this.select();
   },
   methods: {
     box_file() {
@@ -384,11 +383,11 @@ export default {
       }
     },
     magistradosxtribunal(i) {
-        let url = '/magistradosxtribunal/'+ i;
-      axios.get(url).then(res => {
-          console.log(res.data);
-          this.magistrados = res.data.funcionarios
-      })
+      let url = "/magistradosxtribunal/" + i;
+      axios.get(url).then((res) => {
+        console.log(res.data);
+        this.magistrados = res.data.funcionarios;
+      });
     },
     upload_file(event) {
       for (let index = 0; index < this.tipo_archivo.length; index++) {

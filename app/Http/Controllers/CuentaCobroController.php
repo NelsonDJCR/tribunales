@@ -57,7 +57,7 @@ class CuentaCobroController extends Controller
 
 
         return response()->json([
-            'table' => $table           
+            'table' => $table
         ]);
     }
 
@@ -180,7 +180,7 @@ class CuentaCobroController extends Controller
             'valor_honorarios' => 'required|max:11',
             'numero_dias' => 'required|max:11',
             'valor_bruto' => 'required|max:8',
-            'valor_factura' => 'required|max:8|integer',
+            'valor_factura' => 'required|max:99999999|integer',
             'rete_iva' => 'required|max:8',
             'rete_ica' => 'required|max:8',
             'neto_pagar' => 'required|max:8',

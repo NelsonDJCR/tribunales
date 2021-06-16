@@ -157,6 +157,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
         Route::post('/departamentos_sorteo', [SorteoController::class, 'departamentos_sorteo']);
         Route::post('/departamentos_sortear', [SorteoController::class, 'sortear']);
+        Route::get('/magistradosxtribunal/{id}', [ActividadesController::class, 'magistradosxtribunal']);
 
         // Magistrados
         Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
@@ -196,6 +197,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class,'save']);
         Route::post('/cuenta-cobro-editar', [CuentaCobroController::class,'edit']);
         Route::post('/record-cuenta-cobro', [CuentaCobroController::class,'record']);
+        Route::post('/update-cuenta-cobro', [CuentaCobroController::class, 'update']);
         // Comisiones
         Route::post('/nueva-comision', [ComisionController::class,'store']);
         Route::post('/comision-listar', [ComisionController::class,'listar']);

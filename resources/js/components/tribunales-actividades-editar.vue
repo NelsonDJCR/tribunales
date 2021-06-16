@@ -359,6 +359,7 @@ export default {
       formulario.append("tribunal_id", this.formulario.tribunal_id);
       formulario.append("cantidad", this.documentos.length);
       formulario.append("cantidad_eliminados", this.eliminados.length);
+      formulario.append('id_tipo_actividad', this.formulario.id_tipo_actividad)
 
       for (let index = 0; index < this.documentos.length; index++) {
         formulario.append("archivo" + index, this.documentos[index]);
@@ -373,7 +374,7 @@ export default {
       }
 
       axios.post("/editar-actividad", formulario).then((r) => {
-        if (r.data.code == 200) {
+        if (r.data.status == 200) {
           Swal.fire(
             "¡Perfecto!",
             "Datos actualizados correctamente",
@@ -381,6 +382,8 @@ export default {
           ).then(function () {
             location.reload();
           });
+        }else if(r.data.status == 406){
+            Swal.fire('¡Error!',r.data.msg,'error')
         }
       });
     },

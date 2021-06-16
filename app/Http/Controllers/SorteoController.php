@@ -41,12 +41,11 @@ class SorteoController extends Controller
     }
     public function filtroSorteo(Request $r)
     {
+        // return $r->all();
         return response()->json([
             'tabla'=>DB::table('sorteo')
-            ->select("sorteo.*", 'magistrados.nombre AS magistrado', 'tribunal.nombre AS tribunal', 'tipo_eleccion.nombre AS tipo_eleccion')
-            ->leftjoin("tribunal", "tribunal.id", "sorteo.id_tribunal")
-            ->leftjoin("magistrados", "magistrados.id", "sorteo.id_magistrado")
-            ->leftjoin("tipo_eleccion", "tipo_eleccion.id", "sorteo.id_tipo_eleccion")
+            ->select("sorteo.*",'tipo_eleccion.nombre AS nom_eleccion')
+            ->join("tipo_eleccion", "tipo_eleccion.id", "sorteo.id_tipo_eleccion")
             ->where(function ($query) use ($r) {
                 if (isset($r['sorteo'])) {
                     if (!empty($r['sorteo']))
@@ -54,15 +53,15 @@ class SorteoController extends Controller
                 }
             })
             ->where(function ($query) use ($r) {
-                if (isset($r['magistrado'])) {
-                    if (!empty($r['magistrado']))
-                        $query->orwhere("magistrados.nombre", "like", "%".$r['magistrado']."%");
+                if (isset($r['fecha_inicio'])) {
+                    if (!empty($r['fecha_inicio']))
+                        $query->orwhere("sorteo.fecha",'>',$r['fecha_inicio']);
                 }
             })
             ->where(function ($query) use ($r) {
-                if (isset($r['tribunal'])) {
-                    if (!empty($r['tribunal']))
-                        $query->orwhere("tribunal.nombre", "like", "%".$r['tribunal']."%");
+                if (isset($r['fecha_fin'])) {
+                    if (!empty($r['fecha_fin']))
+                        $query->orwhere("sorteo.fecha", '<' ,$r['fecha_fin']);
                 }
             })
             ->where(function ($query) use ($r) {
