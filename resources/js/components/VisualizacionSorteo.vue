@@ -27,7 +27,7 @@
         <input
           type="text"
           id="nombre"
-          class="form-control"
+          class="form-control bg-transparent"
           v-model="sor.nombre"
           disabled
         />
@@ -36,7 +36,7 @@
         <label for="eleccion">Tipo de elección</label>
         <input
           type="text"
-          class="form-control"
+          class="form-control bg-transparent"
           v-model="eleccion.nombre"
           disabled
         />

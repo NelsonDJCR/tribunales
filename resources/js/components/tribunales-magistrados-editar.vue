@@ -432,11 +432,6 @@ export default {
   },
   created() {
     axios.get(`/data-rercord/${this.id}/magistrados`).then((r) => {
-      // axios.get(`/data-rercord/26/magistrados`).then((r) => {
-      //   this.documentos = r.data.documentos;
-      //   for (let index = 0; index < r.data.documentos.length; index++) {
-      //       this.documentos.push(r.documentos[index])
-      //   }
       this.documentos = r.data.documentos;
       console.log(this.documentos);
       this.type_file = r.data.tipo_archivo;

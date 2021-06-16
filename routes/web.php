@@ -337,5 +337,5 @@ Route::get('/informe_pdf_mis', function (Request $request) {
         'max_fecha' => $max_fecha,
         'delegado' => $delegado,
     ]);
-    return $pdf->stream('mis_actividades.pdf');
+    return $pdf->download('mis_actividades.pdf');
 });

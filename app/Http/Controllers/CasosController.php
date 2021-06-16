@@ -400,8 +400,8 @@ class CasosController extends Controller
         $departamento = Departamentos::all();
         $estado = Estado::all();
         $tipoArchivo = TipoArchivo::all();
-        $personas = PersonaCentralizado::where('estado', 1)->get();
         $tribunales = Tribunal::where('estado',1)->get();
+        $magistrados = Magistrado::where('estado',1)->get();
         $estado1 = Estado::where('estado', 1)
             ->where('id', '<>', 1)->get();
 
@@ -412,8 +412,8 @@ class CasosController extends Controller
             'estado' => $estado,
             'casos' => $casos,
             'estado1' => $estado1,
-            'personas' => $personas,
             'tribunales' => $tribunales,
+            'magistrados' => $magistrados,
         ]);
     }
 

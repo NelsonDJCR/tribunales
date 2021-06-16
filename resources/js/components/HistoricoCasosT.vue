@@ -252,13 +252,13 @@
               <td>{{ i.nombres_solicitante }}</td>
               <td>
                 <select
-                  class="form-control"
+                  class="form-control text-dark bg-transparent"
                   disabled
-                  v-model="i.id_asesor_asignado"
-                  style="background: white; outline: none; color: black"
+                  v-model="i.id_magistrado"
+                  style="outline: none;"
                 >
                   <option
-                    v-for="(item, index) in personas"
+                    v-for="(item, index) in magistrados1"
                     :key="index"
                     :value="item.id"
                     v-text="item.nombre"
@@ -266,7 +266,6 @@
                 </select>
               </td>
               <td>{{ i.estado_nombre }}</td>
-              <!-- <td>{{ i.id_asesor_asignado }}</td> -->
             </tr>
           </tbody>
         </table>
@@ -485,6 +484,7 @@ export default {
       },
       tipoArchivo: [],
       estado1: [],
+      magistrados1: [],
       archivo: { name: "" },
       casos: [],
       caso: {},
@@ -515,8 +515,9 @@ export default {
       this.casos = res.data.casos;
       this.estado1 = res.data.estado1;
       this.tipoArchivo = res.data.tipoArchivo;
-      this.personas = res.data.personas;
+      this.magistrados1 = res.data.magistrados;
       this.tribunales = res.data.tribunales;
+    //   console.log(res.data);
       this.formatearFecha();
     });
   },
@@ -601,6 +602,7 @@ export default {
         if (res.data.caso.id_estado == 2) {
           this.casos[this.gestion.index].estado_nombre = "Asignado";
           this.casos[this.gestion.index].id_asesor_asignado =
+          this.casos[this.gestion.index].id_magistrado = this.gestion.magistrado
             res.data.caso.id_asesor_asignado;
           setTimeout(function () {
             $("#gestion-caso-file").modal("hide");

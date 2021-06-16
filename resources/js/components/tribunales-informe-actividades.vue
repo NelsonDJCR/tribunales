@@ -90,7 +90,7 @@
               </div>
             </caption>
             <thead>
-              <th>Fecha</th>
+              <th style="width: 100px;">Fecha</th>
               <th>Tema</th>
               <th>Descripción</th>
               <th>Departamento</th>
@@ -134,7 +134,7 @@ export default {
         let blob = new Blob([res.data]);
         let link = document.createElement("a");
         link.href = window.URL.createObjectURL(blob);
-        link.download = "ReporteCabildos.xls";
+        link.download = "ReporteTribunales.xls";
         link.click();
       });
     },
@@ -143,7 +143,7 @@ export default {
         this.tabla = r.data.tabla;
       })
     },
-  
+
   },
 };
 </script>

@@ -443,7 +443,7 @@ export default {
         let blob = new Blob([res.data]);
         let link = document.createElement("a");
         link.href = window.URL.createObjectURL(blob);
-        link.download = "ReporteCabildos.xls";
+        link.download = "ReporteTribunales.xls";
         link.click();
       });
     },
