@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Departamentos extends Model
 {
     use HasFactory;
+    protected $connection = 'dinamico';
     protected $table = 'departamentos';
 }

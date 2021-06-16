@@ -458,11 +458,6 @@ export default {
     },
     newForm() {
 
-        if(this.documentos.length == 0){
-            Swal.fire('¡Error!','Carga por lo menos un archivo','error')
-            return
-        }
-
       let formulario = new FormData();
       formulario.append('id', this.id)
     //   formulario.append('id', 6)

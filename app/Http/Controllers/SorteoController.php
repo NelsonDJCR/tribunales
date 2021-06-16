@@ -137,6 +137,10 @@ class SorteoController extends Controller
     public function sortear(Request $request)
     {
         // return $request->all();
+        // $num = 0;
+        // for ($i=0; $i < $request->cantidad; $i++) {
+
+        // }
 
         $rules = [
             'nombre' => 'required|max:255',

@@ -311,13 +311,6 @@
                           ></a>
                         </div>
                       </li>
-                      <!-- <li class="list-group-item">
-                        <button class="btn btn-light btn-sm mt-2">
-                          <span class="text-start float-start mt-1">Nombre de Archivo 2</span>
-                          <a href="#" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
-                          <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a>
-                        </button>
-                      </li> -->
                     </ul>
                   </div>
                 </div>
@@ -488,12 +481,7 @@ export default {
       this.tipo_documentos.splice(index, 1);
     },
     edit() {
-      if (this.documentos.length == 0) {
-        Swal.fire("¡Error!", "Carga por lo menos un archivo", "error");
-        return;
-      }
       var formulario = new FormData();
-      //   formulario.append('id', 26)
       formulario.append("id", this.id);
       formulario.append("cargo", this.form.cargo);
       formulario.append("ciu_id", this.form.ciu_id);

@@ -17,7 +17,7 @@
             <div class="row p-2 text-center border shadow rounded-3">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12 col-xl-12 p-2">
-                  <h1 class="text-blue"><b>INFORMES DE PQRS</b></h1>
+                  <h1 class="text-blue"><b>INFORMES DE CASOS</b></h1>
                 </div>
 
               </div>
@@ -83,7 +83,7 @@
                   <div class="mb-3 col-3">
                     <button
                       type="submit"
-                      class="btn-primary btn w-80 btn_search w-100"
+                      class="btn-secondary btn w-100 btn-block active"
                     >
                       Buscar
                     </button>
@@ -114,8 +114,8 @@
                   <div class="col">
 
                   </div>
-                  <div class="col text-end">
-                    <button type="button" class="btn btn-labeled btn-secondary active">
+                  <div class="col text-end mb-3">
+                    <button type="button" class="btn btn-labeled btn-success">
                       <i class="fa fa-file-excel-o"></i></button>
                   </div>
                 </div>
@@ -132,18 +132,8 @@
               <th>Usuario Asignado</th>
             </thead>
             <tbody>
-              <!--tr v-for="(i, index) in cabildos" :key="index">
-                <td>{{ i.nombre_tema }}</td>
-                <td>{{ i.description }}</td>
-                <td>{{ i.nombre_dep }}</td>
-                <td>{{ i.nombre_ciu }}</td>
-                <td>{{ i.nombre_dep }}</td>
-                <td>{{ i.nombre_dep }}</td>
-                <td>{{ i.nombre_ciu }}</td>
-                <td>{{ i.nombre_dep }}</td>
-              </tr-->
               <tr>
-                <td>Queja</td>
+                <td class="p-2">Queja</td>
                 <td>Alta</td>
                 <td>01-02-2021</td>
                 <td>Cundinamarca</td>

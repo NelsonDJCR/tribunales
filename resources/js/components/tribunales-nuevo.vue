@@ -194,9 +194,11 @@
                         :key="index"
                       >
                         <div class="btn btn-light btn-sm mt-2">
-                          <span class="text-start float-start mt-1">{{
-                            i.name
-                          }}</span>
+                          <span class="text-start float-start mt-1">
+                            <select class="form-control bg-transparent text-dark" disabled v-model="i.id_tipo_documento">
+                                <option v-for="(item,index) in tipo_documentos" :key="index" :value="item.id" v-text="item.nombre"></option>
+                            </select>
+                          </span>
                           <button
                             href="#"
                             @click="eliminarArchivo(index)"
@@ -231,6 +233,7 @@ export default {
       departamentos: [],
       estado: [],
       tipo_archivo: [],
+      tipo_documentos: [],
       form: { tipo_archivo: "" },
       documentos: [],
       archivos: [],
@@ -239,9 +242,11 @@ export default {
   },
   created() {
     axios.get("/data-select").then((r) => {
+        console.log(r.data);
       this.tipo_documento = r.data.tipo_documento;
       this.ciudades = r.data.municipios;
       this.departamentos = r.data.departamentos;
+      this.tipo_documentos = r.data.tipo_archivos
       this.estado = r.data.estado;
     });
     this.form.token = Math.floor(Math.random() * (9999 - 5000)) + 5000;
@@ -263,7 +268,7 @@ export default {
         }
       }
       let archivo = event.target.files[0];
-      archivo["tipo_archivo"] = this.form.tipo_archivo;
+      archivo["id_tipo_documento"] = this.form.tipo_archivo;
       this.archivos.push(archivo);
       this.tipo_archivo.push(this.form.tipo_archivo);
       this.form.tipo_archivo = "";

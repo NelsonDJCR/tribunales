@@ -474,12 +474,6 @@ export default {
       });
     },
     save() {
-      console.log(this.form);
-      if (this.archivos.length == 0) {
-        Swal.fire("¡Error!", "Carga por lo menos un archivo", "error");
-        return;
-      }
-      // return
       var formulario = new FormData();
       formulario.append("cargo", this.form.cargo);
       formulario.append("ciu_id", this.form.ciu_id);

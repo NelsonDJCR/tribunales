@@ -348,12 +348,6 @@ export default {
       });
     },
     save() {
-      if (this.archivos.length == 0) {
-        Swal.fire("¡Error!", "Carga por lo menos un archivo", "error");
-        return;
-      }
-      // console.log(this.form);
-      // return
       let formulario = new FormData();
       formulario.append("ciu_id", this.form.ciu_id);
       formulario.append("dep_id", this.form.dep_id);

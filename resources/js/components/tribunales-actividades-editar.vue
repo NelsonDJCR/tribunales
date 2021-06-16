@@ -349,7 +349,6 @@ export default {
     save() {
       let formulario = new FormData();
       formulario.append("id", this.id);
-      //   formulario.append('id', id)
       formulario.append("ciu_id", this.formulario.ciu_id);
       formulario.append("dep_id", this.formulario.dep_id);
       formulario.append("descripcion", this.formulario.descripcion);
