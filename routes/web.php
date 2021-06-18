@@ -33,6 +33,7 @@ use App\Models\CabildoAbierto;
 use App\Models\Caso;
 use App\Http\Controllers\CasosController;
 use App\Http\Controllers\ComisionController;
+use App\Http\Controllers\InformeController;
 use App\Http\Resources\EstadosResource;
 use App\Models\Estado;
 use App\Http\Resources\TipoTramitesResource;
@@ -142,6 +143,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/actualizar-parametro/{id}/{tabla}/{data}', [ParametrosController::class, 'actualizar']);
         Route::post('/inactivar-estado/{id}/{tabla}/{estado}', [ParametrosController::class, 'estadoInactivar']);
         Route::post('/nuevo', [ParametrosController::class, 'nuevo']);
+        Route::post('/tabla_informe_general', [InformeController::class, 'index']);
+        Route::post('/informe_general', [InformeController::class, 'filtrar']);
+        Route::post('/informe_general_descargar', [InformeController::class, 'descargar']);
 
 
 
