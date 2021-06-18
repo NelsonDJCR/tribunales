@@ -226,18 +226,18 @@
     </template>
     <template v-if="pantalla == 'nuevo'">
       <div>
-        <tribunales-magistrados-nuevo />
+        <tribunales-magistrados-nuevo @pantalla="pantalla = $event" />
       </div>
 
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
-        <tribunales-magistrados-editar :id="idEditar"></tribunales-magistrados-editar>
+        <tribunales-magistrados-editar @pantalla="pantalla = $event" :id="idEditar"></tribunales-magistrados-editar>
       </div>
     </template>
     <template v-if="pantalla == 'ver'">
       <div>
-        <tribunales-magistrados-ver :id="idEditar"></tribunales-magistrados-ver>
+        <tribunales-magistrados-ver @pantalla="pantalla = $event" :id="idEditar"></tribunales-magistrados-ver>
       </div>
     </template>
   </div>

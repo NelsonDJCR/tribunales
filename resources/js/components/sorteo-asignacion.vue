@@ -93,7 +93,7 @@
 
 <template v-if="pantalla == 'nuevo'">
     <div>
-        <nuevo-sorteo />
+        <nuevo-sorteo @pantalla="pantalla = $event"/>
     </div>
 </template>
 

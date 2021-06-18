@@ -25,10 +25,10 @@
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
             <button
-              @click="reload"
+              @click="regresar"
               class="btn btn-danger text-white w-100 mt-2"
             >
-              Volver
+              Cancelar
             </button>
           </div>
         </div>
@@ -323,6 +323,9 @@ export default {
     },
     reload() {
       location.reload();
+    },
+    regresar(){
+        this.$emit('pantalla', 'lista')
     },
   },
 };

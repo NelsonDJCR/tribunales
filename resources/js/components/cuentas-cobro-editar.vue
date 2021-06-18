@@ -24,7 +24,7 @@
             <h1 class="text-blue"><b>EDITAR CUENTA DE COBRO</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-            <div @click="reload" class="btn btn-danger text-white w-100 mt-2">
+            <div @click="regresar" class="btn btn-danger text-white w-100 mt-2">
               Cancelar
             </div>
           </div>
@@ -34,7 +34,7 @@
       <form @submit.prevent="newForm">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-          <div class="row">
+            <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
                 <select
@@ -361,7 +361,7 @@
 </template>
 <script>
 export default {
-    props: ["id"],
+  props: ["id"],
   data() {
     return {
       tribunales: [],
@@ -378,14 +378,17 @@ export default {
   },
   created() {
     if (this.solicitud) {
-      this.validacion = ''
-    }else{
-      this.validacion = '0'
+      this.validacion = "";
+    } else {
+      this.validacion = "0";
     }
     this.getRecord();
     // this.select();
   },
   methods: {
+    regresar() {
+      this.$emit("pantalla", "lista");
+    },
     eliminar_archivo(index) {
       if (this.documentos[index].id != 0) {
         this.eliminados.push(this.documentos[index].id);
@@ -394,8 +397,8 @@ export default {
       this.tipo_documentos.splice(index, 1);
     },
     getRecord() {
-        axios.post(`/record-cuenta-cobro`, { id: this.id }).then((r) => {
-    //   axios.post(`/record-cuenta-cobro`, { id: "6" }).then((r) => {
+      axios.post(`/record-cuenta-cobro`, { id: this.id }).then((r) => {
+        //   axios.post(`/record-cuenta-cobro`, { id: "6" }).then((r) => {
         this.form = r.data.data;
         this.documentos = r.data.documentos;
         this.type_file = r.data.tipo_archivos;
@@ -457,10 +460,9 @@ export default {
       });
     },
     newForm() {
-
       let formulario = new FormData();
-      formulario.append('id', this.id)
-    //   formulario.append('id', 6)
+      formulario.append("id", this.id);
+      //   formulario.append('id', 6)
       formulario.append("id_tribunal", this.form.id_tribunal);
       formulario.append("id_magistrado", this.form.id_magistrado);
       formulario.append("fecha_inicio", this.form.fecha_inicio);
@@ -475,7 +477,7 @@ export default {
       formulario.append("rete_ica", this.form.rete_ica);
       formulario.append("neto_pagar", this.form.neto_pagar);
       formulario.append("cantidad", this.tipo_documentos.length);
-      formulario.append('cant_eliminados', this.eliminados.length)
+      formulario.append("cant_eliminados", this.eliminados.length);
 
       for (let index = 0; index < this.documentos.length; index++) {
         formulario.append("archivo" + index, this.documentos[index]);
@@ -486,10 +488,10 @@ export default {
       }
 
       for (let index = 0; index < this.eliminados.length; index++) {
-          formulario.append('e_id'+index, this.eliminados[index])
+        formulario.append("e_id" + index, this.eliminados[index]);
       }
 
-      axios.post('/update-cuenta-cobro', formulario).then((r) => {
+      axios.post("/update-cuenta-cobro", formulario).then((r) => {
         if (r.data.status == 200) {
           swal.fire(r.data.msg, "", "success").then(function () {
             location.reload();

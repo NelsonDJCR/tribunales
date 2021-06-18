@@ -24,12 +24,7 @@
             <h1 class="text-blue"><b>VISUALIZACIÓN DE FUNCIONARIO</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-            <router-link
-              :to="`/tribunales-magistrados-listar`"
-              @click.native="$router.go()"
-              class="btn btn-secondary active text-white w-100 mt-2"
-              >Volver al listado</router-link
-            >
+          <button class="btn btn-warning btn-block w-100 mt-2 text-white" @click="regresar">Cancelar</button>
           </div>
         </div>
       </div>
@@ -351,6 +346,9 @@ export default {
     });
   },
   methods: {
+      regresar(){
+          this.$emit('pantalla', 'lista')
+      },
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {

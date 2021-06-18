@@ -226,12 +226,13 @@
     </template>
     <template v-if="pantalla == 'nuevo'">
       <div>
-        <tribunales-actividades-nuevo></tribunales-actividades-nuevo>
+        <tribunales-actividades-nuevo @pantalla="pantalla = $event"></tribunales-actividades-nuevo>
       </div>
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
         <tribunales-actividades-editar
+        @pantalla="pantalla = $event"
           :id="id_record"
         ></tribunales-actividades-editar>
       </div>
@@ -240,6 +241,7 @@
       <div>
         <tribunales-actividades-ver
           :id="id_record"
+          @pantalla="pantalla = $event"
         ></tribunales-actividades-ver>
       </div>
     </template>

@@ -10,10 +10,11 @@
     </ol>
     <div class="row p-2 text-center border shadow rounded-3">
       <div class="row">
-        <div class="col-12 col-md-12 col-lg-12 col-xl-12 p-2">
+        <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-1">
           <h1 class="text-blue"><b>SORTEO DE ASIGNACIÓN</b></h1>
         </div>
         <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+        <button class="btn btn-warning btn-block text-white w-100 mt-2" @click="regresar">Cancelar</button>
         </div>
       </div>
     </div>
@@ -82,6 +83,9 @@ export default {
         })
     },
     methods:{
+        regresar(){
+            this.$emit('pantalla', 'lista')
+        },
         sortear(){
             let formulario = new FormData()
             formulario.append('nombre', this.sorteo.nombre)

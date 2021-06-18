@@ -18,7 +18,17 @@
       </ol>
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-          <h1 class="text-blue"><b>EDITAR TRIBUNAL</b></h1>
+          <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+            <h1 class="text-blue"><b>EDITAR TRIBUNAL</b></h1>
+          </div>
+          <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+            <button
+              class="btn btn-danger text-white w-100 mt-2"
+              @click="regresar"
+            >
+              Cancelar
+            </button>
+          </div>
         </div>
       </div>
       <form @submit.prevent="edit">
@@ -300,7 +310,7 @@
 </template>
 <script>
 export default {
-    props: ['id'],
+  props: ["id"],
   data() {
     return {
       type_file: [],
@@ -316,7 +326,7 @@ export default {
   },
   created() {
     axios.get(`/data-rercord/${this.id}/tribunal`).then((r) => {
-    // axios.get(`/data-rercord/9/tribunal`).then((r) => {
+      // axios.get(`/data-rercord/9/tribunal`).then((r) => {
       this.type_file = r.data.tipo_archivo;
       this.ciudades = r.data.ciudades;
       this.departament = r.data.departamentos;
@@ -330,6 +340,9 @@ export default {
     });
   },
   methods: {
+    regresar() {
+      this.$emit('pantalla', 'lista')
+    },
     box_file() {
       if (this.form_edit.id_tipo_documento == "") {
         Swal.fire("¡Error!", "Selecciona primero un tipo de archivo", "error");
@@ -378,15 +391,15 @@ export default {
     },
     edit() {
       var datos = new FormData();
-      datos.append('id', this.id)
-    //   datos.append('id', 9)
+      datos.append("id", this.id);
+      //   datos.append('id', 9)
       datos.append("nombre", this.form_edit.nombre);
       datos.append("direccion", this.form_edit.direccion);
       datos.append("dep_id", this.form_edit.dep_id);
       datos.append("ciu_id", this.form_edit.ciu_id);
       datos.append("fecha_inicio", this.form_edit.fecha_inicio);
       datos.append("fecha_final", this.form_edit.fecha_final);
-      datos.append("cantidad", this.documentos.length);
+      datos.append("cantidad");
       datos.append("cantidad_eliminados", this.eliminados.length);
 
       for (let index = 0; index < this.tipo_documentos.length; index++) {

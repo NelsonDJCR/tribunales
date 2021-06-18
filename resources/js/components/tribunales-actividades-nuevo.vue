@@ -23,12 +23,7 @@
             <h1 class="text-blue"><b>NUEVA ACTIVIDAD</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-            <router-link
-              :to="`/tribunales/listado-de-actividades`"
-              @click.native="$router.go()"
-              class="btn btn-danger text-white w-100 mt-2"
-              >Cancelar</router-link
-            >
+          <button class="btn btn-danger text-white w-100 mt-2" @click="regresar">Cancelar</button>
           </div>
         </div>
       </div>
@@ -308,6 +303,9 @@ export default {
     this.form.token = Math.floor(Math.random() * (9999 - 5000)) + 5000;
   },
   methods: {
+      regresar(){
+          this.$emit('pantalla', 'lista')
+      },
     magistradosxtribunal(i) {
       let url = "/magistradosxtribunal/" + i;
       axios.get(url).then((res) => {

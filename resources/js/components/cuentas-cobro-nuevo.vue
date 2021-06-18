@@ -24,7 +24,7 @@
             <h1 class="text-blue"><b>NUEVA CUENTA DE COBRO</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-            <div @click="reload" class="btn btn-danger text-white w-100 mt-2">
+            <div @click="regresar" class="btn btn-danger text-white w-100 mt-2">
               Cancelar
             </div>
           </div>
@@ -406,6 +406,9 @@ export default {
       this.tipo_archivo.push(this.form.id_tipo_documento);
       this.form.id_tipo_documento = "";
       //   console.log(this.archivos);
+    },
+    regresar(){
+        this.$emit('pantalla', 'lista')
     },
     reload() {
       location.reload();

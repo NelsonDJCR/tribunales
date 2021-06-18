@@ -23,12 +23,10 @@
             <h1 class="text-blue"><b>NUEVO TRIBUNAL</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-            <router-link
-              :to="`/tribunales-listar`"
-              @click.native="$router.go()"
+            <button
               class="btn btn-danger text-white w-100 mt-2"
-              >Cancelar</router-link
-            >
+              @click="regresar"
+              >Cancelar</button>
           </div>
         </div>
       </div>
@@ -252,6 +250,9 @@ export default {
     this.form.token = Math.floor(Math.random() * (9999 - 5000)) + 5000;
   },
   methods: {
+      regresar(){
+          this.$emit('pantalla', 'lista')
+      },
     eliminarArchivo(index) {
       this.archivos.splice(index, 1);
       this.tipo_archivo.splice(index, 1);

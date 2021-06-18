@@ -166,17 +166,17 @@
     </template>
     <template v-if="pantalla == 'nuevo'">
       <div>
-        <cuentas-cobro-nuevo></cuentas-cobro-nuevo>
+        <cuentas-cobro-nuevo @pantalla="pantalla = $event"></cuentas-cobro-nuevo>
       </div>
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
-        <cuentas-cobro-editar :id="idrecord"></cuentas-cobro-editar>
+        <cuentas-cobro-editar @pantalla="pantalla = $event" :id="idrecord"></cuentas-cobro-editar>
       </div>
     </template>
     <template v-if="pantalla == 'ver'">
       <div>
-        <cuentas-cobro-ver :id="idrecord"></cuentas-cobro-ver>
+        <cuentas-cobro-ver @pantalla="pantalla = $event" :id="idrecord"></cuentas-cobro-ver>
       </div>
     </template>
 
