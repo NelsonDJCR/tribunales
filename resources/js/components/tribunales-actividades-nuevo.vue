@@ -23,7 +23,7 @@
             <h1 class="text-blue"><b>NUEVA ACTIVIDAD</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-          <button class="btn btn-danger text-white w-100 mt-2" @click="regresar">Cancelar</button>
+          <button class="btn btn-warning text-white w-100 mt-2" @click="regresar">Cancelar</button>
           </div>
         </div>
       </div>

@@ -32,10 +32,10 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="border-bottom: 2px solid rgb(49, 49, 49); padding: 5px; font-size:1.1em;">INFORME DE CUMPLIMIENTO RES. 1638/19 MOD. RES.2275/19 - Res. 2670/19</td>
+                                <td style="border-bottom: 2px solid rgb(49, 49, 49); padding: 12px; font-size:0.9em;">INFORME DE CUMPLIMIENTO RES. 1638/19 MOD. RES.2275/19 - Res. 2670/19</td>
                             </tr>
                             <tr>
-                                <td style="border-bottom: 2px solid rgb(49, 49, 49); padding: 3px; font-size:1em; font-weight:bold;">TRIBUNALES SECCIONALES DE GARANTIA Y VIGILANCIA ELECTORAL</td>
+                                <td style="border-bottom: 2px solid rgb(49, 49, 49); padding: 3px; font-size:0.9em; font-weight:bold;">TRIBUNALES SECCIONALES DE GARANTIA Y VIGILANCIA ELECTORAL</td>
                             </tr>
                             <tr>
                                 <td><br/></td>
@@ -56,20 +56,18 @@
                         <tbody style="display:block; width: 100%;">
                             <tr style="display:table; width: 100%; ">
                                 <td><strong style="display: block; padding: 10px;">MAGISTRADO:</strong></td>
-                                {{-- <td>---MES AQUI ----</td> --}}
-                                <td>{{ $delegado->nombre }}</td>
+                                <td style="margin-left: -15px">{{ $delegado->nombre }}</td>
 
                                 <td style="border-left: 2px solid #000;"><strong style="padding-left: 5px;">DEL:</strong></td>
                                 <td>{{ $min_fecha }}</td>
                                 <td><strong>AL:</strong></td>
                                 <td>{{ $max_fecha }}</td>
                             </tr>
-                            <tr style="display:table; width: 100%; border-top: 2px solid #000; padding-top:10px">
+                            <tr style="display:table; width: 78%; border-top: 2px solid #000; padding-top:10px">
                                 <td><strong style="display: block; padding: 10px;">DEPARTAMENTO:</strong></td>
                                 <td>{{ $delegado->departamento->nombre }}</td>
-                                <td colspan="2" style="border-left: 2px solid #000;"><strong style="padding-left: 5px;">CIUDAD:</strong></td>
-                                <td></td>
-                                <td colspan="2">{{ $delegado->ciudad->nombre }}</td>
+                                <td style="border-left: 2px solid #000;"><strong style="padding-left: 5px;">CIUDAD:</strong></td>
+                                <td>{{ $delegado->ciudad->nombre }}</td>
                             </tr>
                         </tbody>
                     </table>

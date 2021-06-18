@@ -162,10 +162,17 @@ class ActividadesController extends Controller
     public function filtrar(Request $r)
     {
         $post = $r;
-        $x = DB::table('actividades')->select("actividades.*", 'departamentos.nombre AS departamento', 'magistrados.nombre AS magistrado', 'ciudades.nombre AS ciudad')
+        $x = DB::table('actividades')->select(
+            "actividades.*",
+            'departamentos.nombre AS departamento',
+            'magistrados.nombre AS magistrado',
+            'ciudades.nombre AS ciudad',
+            'tipo_actividad.nombre as tipo_nombre'
+        )
             ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
             ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
             ->join("magistrados", "magistrados.id", "actividades.id_magistrado")
+            ->join('tipo_actividad', 'tipo_actividad.id', 'actividades.id_tipo_actividad')
             ->where(function ($query) use ($post) {
                 if (isset($post['tema'])) {
                     if (!empty($post['tema']))
@@ -188,6 +195,24 @@ class ActividadesController extends Controller
                 if (isset($post['fecha_final'])) {
                     if (!empty($post['fecha_final']))
                         $query->where("actividades.fecha",   '<=',  $post['fecha_final']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['id_tipo_actividad'])) {
+                    if (!empty($post['id_tipo_actividad']))
+                        $query->where("actividades.id_tipo_actividad",  $post['id_tipo_actividad']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['dep_id'])) {
+                    if (!empty($post['dep_id']))
+                        $query->where("actividades.dep_id",  $post['dep_id']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['ciu_id'])) {
+                    if (!empty($post['ciu_id']))
+                        $query->where("actividades.ciu_id",  $post['ciu_id']);
                 }
             })
             ->orderBy('actividades.id', 'DESC')
@@ -199,10 +224,17 @@ class ActividadesController extends Controller
     public function reporteExcel(Request $r)
     {
         $post = $r;
-        $x = DB::table('actividades')->select("actividades.*", 'departamentos.nombre AS departamento', 'ciudades.nombre AS ciudad', 'magistrados.nombre AS magistrado')
+        $x = DB::table('actividades')->select(
+            "actividades.*",
+            'departamentos.nombre AS departamento',
+            'ciudades.nombre AS ciudad',
+            'magistrados.nombre AS magistrado',
+            'tipo_actividad.nombre as tipo_nombre'
+        )
             ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
             ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
             ->join("magistrados", "magistrados.id", "actividades.id_magistrado")
+            ->join('tipo_actividad', 'tipo_actividad.id', 'actividades.id_tipo_actividad')
             ->where(function ($query) use ($post) {
                 if (isset($post['tema'])) {
                     if (!empty($post['tema']))
@@ -227,6 +259,24 @@ class ActividadesController extends Controller
                         $query->where("actividades.fecha",   '<=',  $post['fecha_final']);
                 }
             })
+            ->where(function ($query) use ($post) {
+                if (isset($post['id_tipo_actividad'])) {
+                    if (!empty($post['id_tipo_actividad']))
+                        $query->where("actividades.id_tipo_actividad",  $post['id_tipo_actividad']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['dep_id'])) {
+                    if (!empty($post['dep_id']))
+                        $query->where("actividades.dep_id",  $post['dep_id']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['ciu_id'])) {
+                    if (!empty($post['ciu_id']))
+                        $query->where("actividades.ciu_id",  $post['ciu_id']);
+                }
+            })
             ->get();
         return view('sessions.report')
             ->with('data', $x);
@@ -234,7 +284,7 @@ class ActividadesController extends Controller
 
     public function magistradosxtribunal($id)
     {
-        $magistrados = Magistrado::where('estado',1)->where('tribunal_id',$id)->get();
+        $magistrados = Magistrado::where('estado', 1)->where('tribunal_id', $id)->get();
         return response()->json([
             'funcionarios' => $magistrados,
         ]);

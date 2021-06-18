@@ -77,6 +77,48 @@
                   v-model="dataFilter.fecha_final"
                 />
               </div>
+
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"
+                  ><b>Tipo de actividad</b></label
+                >
+                <select
+                  class="form-select"
+                  v-model="dataFilter.id_tipo_actividad"
+                >
+                  <option value="">Seleccione</option>
+                  <option
+                    v-for="(i, index) in tipo_actividad"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Departamento</b></label>
+                <select class="form-select" v-model="dataFilter.dep_id">
+                  <option value="">Seleccione</option>
+                  <option
+                    v-for="(i, index) in departamentos"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Ciudad</b></label>
+                <select class="form-select" v-model="dataFilter.ciu_id">
+                  <option value="">Seleccione</option>
+                  <option
+                    v-for="(i, index) in ciudades"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
               <div class="row">
                 <div class="mb-3 col-3">
                   <button
@@ -91,12 +133,12 @@
             </div>
           </form>
         </div>
-        <table class="table table-bordered table-striped table-sm" id="datos">
+        <table class="table table-bordered table-striped table-sm text-center" id="datos">
           <thead>
             <th>Opciones</th>
             <th class="w-85">Fecha</th>
             <th>Tema</th>
-            <th>Descripción</th>
+            <th>Tipo de actividad</th>
             <th>Departamento</th>
             <th>Municipio</th>
             <th>Magistrado</th>
@@ -142,7 +184,7 @@
               </td>
               <td>{{ i.fecha }}</td>
               <td>{{ i.tema }}</td>
-              <td>{{ i.descripcion }}</td>
+              <td>{{ i.tipo_nombre }}</td>
               <td>{{ i.departamento }}</td>
               <td>{{ i.ciudad }}</td>
               <td>{{ i.magistrado }}</td>
@@ -226,13 +268,15 @@
     </template>
     <template v-if="pantalla == 'nuevo'">
       <div>
-        <tribunales-actividades-nuevo @pantalla="pantalla = $event"></tribunales-actividades-nuevo>
+        <tribunales-actividades-nuevo
+          @pantalla="pantalla = $event"
+        ></tribunales-actividades-nuevo>
       </div>
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
         <tribunales-actividades-editar
-        @pantalla="pantalla = $event"
+          @pantalla="pantalla = $event"
           :id="id_record"
         ></tribunales-actividades-editar>
       </div>
@@ -253,12 +297,17 @@ export default {
   props: ["id"],
   data() {
     return {
-      dataPdf: { cabildo_id: "", radicado: "", ciudadano: "" },
-      departament: [],
+      dataPdf: {
+        cabildo_id: "",
+        radicado: "",
+        ciudadano: "",
+      },
+      departamentos: [],
       ciudades: [],
       type_file: [],
+      tipo_actividad: [],
       tabla: [],
-      dataFilter: {},
+      dataFilter: { id_tipo_actividad: "", ciu_id: "", dep_id: "" },
       action: 0,
       id_record: 0,
       datos_edit: {},
@@ -269,6 +318,9 @@ export default {
   created() {
     axios.get("/listar/actividades").then((r) => {
       this.tabla = r.data.tabla;
+      this.departamentos = r.data.departments;
+      this.ciudades = r.data.ciudades;
+      this.tipo_actividad = r.data.tipo_actividad;
       this.formatear_fecha();
     });
   },
@@ -288,7 +340,7 @@ export default {
     filter() {
       axios.post("/filtros-actividad", this.dataFilter).then((r) => {
         this.tabla = r.data.tabla;
-        this.formatear_fecha()
+        this.formatear_fecha();
       });
     },
     editar(id) {

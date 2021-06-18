@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTribunales;
 use App\Models\Banco;
+use App\Models\Ciudad;
 use App\Models\Ciudades;
 use App\Models\Departamentos;
 use App\Models\Documento;
@@ -110,7 +111,7 @@ class TribunalesController extends Controller
             'tipo_identificacion' => TipoIdentificacion::all()->where('estado', 1),
             'magistrados' => Magistrado::all()->where('estado', 1),
             'tribunales' => Tribunal::all()->where('estado', 1),
-            'tipo_actividad' => TipoActividad::where('estado',1)->get()
+            'tipo_actividad' => TipoActividad::where('estado', 1)->get()
 
         ]);
     }
@@ -119,10 +120,17 @@ class TribunalesController extends Controller
     {
         if ($table == 'actividades') {
             $tabla = DB::table($table)
-                ->select("$table.*", 'departamentos.nombre AS departamento', 'ciudades.nombre AS ciudad', 'magistrados.nombre AS magistrado')
+                ->select(
+                    "$table.*",
+                    'departamentos.nombre AS departamento',
+                    'ciudades.nombre AS ciudad',
+                    'magistrados.nombre AS magistrado',
+                    'tipo_actividad.nombre as tipo_nombre'
+                )
                 ->join("departamentos", "departamentos.id", "$table.dep_id")
                 ->join("ciudades", "ciudades.id", "$table.ciu_id")
                 ->join("magistrados", "magistrados.id", "actividades.id_magistrado")
+                ->join('tipo_actividad', 'tipo_actividad.id', 'actividades.id_tipo_actividad')
                 ->orderBy("$table.id", 'DESC')
                 ->get();
         } else {
@@ -155,6 +163,8 @@ class TribunalesController extends Controller
 
         return response()->json([
             'departments' => Departamentos::all()->where('estado', 1),
+            'ciudades' => Ciudad::where('estado', 1)->get(),
+            'tipo_actividad' => TipoActividad::where('estado', 1)->get(),
             'tabla' => $tabla
         ]);
     }
@@ -199,10 +209,10 @@ class TribunalesController extends Controller
                 )->join('documento', 'documento.id', 'actividades_soporte.id_documento')
                 ->where('documento.estado', '1')
                 ->where('id_actividad', $id)->get();
-                $x = DB::table('actividades')->where('id', $id)->get();
-                foreach ($x as $row) {
-                    $id_magistrado = $row->id_magistrado;
-                }
+            $x = DB::table('actividades')->where('id', $id)->get();
+            foreach ($x as $row) {
+                $id_magistrado = $row->id_magistrado;
+            }
             return response()->json([
                 'documentos' => $documentos,
                 'formulario' => DB::table($table)->where('id', $id)->first(),
@@ -213,7 +223,7 @@ class TribunalesController extends Controller
                 'tipo_cuentas' => TipoCuenta::all()->where('estado', 1),
                 'tipo_archivos' => TipoArchivo::all()->where('estado', 1),
                 'tipo_identificacion' => TipoIdentificacion::all()->where('estado', 1),
-                'tipo_actividad' => TipoActividad::where('estado',1)->get(),
+                'tipo_actividad' => TipoActividad::where('estado', 1)->get(),
                 'magistrado' => Magistrado::where('id', $id_magistrado)->select('magistrados.nombre AS magistrado')->first(),
 
             ]);
@@ -261,7 +271,7 @@ class TribunalesController extends Controller
 
     public function editar(Request $request)
     {
-        for ($x=0; $x < $request->cantidad_eliminados; $x++) {
+        for ($x = 0; $x < $request->cantidad_eliminados; $x++) {
             $documento = Documento::find($request["e_id$x"]);
             $documento->estado = '0';
             $documento->save();

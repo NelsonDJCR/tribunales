@@ -163,6 +163,7 @@
       <div>
         <magistrados-mis-actividades-ver
           :id="id_record"
+          @pantalla="pantalla = $event"
         ></magistrados-mis-actividades-ver>
       </div>
     </template>
@@ -171,6 +172,7 @@
       <div>
         <tribunales-actividades-nuevo
           :id="id_magistrado"
+          @pantalla="pantalla = $event"
         ></tribunales-actividades-nuevo>
       </div>
     </template>
@@ -241,11 +243,19 @@ export default {
       let fecha_final = "";
       let tema = "";
       let id_tipo_actividad = "";
+      let dep_id = "";
+      let ciu_id = "";
       if (this.filtros.tema != "") {
         tema = this.filtros.tema;
       }
-      if (this.filtros.id_tipo_actividad == "") {
+      if (this.filtros.id_tipo_actividad != "") {
         id_tipo_actividad = this.filtros.id_tipo_actividad;
+      }
+      if (this.filtros.ciu_id != "") {
+        ciu_id = this.filtros.ciu_id;
+      }
+      if (this.filtros.dep_id != "") {
+        dep_id = this.filtros.dep_id;
       }
       if (this.filtros.fecha_inicial == "") {
         fecha_inicial = this.fechas.min_fecha;
@@ -264,7 +274,12 @@ export default {
           fecha_final +
           "&tema=" +
           tema +
-          "&id_tipo_actividad=" + id_tipo_actividad
+          "&id_tipo_actividad=" +
+          id_tipo_actividad +
+          "&dep_id=" +
+          dep_id +
+          "&ciu_id=" +
+          ciu_id
       );
     },
     pantallaNuevo(x) {
