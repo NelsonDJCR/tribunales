@@ -98,6 +98,7 @@
                   type="number"
                   class="form-control"
                   v-model="form.valor_honorarios"
+                  @keyup="cal_valor_bruto"
                 />
               </div>
             </div>
@@ -108,6 +109,7 @@
                   type="number"
                   class="form-control"
                   v-model="form.numero_dias"
+                  @keyup="cal_valor_bruto"
                 />
               </div>
             </div>
@@ -115,9 +117,10 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Valor bruto</b></label>
                 <input
-                  type="number"
+                  type="text"
                   class="form-control"
                   v-model="form.valor_bruto"
+                  disabled
                 />
               </div>
             </div>
@@ -131,9 +134,20 @@
                 />
               </div>
             </div>
-          </div>
 
-          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Valor iva factura</b></label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  v-model="form.iva_factura"
+                  @keyup="cal_total_pagar"
+                />
+              </div>
+            </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"
@@ -141,22 +155,25 @@
                 >
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.total_pagar"
+                  disabled
                 />
               </div>
             </div>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Rete fuente</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.rete_fuente"
+                  @keyup="cal_neto_pagar()"
                 />
               </div>
             </div>
@@ -165,10 +182,10 @@
                 <label for="" class="form-label"><b>Rete IVA</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.rete_iva"
+                  @keyup="cal_neto_pagar()"
                 />
               </div>
             </div>
@@ -177,10 +194,10 @@
                 <label for="" class="form-label"><b>Rete ICA</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.rete_ica"
+                  @keyup="cal_neto_pagar()"
                 />
               </div>
             </div>
@@ -189,10 +206,10 @@
                 <label for="" class="form-label"><b>Neto a pagar</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.neto_pagar"
+                  disabled
                 />
               </div>
             </div>
@@ -363,7 +380,19 @@ export default {
       type_file: [],
       archivos: [],
       archivo: {},
-      form: { id_tipo_documento: "" },
+      form: {
+        id_tipo_documento: "",
+        neto_pagar: 0,
+        rete_ica: 0,
+        rete_iva: 0,
+        rete_fuente: 0,
+        total_pagar: 0,
+        valor_factura: 0,
+        valor_bruto: 0,
+        numero_dias: 0,
+        valor_honorarios: 0,
+        iva_factura: 0,
+      },
     };
   },
   created() {
@@ -375,6 +404,27 @@ export default {
     this.select();
   },
   methods: {
+    cal_neto_pagar() {
+      var resultado = 0
+      resultado = this.form.total_pagar;
+      resultado = resultado - this.form.rete_fuente;
+      resultado = resultado - this.form.rete_ica;
+      resultado = resultado - this.form.rete_iva;
+      this.form.neto_pagar = resultado;
+    },
+    cal_total_pagar() {
+      //   console.log("llego");
+      this.form.total_pagar =
+        parseFloat(this.form.valor_bruto) + parseFloat(this.form.iva_factura);
+      this.cal_neto_pagar();
+    },
+    cal_valor_bruto() {
+      //   console.log(this.form.valor_honorarios + "-" + this.form.numero_dias);
+      this.form.valor_bruto =
+        (this.form.valor_honorarios * this.form.numero_dias) / 30;
+      this.cal_total_pagar();
+      this.cal_neto_pagar();
+    },
     box_file() {
       if (this.form.id_tipo_documento != "") {
         $("#file").trigger("click");
@@ -407,8 +457,8 @@ export default {
       this.form.id_tipo_documento = "";
       //   console.log(this.archivos);
     },
-    regresar(){
-        this.$emit('pantalla', 'lista')
+    regresar() {
+      this.$emit("pantalla", "lista");
     },
     reload() {
       location.reload();
@@ -462,7 +512,10 @@ export default {
 };
 </script>
 
-
-
-
-
+<style>
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>

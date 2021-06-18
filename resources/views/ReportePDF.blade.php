@@ -21,7 +21,7 @@
         <thead>
             <tr>
                 <th colspan="3">
-                    <img style="display: block; margin: 0px 15px 0 40px" src="images/CNE.png" width="130px; height:120px; ">
+                    <img style="display: block; margin: 0px 20px 5px 40px" src="images/CNE.png" width="130px; height:100px; ">
                 </th>
                 <th colspan="3">
                     <table style="width: 100%; padding-left:30px;">
@@ -58,15 +58,15 @@
                                 <td><strong style="display: block; padding: 10px;">MAGISTRADO:</strong></td>
                                 <td style="margin-left: -15px">{{ $delegado->nombre }}</td>
 
-                                <td style="border-left: 2px solid #000;"><strong style="padding-left: 5px;">DEL:</strong></td>
+                                <td style="border-left: 2px solid #000;"><strong style="padding-left: 10px;">DEL:</strong></td>
                                 <td>{{ $min_fecha }}</td>
                                 <td><strong>AL:</strong></td>
                                 <td>{{ $max_fecha }}</td>
                             </tr>
-                            <tr style="display:table; width: 78%; border-top: 2px solid #000; padding-top:10px">
-                                <td><strong style="display: block; padding: 10px;">DEPARTAMENTO:</strong></td>
+                            <tr style="display:table; width: 100%; border-top: 2px solid #000; padding-top:10px; padding-left:15px; margin-top: -10px;">
+                                <td><strong style="display: block; padding: 10px 10px 10px 0;">DEPARTAMENTO:</strong></td>
                                 <td>{{ $delegado->departamento->nombre }}</td>
-                                <td style="border-left: 2px solid #000;"><strong style="padding-left: 5px;">CIUDAD:</strong></td>
+                                <td style="border-left: 2px solid #000;"><strong style="padding-left: 95px;">CIUDAD:</strong></td>
                                 <td>{{ $delegado->ciudad->nombre }}</td>
                             </tr>
                         </tbody>
@@ -94,12 +94,12 @@
             @endphp
             @foreach ($data as $row)
             <tr>
-                <td style="padding: 20px; border-bottom: 1px solid #000">{{ $x++ }}</td>
-                <td style="padding: 20px; border-left: 1px solid #000; border-bottom: 1px solid #000">{{ $row->fecha }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #000; width:5%; text-align: center;">{{ $x++ }}</td>
+                <td style="padding: 20px 15px; border-left: 1px solid #000; width:20%; border-bottom: 1px solid #000; text-align: center;">{{ $row->fecha }}</td>
                 <td style="padding: 20px; vertical-align: middle; border-left: 1px solid #000;  border-right: 1px solid #000; border-bottom: 1px solid #000">
                     <ul style="list-style: none">
-                        <li style="list-style:none; display: block; height: 50px; line-height: 0.7em;"><strong>Tipo de actividad:</strong>  <p style="display: inline-block; margin-top: 2px; border-bottom: 1px solid #000">{{ $row->tipoActividad->nombre }}</p></li>
-                        <li style="list-style:none; display: block;  line-height: 0.7em; "><strong>Tema:</strong><p style="display: inline-block;  margin-top: 2px; text-align: justify; padding-right: 45px;">{{ $row->tema }} </p></li>
+                        <li style="list-style:none; display: block; height: 50px; line-height: 0.9em;"><strong>Tipo de actividad:</strong>  <p style="display: inline-block; margin-top: 2px; line-height:.7em;"> {{ $row->tipoActividad->nombre }}</p></li>
+                        <li style="list-style:none; display: block; line-height: 0.7em; margin-top: -5px;"><strong>Tema:</strong><p style="display: inline-block; margin-top: 0px; text-align: justify; padding-right: 45px; position: relative; top: 10px; margin-left: 10px">{{ $row->tema }} </p></li>
                     </ul>
                 </td>
                 <td style="padding: 20px; border-bottom: 1px solid #000">
@@ -117,7 +117,7 @@
         </thead>
         <tbody>
             <tr style="display: table-row; width: 100%;">
-                <td style="padding: 50px 20px;"></td>
+                <td style="padding: 30px 20px;"></td>
             </tr>
         </tbody>
     </table>
@@ -162,8 +162,7 @@
                         <tfoot>
                             <tr>
                                 <td colspan="5">
-                                    <strong>VoBo.:</strong>
-                                    <br/><br/>
+                                    <strong>VoBo.:</strong><br/>
                                     <strong>Cargo:</strong>
                                 </td>
                             </tr>
