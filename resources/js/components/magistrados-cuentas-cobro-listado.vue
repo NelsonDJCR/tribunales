@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main col-12">
     <template v-if="pantalla == 'lista'">
       <div class="main col-12">
         <link
@@ -65,7 +65,7 @@
                   v-model="dataFilter.fecha_inicio"
                 />
               </div>
-             
+
               <div class="mb-3 col-3">
                 <label for="" class="form-label"><b>Fecha fin</b></label>
                 <input
@@ -104,7 +104,7 @@
                 >
                   <i class="typcn typcn-database"></i>
                 </button>
-                </div> 
+                </div>
                 -->
               </div>
             </div>
@@ -123,7 +123,7 @@
           </thead>
           <tbody>
             <tr v-for="(i, index) in table" :key="index">
-              
+
               <td class="aling_btn_options" style="width: 190px">
                 <button
                   type="button"
@@ -204,7 +204,7 @@
           <div class="row p-2 text-center border shadow rounded-3">
             <div class="row">
               <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                <h1 class="text-blue"><b>NUEVA CUENTA DE COBRO</b></h1>
+                <h1 class="text-blue"><b>NUEVA COMISIÓN</b></h1>
               </div>
               <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
                 <div
@@ -266,6 +266,7 @@
                       type="number"
                       class="form-control"
                       v-model="new_com.valor_bruto"
+                      disabled
                     />
                   </div>
                 </div>
@@ -287,8 +288,8 @@
                       ><b>Valor total a pagar</b></label
                     >
                     <input
+                    disabled
                       type="number"
-                      min="1"
                       step="any"
                       class="form-control"
                       v-model="new_com.total_pagar"
@@ -338,8 +339,8 @@
                   <div class="mb-3">
                     <label for="" class="form-label"><b>Neto a pagar</b></label>
                     <input
+                    disabled
                       type="number"
-                      min="1"
                       step="any"
                       class="form-control"
                       v-model="new_com.neto_pagar"
