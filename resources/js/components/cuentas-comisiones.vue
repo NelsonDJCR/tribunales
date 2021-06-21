@@ -10,16 +10,24 @@
     <div class="container mt-5">
       <!-- Breadcrumb -->
       <ol class="breadcrumb">
-          <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de cuentas de cobro / Nueva cuenta de cobro </label></li>
+        <li class="breadcrumb-item active">
+          <router-link :to="{ name: 'home' }"><span>Home</span></router-link> /
+          <label for="" class="p-2"
+            >Tribunales de Garantía / Listado de cuentas de cobro / Nueva cuenta
+            de cobro
+          </label>
+        </li>
       </ol>
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
-            <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                <h1 class="text-blue"><b>COMISIONES</b></h1>
+          <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
+            <h1 class="text-blue"><b>COMISIONES</b></h1>
+          </div>
+          <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
+            <div @click="reload" class="btn btn-danger text-white w-100 mt-2">
+              Cancelar
             </div>
-            <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-                <div @click="reload" class="btn btn-danger text-white w-100 mt-2">Cancelar</div>
-            </div>
+          </div>
         </div>
       </div>
 
@@ -29,45 +37,38 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
-                  <select
-
-                    class="form-select"
-                    name="tribu_id"
-                    v-model="form.id_tribunal"
-                  >
-                    <option value="">Selecciona</option>
-                   <option
+                <select
+                  class="form-select"
+                  name="tribu_id"
+                  v-model="form.id_tribunal"
+                >
+                  <option value="">Selecciona</option>
+                  <option
                     v-for="(i, index) in tribunales"
                     :key="index"
                     :value="i.id"
                     v-text="i.nombre"
                   ></option>
-                  </select>
+                </select>
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Magistrado</b></label>
-                  <select
-
-                    class="form-select"
-                    v-model="form.id_magistrado"
-                  >
-                    <option value="">Selecciona</option>
+                <select class="form-select" v-model="form.id_magistrado">
+                  <option value="">Selecciona</option>
                   <option
                     v-for="(i, index) in magistrados"
                     :key="index"
                     :value="i.id"
                     v-text="i.nombre"
                   ></option>
-                  </select>
+                </select>
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"
-                  ><b>Fecha inicio</b>
-                </label>
+                <label for="" class="form-label"><b>Fecha inicio</b> </label>
                 <div class="input-group">
                   <input
                     v-model="form.fecha_inicio"
@@ -79,9 +80,7 @@
             </div>
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"
-                  ><b>Fecha fin</b>
-                </label>
+                <label for="" class="form-label"><b>Fecha fin</b> </label>
                 <div class="input-group">
                   <input
                     v-model="form.fecha_fin"
@@ -95,50 +94,64 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Valor honorarios</b></label>
                 <input
-                    type="number"
-                    class="form-control"
-                    v-model="form.valor_honorarios"
-                  />
+                  type="number"
+                  class="form-control"
+                  v-model="form.valor_honorarios"
+                />
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Valor Conseptos</b></label>
                 <input
-                    type="number"
-                    class="form-control"
-                    v-model="form.valor_honorarios"
-                  />
+                  type="number"
+                  class="form-control"
+                  v-model="form.valor_honorarios"
+                />
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Número de días</b></label>
                 <input
-                    type="number"
-                    class="form-control"
-                    v-model="form.numero_dias"
-                  />
+                  type="number"
+                  class="form-control"
+                  v-model="form.numero_dias"
+                />
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Valor bruto</b></label>
                 <input
-                    type="number"
-                    class="form-control"
-                    v-model="form.valor_bruto"
-                  />
+                  type="number"
+                  class="form-control"
+                  v-model="form.valor_bruto"
+                />
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Valor factura</b></label>
                 <input
-                    type="number"
-                    class="form-control"
-                    v-model="form.valor_factura"
-                  />
+                  type="number"
+                  class="form-control"
+                  v-model="form.valor_factura"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Valor iva factura</b></label
+                >
+                <input
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  v-model="form.iva_factura"
+                  disabled
+                />
               </div>
             </div>
           </div>
@@ -146,52 +159,64 @@
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
               <div class="mb-3">
-                <label for="" class="form-label"><b>Valor total a pagar</b></label>
+                <label for="" class="form-label"
+                  ><b>Valor total a pagar</b></label
+                >
                 <input
-                    type="number" min="1" step="any"
-                    class="form-control"
-                    v-model="form.total_pagar"
-                  />
+                  type="number"
+                  min="1"
+                  step="any"
+                  class="form-control"
+                  v-model="form.total_pagar"
+                />
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Rete fuente</b></label>
                 <input
-                    type="number" min="1" step="any"
-                    class="form-control"
-                    v-model="form.rete_fuente"
-                  />
+                  type="number"
+                  min="1"
+                  step="any"
+                  class="form-control"
+                  v-model="form.rete_fuente"
+                />
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Rete IVA</b></label>
                 <input
-                    type="number" min="1" step="any"
-                    class="form-control"
-                    v-model="form.rete_iva"
-                  />
+                  type="number"
+                  min="1"
+                  step="any"
+                  class="form-control"
+                  v-model="form.rete_iva"
+                />
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Rete ICA</b></label>
                 <input
-                    type="number" min="1" step="any"
-                    class="form-control"
-                    v-model="form.rete_ica"
-                  />
+                  type="number"
+                  min="1"
+                  step="any"
+                  class="form-control"
+                  v-model="form.rete_ica"
+                />
               </div>
             </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Neto a pagar</b></label>
                 <input
-                    type="number" min="1" step="any"
-                    class="form-control"
-                    v-model="form.neto_pagar"
-                  />
+                  type="number"
+                  min="1"
+                  step="any"
+                  class="form-control"
+                  v-model="form.neto_pagar"
+                />
               </div>
             </div>
             <div class="row">
@@ -199,11 +224,8 @@
                 <label for="" class="form-label"
                   ><b>Tipo de archivo *</b></label
                 >
-                <select
-                  class="form-select"
-                  name="type_file"
-                >
-                <option>Seleccione ...</option>
+                <select class="form-select" name="type_file">
+                  <option>Seleccione ...</option>
                   <option
                     v-for="(i, index) in tipo_archivos"
                     :key="index"
@@ -236,7 +258,9 @@
               </div>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button type="submit"  class="btn btn-success">Crear Cuenta de Cobro</button>
+              <button type="submit" class="btn btn-success">
+                Crear Cuenta de Cobro
+              </button>
             </div>
           </div>
         </div>
@@ -303,39 +327,39 @@
 export default {
   data() {
     return {
-      tribunales:[],
-      magistrados:[],
-      tipo_archivos:[],
-      form:{},
+      tribunales: [],
+      magistrados: [],
+      tipo_archivos: [],
+      form: {},
     };
   },
   created() {
-     this.select()
+    this.select();
   },
   methods: {
-    reload(){
-      location.reload()
+    reload() {
+      location.reload();
     },
-    select(){
+    select() {
       axios.get(`/data-select`).then((r) => {
-        this.tribunales = r.data.tribunales; 
-        this.magistrados = r.data.magistrados; 
-        this.tipo_archivos = r.data.tipo_archivos; 
-      })
+        this.tribunales = r.data.tribunales;
+        this.magistrados = r.data.magistrados;
+        this.tipo_archivos = r.data.tipo_archivos;
+      });
     },
-    newForm(){
+    newForm() {
       axios.post(`/guardar-cuenta-cobro`, this.form).then((r) => {
-        if(r.data.code== 200){
-          swal.fire(r.data.msg,'', "success").then(function(){ location.reload() });
-        }else if(r.data.code== 406){
-          swal.fire(r.data.msg,'', "warning")
-        }else{
-          swal.fire("Fallo en el sevidor!",'error', "error")
+        if (r.data.code == 200) {
+          swal.fire(r.data.msg, "", "success").then(function () {
+            location.reload();
+          });
+        } else if (r.data.code == 406) {
+          swal.fire(r.data.msg, "", "warning");
+        } else {
+          swal.fire("Fallo en el sevidor!", "error", "error");
         }
       });
     },
-    
-
   },
 };
 </script>
