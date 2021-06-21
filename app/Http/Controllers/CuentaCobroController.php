@@ -214,6 +214,16 @@ class CuentaCobroController extends Controller
             return response()->json(['status' => 406, 'msg' => $validator->errors()->first()]);
         }
 
+        $request->valor_honorarios = number_format($request->valor_honorarios, 2);
+        $request->valor_bruto = number_format($request->valor_bruto, 2);
+        $request->numero_dias = number_format($request->numero_dias, 2);
+        $request->valor_factura = number_format($request->valor_factura, 2);
+        $request->total_pagar = number_format($request->total_pagar, 2);
+        $request->rete_fuente = number_format($request->rete_fuente, 2);
+        $request->rete_iva = number_format($request->rete_iva, 2);
+        $request->rete_ica = number_format($request->rete_ica, 2);
+        $request->neto_pagar = number_format($request->neto_pagar, 2);
+
         $cuenta = new CuentaCobro();
         $cuenta->id_tribunal = $request->id_tribunal;
         $cuenta->id_magistrado = $request->id_magistrado;

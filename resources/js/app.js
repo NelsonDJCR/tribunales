@@ -28,6 +28,7 @@ Vue.component('magistrados-mis-actividades-ver', require('./components/magistrad
 Vue.component('nuevo-sorteo', require('./components/Nuevo-sorteo.vue').default);
 Vue.component('nuevo-caso', require('./components/NuevoCaso.vue').default);
 Vue.component('ver-sorteo', require('./components/VisualizacionSorteo.vue').default);
+Vue.component('editar-mis-actividades', require('./components/EditarMisActividades.vue').default);
 
 
 // Vue.component('tipo-documento', require('./components/tipoDocumento_J/index.vue').default);

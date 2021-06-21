@@ -411,14 +411,14 @@ export default {
       resultado = resultado - parseFloat(this.form.rete_ica).toFixed(2);
       resultado = resultado - parseFloat(this.form.rete_iva).toFixed(2);
       //   console.log('Resultado 1',resultado);
-      resultado.toFixed(2);
-      console.log("Resultado 2", resultado);
+      resultado = parseFloat(resultado).toFixed(2);
+    //   console.log("Resultado 2", resultado);
       this.form.neto_pagar = resultado;
     },
     cal_total_pagar() {
       //   console.log("llego");
       this.form.total_pagar =
-        parseFloat(this.form.valor_bruto) + parseFloat(this.form.iva_factura);
+        parseFloat(this.form.valor_bruto).toFixed(2) + parseFloat(this.form.iva_factura).toFixed(2);
       parseFloat(this.form.total_pagar).toFixed(2);
       this.cal_neto_pagar();
     },
@@ -428,7 +428,7 @@ export default {
         (this.form.valor_honorarios * this.form.numero_dias) / 30;
       this.form.valor_bruto = parseFloat(this.form.valor_bruto).toFixed(2);
       this.cal_total_pagar();
-      this.cal_neto_pagar();
+    //   this.cal_neto_pagar();
     },
     box_file() {
       if (this.form.id_tipo_documento != "") {

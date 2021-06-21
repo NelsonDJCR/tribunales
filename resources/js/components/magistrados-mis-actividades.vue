@@ -147,6 +147,9 @@
                 >
                   <i class="typcn typcn-eye"></i>
                 </button>
+                <button type="button" class="btn btn-info btn-sm" @click="editar(i)">
+                  <i class="typcn typcn-edit" style="color: white"></i>
+                </button>
               </td>
               <td>{{ i.fecha }}</td>
               <td>{{ i.tema }}</td>
@@ -175,6 +178,12 @@
           @pantalla="pantalla = $event"
         ></tribunales-actividades-nuevo>
       </div>
+    </template>
+
+    <template v-if="pantalla == 'editar'">
+        <div>
+            <editar-mis-actividades :id="id_magistrado" />
+        </div>
     </template>
   </div>
 </template>
@@ -214,6 +223,11 @@ export default {
     });
   },
   methods: {
+      editar(i){
+          this.id_magistrado = i.id
+          this.pantalla = 'editar'
+        //   alert(i.id)
+      },
     formatear_fecha() {
       var fecha = "";
       var array = [];
