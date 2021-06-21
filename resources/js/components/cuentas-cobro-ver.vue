@@ -118,6 +118,18 @@
                 />
               </div>
             </div>
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Iva factura</b></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  v-model="record.iva_factura"
+                  disabled
+                />
+              </div>
+            </div>
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">

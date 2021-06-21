@@ -24,7 +24,12 @@
             <h1 class="text-blue"><b>VISUALIZACIÓN DE FUNCIONARIO</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-          <button class="btn btn-warning btn-block w-100 mt-2 text-white" @click="regresar">Cancelar</button>
+            <button
+              class="btn btn-warning btn-block w-100 mt-2 text-white"
+              @click="regresar"
+            >
+              Cancelar
+            </button>
           </div>
         </div>
       </div>
@@ -215,6 +220,19 @@
               </div>
             </div>
             <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Número de resolución</b>
+                </label>
+                <input
+                  v-model="data_record.numero_resolucion"
+                  type="number"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="row">
               <div class="mb-1">
                 <label for="" class="form-label"><b>Archivos</b></label>
                 <div class="row">
@@ -346,9 +364,9 @@ export default {
     });
   },
   methods: {
-      regresar(){
-          this.$emit('pantalla', 'lista')
-      },
+    regresar() {
+      this.$emit("pantalla", "lista");
+    },
     changeCity() {
       var id = $("#departamento_id").val();
       axios.post("/changeCity", { id: id }).then((r) => {

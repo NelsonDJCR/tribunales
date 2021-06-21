@@ -318,7 +318,7 @@ export default {
       ciudades: [],
       departament: [],
       magistrados: [],
-      formulario: {},
+      formulario: {id_tipo_documento: ''},
       documentos: [],
       eliminados: [],
       tipo_documentos: [],

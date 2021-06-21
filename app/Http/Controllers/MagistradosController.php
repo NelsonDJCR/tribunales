@@ -75,6 +75,7 @@ class MagistradosController extends Controller
         $magistrado->numero_cuenta = $request->numero_cuenta;
         $magistrado->numero_identificacion = $request->numero_identificacion;
         $magistrado->telefono = $request->telefono;
+        $magistrado->numero_resolucion = $request->numero_resolucion;
         // Especial
         $magistrado->tribunal_id = $request->tribunal_id;
         // Fin especial
@@ -171,6 +172,7 @@ class MagistradosController extends Controller
         $magistrado->nombre = $request->nombre;
         $magistrado->numero_cuenta = $request->numero_cuenta;
         $magistrado->numero_identificacion = $request->numero_identificacion;
+        $magistrado->numero_resolucion = $request->numero_resolucion;
         $magistrado->telefono = $request->telefono;
         // Especial
         $magistrado->tribunal_id = $request->tribunal_id;

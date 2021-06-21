@@ -416,10 +416,10 @@ export default {
       this.form.neto_pagar = resultado;
     },
     cal_total_pagar() {
-      //   console.log("llego");
+        console.log(this.form.valor_bruto + '-->' + this.form.iva_factura);
       this.form.total_pagar =
-        parseFloat(this.form.valor_bruto).toFixed(2) + parseFloat(this.form.iva_factura).toFixed(2);
-      parseFloat(this.form.total_pagar).toFixed(2);
+        parseFloat(this.form.valor_bruto) + parseFloat(this.form.iva_factura);
+    //   this.form.total_pagar  = parseFloat(this.form.total_pagar).toFixed(2);
       this.cal_neto_pagar();
     },
     cal_valor_bruto() {
@@ -492,6 +492,7 @@ export default {
       formulario.append("rete_ica", this.form.rete_ica);
       formulario.append("neto_pagar", this.form.neto_pagar);
       formulario.append("cantidad", this.archivos.length);
+      formulario.append('iva_factura', this.form.iva_factura)
 
       for (let index = 0; index < this.archivos.length; index++) {
         formulario.append("archivo" + index, this.archivos[index]);

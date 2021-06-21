@@ -465,8 +465,8 @@ export default {
       new_com: {
         cuentas_cobro_id: 0,
       },
-    //   pantalla: "lista",
-        pantalla: "nuevo",
+      pantalla: "lista",
+        // pantalla: "nuevo",
     };
   },
   created() {

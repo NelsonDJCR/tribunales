@@ -134,6 +134,7 @@ class CuentaCobroController extends Controller
         $cuenta->rete_iva = $request->rete_iva;
         $cuenta->rete_ica = $request->rete_ica;
         $cuenta->neto_pagar = $request->neto_pagar;
+        $cuenta->iva_factura = $request->iva_factura;
         $cuenta->save();
 
         for ($x = 0; $x < $request->cantidad; $x++) {
@@ -238,6 +239,7 @@ class CuentaCobroController extends Controller
         $cuenta->rete_iva = $request->rete_iva;
         $cuenta->rete_ica = $request->rete_ica;
         $cuenta->neto_pagar = $request->neto_pagar;
+        $cuenta->iva_factura = $request->iva_factura;
         $cuenta->save();
 
         for ($x = 0; $x < $request->cantidad; $x++) {

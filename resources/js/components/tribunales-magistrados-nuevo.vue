@@ -220,10 +220,23 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"
-                  ><b>Número de Cuenta</b>
+                  ><b>Número de cuenta</b>
                 </label>
                 <input
                   v-model="form.numero_cuenta"
+                  type="number"
+                  class="form-control"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Número de resolución</b>
+                </label>
+                <input
+                  v-model="form.numero_resolucion"
                   type="number"
                   class="form-control"
                 />
@@ -414,6 +427,7 @@ export default {
         numero_identificacion: "",
         telefono: "",
         tribunal_id: "",
+        numero_resolucion: '',
       },
       documentos: [],
       usados: [],
@@ -480,6 +494,7 @@ export default {
       formulario.append("direccion", this.form.direccion);
       formulario.append("id_banco", this.form.id_banco);
       formulario.append("id_tipo_cuenta", this.form.id_tipo_cuenta);
+      formulario.append('numero_resolucion', this.form.numero_resolucion)
       formulario.append(
         "id_tipo_identificacion",
         this.form.id_tipo_identificacion

@@ -24,7 +24,12 @@
             <h1 class="text-blue"><b>EDITAR FUNCIONARIO</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-          <button class="btn btn-warning btn-block text-white w-100 mt-2" @click="regresar">Cancelar</button>
+            <button
+              class="btn btn-warning btn-block text-white w-100 mt-2"
+              @click="regresar"
+            >
+              Cancelar
+            </button>
           </div>
         </div>
       </div>
@@ -216,6 +221,19 @@
 
             <div class="row">
               <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Número de resolución</b>
+                </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  v-model="form.numero_resolucion"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-3">
                 <label for="" class="form-label"><b>Tipo de archivo</b></label>
                 <select
                   class="form-select"
@@ -316,12 +334,6 @@
               <button type="submit" class="btn btn-secondary active">
                 Guardar Magistrado
               </button>
-              <router-link
-                :to="`/tribunales-magistrados-listar`"
-                @click.native="$router.go()"
-                class="btn btn-danger text-white w-100 mt-2"
-                >Cancelar</router-link
-              >
             </div>
           </div>
         </div>
@@ -420,9 +432,9 @@ export default {
   },
   created() {
     axios.get(`/data-rercord/${this.id}/magistrados`).then((r) => {
-        console.log(r.data);
+      console.log(r.data);
       this.documentos = r.data.documentos;
-    //   console.log(this.documentos);
+      //   console.log(this.documentos);
       this.type_file = r.data.tipo_archivo;
       this.ciudades = r.data.ciudades;
       this.departament = r.data.departamentos;
@@ -438,9 +450,9 @@ export default {
     });
   },
   methods: {
-      regresar(){
-          this.$emit('pantalla', 'lista')
-      },
+    regresar() {
+      this.$emit("pantalla", "lista");
+    },
     box_file() {
       if (this.form.id_tipo_documento == "") {
         Swal.fire("¡Error!", "Selecciona primero un tipo de archivo", "error");
@@ -488,6 +500,7 @@ export default {
       formulario.append("direccion", this.form.direccion);
       formulario.append("id_banco", this.form.id_banco);
       formulario.append("id_tipo_cuenta", this.form.id_tipo_cuenta);
+      formulario.append('numero_resolucion', this.form.numero_resolucion)
       formulario.append(
         "id_tipo_identificacion",
         this.form.id_tipo_identificacion

@@ -115,7 +115,7 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Valor bruto</b></label>
                 <input
-                  type="number"
+                  type="text"
                   class="form-control"
                   v-model="form.valor_bruto"
                 />
@@ -128,6 +128,20 @@
                   type="text"
                   class="form-control"
                   v-model="form.valor_factura"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Valor iva factura</b></label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  v-model="form.iva_factura"
+                  @keyup="cal_total_pagar"
                 />
               </div>
             </div>
@@ -478,6 +492,7 @@ export default {
       formulario.append("neto_pagar", this.form.neto_pagar);
       formulario.append("cantidad", this.tipo_documentos.length);
       formulario.append("cant_eliminados", this.eliminados.length);
+      formulario.append('iva_factura', this.form.iva_factura)
 
       for (let index = 0; index < this.documentos.length; index++) {
         formulario.append("archivo" + index, this.documentos[index]);

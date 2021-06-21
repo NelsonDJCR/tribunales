@@ -47,7 +47,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th class="w-50 p-4">Departamentos</th>
+            <th class="p-4">Departamentos</th>
             <th class="w-50"></th>
             <th>Estado</th>
           </tr>
