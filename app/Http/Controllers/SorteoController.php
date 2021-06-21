@@ -248,6 +248,7 @@ class SorteoController extends Controller
                 'magistrados.nombre as mag_nombre',
                 'magistrados.id as mag_id',
                 'departamentos.id as dep_id',
+                // 'sorteo_departamentos.estado'
                 // DB::raw("count('sorteo_departamentos.magistrado_id') as cantidad")
             )
             ->join('departamentos', 'departamentos.id', 'sorteo_departamentos.departamentos_id')

@@ -405,23 +405,28 @@ export default {
   },
   methods: {
     cal_neto_pagar() {
-      var resultado = 0
-      resultado = this.form.total_pagar;
-      resultado = resultado - this.form.rete_fuente;
-      resultado = resultado - this.form.rete_ica;
-      resultado = resultado - this.form.rete_iva;
+      var resultado = 0;
+      resultado = parseFloat(this.form.total_pagar).toFixed(2);
+      resultado = resultado - parseFloat(this.form.rete_fuente).toFixed(2);
+      resultado = resultado - parseFloat(this.form.rete_ica).toFixed(2);
+      resultado = resultado - parseFloat(this.form.rete_iva).toFixed(2);
+      //   console.log('Resultado 1',resultado);
+      resultado.toFixed(2);
+      console.log("Resultado 2", resultado);
       this.form.neto_pagar = resultado;
     },
     cal_total_pagar() {
       //   console.log("llego");
       this.form.total_pagar =
         parseFloat(this.form.valor_bruto) + parseFloat(this.form.iva_factura);
+      parseFloat(this.form.total_pagar).toFixed(2);
       this.cal_neto_pagar();
     },
     cal_valor_bruto() {
       //   console.log(this.form.valor_honorarios + "-" + this.form.numero_dias);
       this.form.valor_bruto =
         (this.form.valor_honorarios * this.form.numero_dias) / 30;
+      this.form.valor_bruto = parseFloat(this.form.valor_bruto).toFixed(2);
       this.cal_total_pagar();
       this.cal_neto_pagar();
     },

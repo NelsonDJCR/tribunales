@@ -16,6 +16,9 @@
             <td>Magistrado</td>
             <td>Tipo de documento</td>
             <td>Cédula de ciudadanía</td>
+            <td>Tribunal</td>
+            <td>Departamentos de residencia</td>
+            <td>Municipio de residencia</td>
             {{-- <td>N° de resolución</td> --}}
             <td>Dirección</td>
             <td>Correo electrónico</td>
@@ -27,12 +30,14 @@
         <tbody>
             @foreach ($data as $row)
                 <tr>
-                    <td>{{ $row->departamento->nombre ?? '' }}</td>
-                    <td>{{ $row->ciudad->nombre ?? '' }}</td>
+                    <td>{{ $row->tribunal->departamento->nombre ?? '' }}</td>
+                    <td>{{ $row->tribunal->ciudad->nombre ?? '' }}</td>
                     <td>{{ $row->nombre }}</td>
                     <td>{{ $row->tipo_identificacion->nombre ?? ''}}</td>
                     <td>{{ $row->numero_identificacion }}</td>
-                    {{-- <td>{{ $row->numero_cuenta }}</td> --}}
+                    <td>{{ $row->tribunal->nombre ?? '' }}</td>
+                    <td>{{ $row->departamento->nombre ?? '' }}</td>
+                    <td>{{ $row->ciudad->nombre ?? '' }}</td>
                     <td>{{ $row->direccion }}</td>
                     <td>{{ $row->correo }}</td>
                     <td>{{ $row->telefono }}</td>

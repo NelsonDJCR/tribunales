@@ -23,7 +23,7 @@
           <div class="row p-2 text-center border shadow rounded-3">
             <div class="row">
               <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-                <h1 class="text-blue"><b>Mis actividades</b></h1>
+                <h1 class="text-blue"><b>MIS ACTIVIDADES</b></h1>
               </div>
               <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
                 <button

@@ -49,6 +49,7 @@
           <tr>
             <th class="w-50 p-4">Departamentos</th>
             <th class="w-50"></th>
+            <th>Estado</th>
           </tr>
         </thead>
         <tbody>
@@ -69,6 +70,12 @@
                 ></option>
               </select>
               <!-- {{ i.mag_nombre }} -->
+            </td>
+            <td v-if="i.estado == 1">
+                Activo
+            </td>
+            <td v-else>
+                Inactivo
             </td>
           </tr>
         </tbody>
@@ -134,8 +141,8 @@ export default {
     editar() {
       let url = "/editar_sorteo";
       axios.post(url, this.departamentos).then((res) => {
-        console.log(res.data);
-        // Swal.fire('Éxito', res.data.msg, 'success');
+        // console.log(res.data);
+        Swal.fire('Éxito', res.data.msg, 'success').then(function(){ location.reload() });
       });
     },
     cambiar(i, index) {

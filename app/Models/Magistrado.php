@@ -34,4 +34,9 @@ class Magistrado extends Model
     {
         return $this->hasOne(Banco::class, 'id', 'id_banco');
     }
+
+    public function tribunal()
+    {
+        return $this->hasOne(Tribunal::class, 'id', 'tribunal_id');
+    }
 }
