@@ -23,7 +23,7 @@ class ActividadesController extends Controller
             $data['id_magistrado'] = Auth::user()->id;
         }
         $rules = [
-            'fecha' => 'required|after:today',
+            'fecha' => 'required',
             'tema' => 'required|',
             'descripcion' => 'required|',
             'dep_id' => 'required|',
@@ -33,7 +33,7 @@ class ActividadesController extends Controller
         ];
         $messages = [
             'fecha.required' => 'La fecha es requerida',
-            'fecha.after' => 'La fecha debe ser mayor a hoy',
+            // 'fecha.after' => 'La fecha debe ser mayor a hoy',
             'tema.required' => 'El tema es requerido',
             'descripcion.required' => 'La descripción es requerida',
             'dep_id.required' => 'El departamento es requerido',
@@ -100,7 +100,7 @@ class ActividadesController extends Controller
         // return '1';
 
         $rules = [
-            'fecha' => 'required|after:today',
+            'fecha' => 'required',
             'tema' => 'required|',
             'descripcion' => 'required|',
             'dep_id' => 'required|',
@@ -109,7 +109,7 @@ class ActividadesController extends Controller
         ];
         $messages = [
             'fecha.required' => 'La fecha es requerida',
-            'fecha.after' => 'La fecha debe ser mayor a hoy',
+            // 'fecha.after' => 'La fecha debe ser mayor a hoy',
             'tema.required' => 'El tema es requerido',
             'descripcion.required' => 'La descripción es requerida',
             'dep_id.required' => 'El departamento es requerido',
@@ -118,7 +118,7 @@ class ActividadesController extends Controller
         ];
         $validator = Validator::make(request()->all(), $rules, $messages);
         if ($validator->fails()) {
-            return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
+            return response()->json(['status' => 406, 'msg' => $validator->errors()->first()]);
         }
 
         $actividad = Actividad::find($request->id);
@@ -129,6 +129,7 @@ class ActividadesController extends Controller
         $actividad->ciu_id = $request->ciu_id;
         $actividad->id_magistrado = $request->id_magistrado;
         $actividad->id_tipo_archivo = $request->id_tipo_archivo;
+        $actividad->id_tipo_actividad = $request->id_tipo_actividad;
         $actividad->save();
 
         for ($x = 0; $x < $request->cantidad; $x++) {
@@ -153,7 +154,7 @@ class ActividadesController extends Controller
         }
 
         return response()->json([
-            'code' => '200',
+            'status' => '200',
             'msg' => 'Datos actualizados correctamente'
         ]);
     }
@@ -161,10 +162,17 @@ class ActividadesController extends Controller
     public function filtrar(Request $r)
     {
         $post = $r;
-        $x = DB::table('actividades')->select("actividades.*", 'departamentos.nombre AS departamento', 'magistrados.nombre AS magistrado', 'ciudades.nombre AS ciudad')
+        $x = DB::table('actividades')->select(
+            "actividades.*",
+            'departamentos.nombre AS departamento',
+            'magistrados.nombre AS magistrado',
+            'ciudades.nombre AS ciudad',
+            'tipo_actividad.nombre as tipo_nombre'
+        )
             ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
             ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
             ->join("magistrados", "magistrados.id", "actividades.id_magistrado")
+            ->join('tipo_actividad', 'tipo_actividad.id', 'actividades.id_tipo_actividad')
             ->where(function ($query) use ($post) {
                 if (isset($post['tema'])) {
                     if (!empty($post['tema']))
@@ -187,6 +195,24 @@ class ActividadesController extends Controller
                 if (isset($post['fecha_final'])) {
                     if (!empty($post['fecha_final']))
                         $query->where("actividades.fecha",   '<=',  $post['fecha_final']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['id_tipo_actividad'])) {
+                    if (!empty($post['id_tipo_actividad']))
+                        $query->where("actividades.id_tipo_actividad",  $post['id_tipo_actividad']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['dep_id'])) {
+                    if (!empty($post['dep_id']))
+                        $query->where("actividades.dep_id",  $post['dep_id']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['ciu_id'])) {
+                    if (!empty($post['ciu_id']))
+                        $query->where("actividades.ciu_id",  $post['ciu_id']);
                 }
             })
             ->orderBy('actividades.id', 'DESC')
@@ -198,10 +224,17 @@ class ActividadesController extends Controller
     public function reporteExcel(Request $r)
     {
         $post = $r;
-        $x = DB::table('actividades')->select("actividades.*", 'departamentos.nombre AS departamento', 'ciudades.nombre AS ciudad', 'magistrados.nombre AS magistrado')
+        $x = DB::table('actividades')->select(
+            "actividades.*",
+            'departamentos.nombre AS departamento',
+            'ciudades.nombre AS ciudad',
+            'magistrados.nombre AS magistrado',
+            'tipo_actividad.nombre as tipo_nombre'
+        )
             ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
             ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
             ->join("magistrados", "magistrados.id", "actividades.id_magistrado")
+            ->join('tipo_actividad', 'tipo_actividad.id', 'actividades.id_tipo_actividad')
             ->where(function ($query) use ($post) {
                 if (isset($post['tema'])) {
                     if (!empty($post['tema']))
@@ -226,8 +259,34 @@ class ActividadesController extends Controller
                         $query->where("actividades.fecha",   '<=',  $post['fecha_final']);
                 }
             })
+            ->where(function ($query) use ($post) {
+                if (isset($post['id_tipo_actividad'])) {
+                    if (!empty($post['id_tipo_actividad']))
+                        $query->where("actividades.id_tipo_actividad",  $post['id_tipo_actividad']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['dep_id'])) {
+                    if (!empty($post['dep_id']))
+                        $query->where("actividades.dep_id",  $post['dep_id']);
+                }
+            })
+            ->where(function ($query) use ($post) {
+                if (isset($post['ciu_id'])) {
+                    if (!empty($post['ciu_id']))
+                        $query->where("actividades.ciu_id",  $post['ciu_id']);
+                }
+            })
             ->get();
         return view('sessions.report')
             ->with('data', $x);
+    }
+
+    public function magistradosxtribunal($id)
+    {
+        $magistrados = Magistrado::where('estado', 1)->where('tribunal_id', $id)->get();
+        return response()->json([
+            'funcionarios' => $magistrados,
+        ]);
     }
 }

@@ -13,7 +13,7 @@
         <li class="breadcrumb-item active">
           <router-link :to="{ name: 'home' }"><span>Home</span></router-link> /
           <label for="" class="p-2"
-            >Tribunales de Garantía / Listado de Magistrados / Editar
+            >Tribunales de Garantía / Listado de Funcionarios / Editar
             Magistrado</label
           >
         </li>
@@ -21,15 +21,15 @@
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
           <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-            <h1 class="text-blue"><b>EDITAR MAGISTRADO</b></h1>
+            <h1 class="text-blue"><b>EDITAR FUNCIONARIO</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-            <router-link
-              :to="`/tribunales-magistrados-listar`"
-              @click.native="$router.go()"
-              class="btn btn-secondary active text-white w-100 mt-2"
-              >Volver al listado</router-link
+            <button
+              class="btn btn-warning btn-block text-white w-100 mt-2"
+              @click="regresar"
             >
+              Cancelar
+            </button>
           </div>
         </div>
       </div>
@@ -221,6 +221,19 @@
 
             <div class="row">
               <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Número de resolución</b>
+                </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  v-model="form.numero_resolucion"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-3">
                 <label for="" class="form-label"><b>Tipo de archivo</b></label>
                 <select
                   class="form-select"
@@ -311,13 +324,6 @@
                           ></a>
                         </div>
                       </li>
-                      <!-- <li class="list-group-item">
-                        <button class="btn btn-light btn-sm mt-2">
-                          <span class="text-start float-start mt-1">Nombre de Archivo 2</span>
-                          <a href="#" class="badge bg-danger float-end text-end m-1"><i class="fa fa-trash fa-md"></i></a>
-                          <a href="#" class="badge bg-info float-end text-end m-1"><i class="fa fa-download fa-md"></i></a>
-                        </button>
-                      </li> -->
                     </ul>
                   </div>
                 </div>
@@ -328,12 +334,6 @@
               <button type="submit" class="btn btn-secondary active">
                 Guardar Magistrado
               </button>
-              <router-link
-                :to="`/tribunales-magistrados-listar`"
-                @click.native="$router.go()"
-                class="btn btn-danger text-white w-100 mt-2"
-                >Cancelar</router-link
-              >
             </div>
           </div>
         </div>
@@ -432,13 +432,9 @@ export default {
   },
   created() {
     axios.get(`/data-rercord/${this.id}/magistrados`).then((r) => {
-      // axios.get(`/data-rercord/26/magistrados`).then((r) => {
-      //   this.documentos = r.data.documentos;
-      //   for (let index = 0; index < r.data.documentos.length; index++) {
-      //       this.documentos.push(r.documentos[index])
-      //   }
+      console.log(r.data);
       this.documentos = r.data.documentos;
-      console.log(this.documentos);
+      //   console.log(this.documentos);
       this.type_file = r.data.tipo_archivo;
       this.ciudades = r.data.ciudades;
       this.departament = r.data.departamentos;
@@ -454,6 +450,9 @@ export default {
     });
   },
   methods: {
+    regresar() {
+      this.$emit("pantalla", "lista");
+    },
     box_file() {
       if (this.form.id_tipo_documento == "") {
         Swal.fire("¡Error!", "Selecciona primero un tipo de archivo", "error");
@@ -492,12 +491,7 @@ export default {
       this.tipo_documentos.splice(index, 1);
     },
     edit() {
-      if (this.documentos.length == 0) {
-        Swal.fire("¡Error!", "Carga por lo menos un archivo", "error");
-        return;
-      }
       var formulario = new FormData();
-      //   formulario.append('id', 26)
       formulario.append("id", this.id);
       formulario.append("cargo", this.form.cargo);
       formulario.append("ciu_id", this.form.ciu_id);
@@ -506,6 +500,7 @@ export default {
       formulario.append("direccion", this.form.direccion);
       formulario.append("id_banco", this.form.id_banco);
       formulario.append("id_tipo_cuenta", this.form.id_tipo_cuenta);
+      formulario.append('numero_resolucion', this.form.numero_resolucion)
       formulario.append(
         "id_tipo_identificacion",
         this.form.id_tipo_identificacion

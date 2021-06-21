@@ -131,7 +131,7 @@
             </div>
             <input type="hidden" v-model="formulario.id" />
 
-            <div class="row">
+            <!-- <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Magistrado</b></label>
                 <select
@@ -148,7 +148,7 @@
                   ></option>
                 </select>
               </div>
-            </div>
+            </div> -->
 
             <div class="row">
               <div class="mb-3">
@@ -248,12 +248,6 @@
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
               <button type="submit" class="btn btn-primary">Guardar</button>
-              <router-link
-                :to="`/tribunales/listado-de-actividades`"
-                @click.native="$router.go()"
-                class="btn btn-danger text-white w-100 mt-2"
-                >Cancelar</router-link
-              >
             </div>
           </div>
         </div>
@@ -324,7 +318,7 @@ export default {
       ciudades: [],
       departament: [],
       magistrados: [],
-      formulario: {},
+      formulario: {id_tipo_documento: ''},
       documentos: [],
       eliminados: [],
       tipo_documentos: [],

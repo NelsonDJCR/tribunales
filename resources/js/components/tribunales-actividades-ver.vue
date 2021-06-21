@@ -23,12 +23,7 @@
             <h2 class="text-blue"><b>VISUALIZACIÓN DE LA ACTIVIDAD</b></h2>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-            <router-link
-              :to="`/tribunales/listado-de-actividades`"
-              @click.native="$router.go()"
-              class="btn btn-secondary active text-white w-100 mt-2"
-              >Volver al listado</router-link
-            >
+          <button class="btn btn-warning text-white w-100 mt-2" @click="regresar">Cancelar</button>
           </div>
         </div>
       </div>
@@ -268,6 +263,11 @@ export default {
       this.tipo_actividad = r.data.tipo_actividad
     });
   },
+  methods: {
+      regresar(){
+          this.$emit('pantalla', 'lista')
+      }
+  }
 };
 </script>
 

@@ -77,6 +77,48 @@
                   v-model="dataFilter.fecha_final"
                 />
               </div>
+
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"
+                  ><b>Tipo de actividad</b></label
+                >
+                <select
+                  class="form-select"
+                  v-model="dataFilter.id_tipo_actividad"
+                >
+                  <option value="">Seleccione</option>
+                  <option
+                    v-for="(i, index) in tipo_actividad"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Departamento</b></label>
+                <select class="form-select" v-model="dataFilter.dep_id">
+                  <option value="">Seleccione</option>
+                  <option
+                    v-for="(i, index) in departamentos"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
+              <div class="mb-3 col-3">
+                <label for="" class="form-label"><b>Ciudad</b></label>
+                <select class="form-select" v-model="dataFilter.ciu_id">
+                  <option value="">Seleccione</option>
+                  <option
+                    v-for="(i, index) in ciudades"
+                    :key="index"
+                    :value="i.id"
+                    v-text="i.nombre"
+                  ></option>
+                </select>
+              </div>
               <div class="row">
                 <div class="mb-3 col-3">
                   <button
@@ -91,12 +133,12 @@
             </div>
           </form>
         </div>
-        <table class="table table-bordered table-striped table-sm" id="datos">
+        <table class="table table-bordered table-striped table-sm text-center" id="datos">
           <thead>
             <th>Opciones</th>
             <th class="w-85">Fecha</th>
             <th>Tema</th>
-            <th>Descripción</th>
+            <th>Tipo de actividad</th>
             <th>Departamento</th>
             <th>Municipio</th>
             <th>Magistrado</th>
@@ -142,7 +184,7 @@
               </td>
               <td>{{ i.fecha }}</td>
               <td>{{ i.tema }}</td>
-              <td>{{ i.descripcion }}</td>
+              <td>{{ i.tipo_nombre }}</td>
               <td>{{ i.departamento }}</td>
               <td>{{ i.ciudad }}</td>
               <td>{{ i.magistrado }}</td>
@@ -226,12 +268,15 @@
     </template>
     <template v-if="pantalla == 'nuevo'">
       <div>
-        <tribunales-actividades-nuevo></tribunales-actividades-nuevo>
+        <tribunales-actividades-nuevo
+          @pantalla="pantalla = $event"
+        ></tribunales-actividades-nuevo>
       </div>
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
         <tribunales-actividades-editar
+          @pantalla="pantalla = $event"
           :id="id_record"
         ></tribunales-actividades-editar>
       </div>
@@ -240,6 +285,7 @@
       <div>
         <tribunales-actividades-ver
           :id="id_record"
+          @pantalla="pantalla = $event"
         ></tribunales-actividades-ver>
       </div>
     </template>
@@ -251,12 +297,17 @@ export default {
   props: ["id"],
   data() {
     return {
-      dataPdf: { cabildo_id: "", radicado: "", ciudadano: "" },
-      departament: [],
+      dataPdf: {
+        cabildo_id: "",
+        radicado: "",
+        ciudadano: "",
+      },
+      departamentos: [],
       ciudades: [],
       type_file: [],
+      tipo_actividad: [],
       tabla: [],
-      dataFilter: {},
+      dataFilter: { id_tipo_actividad: "", ciu_id: "", dep_id: "" },
       action: 0,
       id_record: 0,
       datos_edit: {},
@@ -267,6 +318,9 @@ export default {
   created() {
     axios.get("/listar/actividades").then((r) => {
       this.tabla = r.data.tabla;
+      this.departamentos = r.data.departments;
+      this.ciudades = r.data.ciudades;
+      this.tipo_actividad = r.data.tipo_actividad;
       this.formatear_fecha();
     });
   },
@@ -286,6 +340,7 @@ export default {
     filter() {
       axios.post("/filtros-actividad", this.dataFilter).then((r) => {
         this.tabla = r.data.tabla;
+        this.formatear_fecha();
       });
     },
     editar(id) {
@@ -349,120 +404,6 @@ export default {
         }
       });
     },
-
-    // modal_export(id) {
-    //   $("#cabildos_id").val(id);
-    //   this.dataPdf.cabildo_id = id;
-    //   this.dataPdf.radicado = "";
-    //   this.dataPdf.ciudadano = "";
-    //   $("#modal_export").modal("show");
-    // },
-    // exportPdf() {
-    //   window.open(
-    //     "/download?id=" +
-    //       this.dataPdf.cabildo_id +
-    //       "&radicado=" +
-    //       this.dataPdf.radicado +
-    //       "&ciudadano=" +
-    //       this.dataPdf.ciudadano
-    //   );
-    //   $("#modal_export").modal("hide");
-    // },
-    // export_exel() {
-    //   let url = "/excel-cabildos";
-    //   let filtros = this.dataFilter;
-    //   axios.post(url, filtros).then((res) => {
-    //     let blob = new Blob([res.data]);
-    //     let link = document.createElement("a");
-    //     link.href = window.URL.createObjectURL(blob);
-    //     link.download = "ReporteCabildos.xls";
-    //     link.click();
-    //   });
-    // },
-    // changeCity() {
-    //   var id = $("#departamento_id").val();
-    //   axios.post("/changeCity", { id: id }).then((r) => {
-    //     this.ciudades = r.data;
-    //   });
-    // },
-    // filter() {
-    //   let filtros = this.dataFilter;
-    //   axios.post("/filter-list-cabildos", filtros).then((r) => {
-    //     console.log(r.data.cabildos);
-    //     this.cabildos = r.data.cabildos;
-    //   });
-    // },
-    // report() {
-    //   var form = new FormData();
-    //   form.append("nombre_tema", $("#nombre_tema").val());
-    //   form.append("dep_id", $("#dep_id").val());
-    //   form.append("fecha_realizacion", $("#fecha_realizacion").val());
-    //   form.append("fecha_final", $("#fecha_final").val());
-    //   axios.post("/excel-cabildos", form).then((r) => {});
-    // },
-    // deleteSesion(id) {
-    //   Swal.fire({
-    //     title: "¿Eliminar registro?",
-    //     text: "Esta acción no se puede revertir",
-    //     icon: "question",
-    //     showCancelButton: true,
-    //     confirmButtonColor: "#3085d6",
-    //     cancelButtonColor: "#757575",
-    //     confirmButtonText: "Aceptar",
-    //     cancelButtonText: "Cancelar",
-    //   }).then((result) => {
-    //     console.log(result);
-    //     if (result.value) {
-    //       const url = "/delete-session/" + id;
-    //       axios.get(url).then((r) => {
-    //         this.cabildos = r.data.cabildos;
-    //         Swal.fire(
-    //           "¡Perfecto!",
-    //           "Datos eliminados correctamente",
-    //           "success"
-    //         );
-    //       });
-    //     }
-    //   });
-    // },
-    // editSession(id) {
-    //   this.action = 1;
-    //   this.idEditar = id;
-    //   axios
-    //     .get("/edit-sesion/" + id)
-    //     .then((r) => {
-    //       this.datos_edit = r.data.datos;
-    //       this.departament = r.data.departament;
-    //       this.ciudades = r.data.ciudades;
-    //       this.type_file = r.data.type_file;
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     });
-    // },
-    // saveEdit() {
-    //   let datos = this.datos_edit;
-    //   let url = "/editSesion";
-    //   axios.post(url, datos).then((res) => {
-    //     if (res.data.status == 406) {
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "¡Error!",
-    //         text: res.data.msg,
-    //       });
-    //     } else {
-    //       this.action = 0;
-    //       this.cabildos = res.data.table;
-    //       // console.log(r.data);
-    //       // return false;
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "¡Perfercto!",
-    //         text: "Datos guardados exitosamente",
-    //       });
-    //     }
-    //   });
-    // },
   },
 };
 </script>

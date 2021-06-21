@@ -179,12 +179,12 @@
     </template>
     <template v-if="pantalla == 'nuevo'">
       <div>
-        <tribunales-nuevo></tribunales-nuevo>
+        <tribunales-nuevo @pantalla="pantalla = $event"></tribunales-nuevo>
       </div>
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
-        <tribunales-editar :id="idEditar"></tribunales-editar>
+        <tribunales-editar @pantalla="pantalla = $event" :id="idEditar"></tribunales-editar>
       </div>
     </template>
     <template v-if="pantalla == 'ver'">

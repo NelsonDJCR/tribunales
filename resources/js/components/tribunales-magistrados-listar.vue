@@ -12,12 +12,12 @@
           <div class="container mt-5">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Magistrados</label></li>
+                <li class="breadcrumb-item active"><router-link :to="{ name: 'home'}"><span>Home</span></router-link> / <label for="" class="p-2">Tribunales de Garantía / Listado de Funcionarios</label></li>
             </ol>
             <div class="row p-2 text-center border shadow rounded-3">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-9 col-xl-9 p-2">
-                  <h1 class="text-blue"><b>LISTADO DE MAGISTRADOS</b></h1>
+                  <h1 class="text-blue"><b>LISTADO DE FUNCIONARIOS</b></h1>
                 </div>
                 <div class="col-12 col-md-12 col-lg-3 col-xl-3 p-2">
                   <button
@@ -25,7 +25,7 @@
                     class="btn btn-warning text-white w-100 mt-2"
                   >
 
-                    Nuevo Magistrado
+                    Nuevo Funcionario
                   </button>
                 </div>
               </div>
@@ -226,18 +226,18 @@
     </template>
     <template v-if="pantalla == 'nuevo'">
       <div>
-        <tribunales-magistrados-nuevo />
+        <tribunales-magistrados-nuevo @pantalla="pantalla = $event" />
       </div>
 
     </template>
     <template v-if="pantalla == 'editar'">
       <div>
-        <tribunales-magistrados-editar :id="idEditar"></tribunales-magistrados-editar>
+        <tribunales-magistrados-editar @pantalla="pantalla = $event" :id="idEditar"></tribunales-magistrados-editar>
       </div>
     </template>
     <template v-if="pantalla == 'ver'">
       <div>
-        <tribunales-magistrados-ver :id="idEditar"></tribunales-magistrados-ver>
+        <tribunales-magistrados-ver @pantalla="pantalla = $event" :id="idEditar"></tribunales-magistrados-ver>
       </div>
     </template>
   </div>

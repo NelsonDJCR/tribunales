@@ -267,7 +267,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title"><b>Gestionar caso</b></h5>
+                <h5 class="modal-title"><b>Asignar caso</b></h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -291,25 +291,44 @@
                   </select>
                 </div>
                 <div class="mb-3 col-12">
-                  <label for="" class="form-label"
-                    ><b>Asesor asignado</b></label
-                  >
+                  <label for="" class="form-label"><b>Tribunales</b></label>
                   <select
                     class="form-select obliGes"
                     name=""
                     data-label="El asesor es requerido"
                     id="asesor"
-                    v-model="gestion.asesor"
+                    v-model="gestion.tribunal"
+                    @click="magistradoxdepartamento(gestion.tribunal)"
                   >
                     <option value="">Seleccione ...</option>
                     <option
-                      v-for="(i, index) in usuarios"
+                      v-for="(i, index) in tribunales"
                       :key="index"
                       :value="i.id"
                       v-text="i.nombre"
                     ></option>
                   </select>
-                  <span style="color: red" v-text="gestion.msg"></span>
+                  <!-- <span style="color: red" v-text="gestion.msg"></span> -->
+                </div>
+
+                <div class="mb-3 col-12">
+                  <label for="" class="form-label"><b>Funcionarios</b></label>
+                  <select
+                    class="form-select obliGes"
+                    name=""
+                    data-label="El asesor es requerido"
+                    id="asesor"
+                    v-model="gestion.magistrado"
+                  >
+                    <option value="">Seleccione ...</option>
+                    <option
+                      v-for="(i, index) in magistrados"
+                      :key="index"
+                      :value="i.id"
+                      v-text="i.nombre"
+                    ></option>
+                  </select>
+                  <!-- <span style="color: red" v-text="gestion.msg"></span> -->
                 </div>
                 <div class="mb-3 col-12">
                   <label for="" class="form-label"
@@ -367,12 +386,22 @@ export default {
       estados: [],
       tramites: [],
       tipoArchivo: [],
+      tribunales: [],
       estado1: [],
       usuarios: [],
+      magistrados: [],
       casos: [],
       caso: {},
       posicion: -1,
-      gestion: { id: 0, estado: "", asesor: "", msg: "", observacion: "" },
+      gestion: {
+        id: 0,
+        estado: "",
+        asesor: "",
+        msg: "",
+        observacion: "",
+        tribunal: "",
+        id_magistrado: "",
+      },
       id: 0,
       pantalla: "",
     };
@@ -390,6 +419,7 @@ export default {
       this.estado1 = res.data.estado1;
       this.tipoArchivo = res.data.tipoArchivo;
       this.usuarios = res.data.usuarios;
+      this.tribunales = res.data.tribunales;
       console.log(this.usuarios);
       this.formatearFecha();
     });
@@ -409,6 +439,13 @@ export default {
       this.posicion = index;
       $("#gestion-caso").modal("show");
     },
+    magistradoxdepartamento(id) {
+      let url = "/magistradoxdepartamento/" + id;
+      axios.get(url).then((res) => {
+        this.magistrados = res.data.magistrados;
+        // console.log(this.magistrados);
+      });
+    },
     modal_archivos(caso) {
       let url = "/documentos-x-casos/" + caso.id;
       axios.post(url).then((res) => {
@@ -427,15 +464,17 @@ export default {
     },
     gestionarCaso() {
       console.log(this.gestion);
+    //   return
       if (
-        this.gestion.asesor != "" &&
         this.gestion.id != 0 &&
-        this.gestion.observacion != ""
+        this.gestion.observacion != "" &&
+        this.gestion.tribunal != '' &&
+        this.gestion.id_magistrado != ''
       ) {
         let url = "/asignar-caso";
         let gestion = this.gestion;
         axios.post(url, gestion).then((res) => {
-            // console.log(res.data);
+          // console.log(res.data);
           this.casos.splice(this.posicion, 1);
           Swal.fire("¡Editado!", res.data.msg, "success");
           setTimeout(function () {

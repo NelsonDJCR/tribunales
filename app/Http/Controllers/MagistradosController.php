@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Actividad;
+use App\Models\Ciudad;
+use App\Models\Departamentos;
 use App\Models\Documento;
 use App\Models\Magistrado;
 use App\Models\MagistradoSoporte;
+use App\Models\TipoActividad;
+use App\Models\TipoArchivo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -71,6 +75,7 @@ class MagistradosController extends Controller
         $magistrado->numero_cuenta = $request->numero_cuenta;
         $magistrado->numero_identificacion = $request->numero_identificacion;
         $magistrado->telefono = $request->telefono;
+        $magistrado->numero_resolucion = $request->numero_resolucion;
         // Especial
         $magistrado->tribunal_id = $request->tribunal_id;
         // Fin especial
@@ -112,7 +117,7 @@ class MagistradosController extends Controller
     public function editar(Request $request)
     {
         // return $request->all();
-        for ($x=0; $x < $request->cantidad_eliminados; $x++) {
+        for ($x = 0; $x < $request->cantidad_eliminados; $x++) {
             $documento = Documento::find($request["e_id$x"]);
             $documento->estado = '0';
             $documento->save();
@@ -167,6 +172,7 @@ class MagistradosController extends Controller
         $magistrado->nombre = $request->nombre;
         $magistrado->numero_cuenta = $request->numero_cuenta;
         $magistrado->numero_identificacion = $request->numero_identificacion;
+        $magistrado->numero_resolucion = $request->numero_resolucion;
         $magistrado->telefono = $request->telefono;
         // Especial
         $magistrado->tribunal_id = $request->tribunal_id;
@@ -242,21 +248,35 @@ class MagistradosController extends Controller
     public function misActividades()
     {
         $actividades = Actividad::where('id_magistrado', Auth::user()->id)
-            ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento')
+            ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento', 'tipo_actividad.nombre as tipo_nombre')
+            ->join('tipo_actividad', 'tipo_actividad.id', 'actividades.id_tipo_actividad')
             ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")
             ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
             ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
+            ->orderBy('actividades.id','DESC')
             ->get();
         return response()->json([
             'table' => $actividades,
             'maximo' => $actividades->max("fecha"),
             'minimo' => $actividades->min('fecha'),
+            'actividades' => TipoActividad::where('estado',1)->get(),
+            'departamentos' => Departamentos::where('estado',1)->get(),
+            'ciudades' => Ciudad::where('estado',1)->get(),
         ]);
     }
 
     public function verActividad($id)
     {
+        $documentos = DB::table('actividades_soporte')
+            ->select(
+                'documento.*',
+            )->join('documento', 'documento.id', 'actividades_soporte.id_documento')
+            ->where('documento.estado', '1')
+            ->where('actividades_soporte.id_actividad', $id)
+            ->get();
         return response()->json([
+            'documentos' => $documentos,
+            'tipo_archivo' => TipoArchivo::where('estado', 1)->get(),
             'data' => Actividad::where('id_magistrado', Auth::user()->id)
                 ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento')
                 ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")
@@ -269,12 +289,15 @@ class MagistradosController extends Controller
 
     public function filtrarMisActividades(Request $r)
     {
+        // return $r->all();
         return response()->json([
             'tabla' => Actividad::where('id_magistrado', Auth::user()->id)
-                ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento')
+                ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento', 'tipo_actividad.nombre as tipo_nombre')
+                ->join('tipo_actividad', 'tipo_actividad.id', 'actividades.id_tipo_actividad')
                 ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")
                 ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
                 ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
+                ->orderBy('actividades.id','DESC')
                 ->where(function ($query) use ($r) {
                     if (isset($r['tema'])) {
                         if (!empty($r['tema']))
@@ -293,7 +316,24 @@ class MagistradosController extends Controller
                             $query->orwhere("actividades.fecha", "<=", $r['fecha_final']);
                     }
                 })
-                ->orderBy('actividades.id', 'DESC')
+                ->where(function ($query) use ($r) {
+                    if (isset($r['id_tipo_actividad'])) {
+                        if (!empty($r['id_tipo_actividad']))
+                            $query->orwhere("actividades.id_tipo_actividad", $r['id_tipo_actividad']);
+                    }
+                })
+                ->where(function ($query) use ($r) {
+                    if (isset($r['dep_id'])) {
+                        if (!empty($r['dep_id']))
+                            $query->orwhere("actividades.dep_id", $r['dep_id']);
+                    }
+                })
+                ->where(function ($query) use ($r) {
+                    if (isset($r['ciu_id'])) {
+                        if (!empty($r['ciu_id']))
+                            $query->orwhere("actividades.ciu_id", $r['ciu_id']);
+                    }
+                })
                 ->get()
         ]);
     }

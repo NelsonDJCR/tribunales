@@ -33,6 +33,7 @@ use App\Models\CabildoAbierto;
 use App\Models\Caso;
 use App\Http\Controllers\CasosController;
 use App\Http\Controllers\ComisionController;
+use App\Http\Controllers\InformeController;
 use App\Http\Resources\EstadosResource;
 use App\Models\Estado;
 use App\Http\Resources\TipoTramitesResource;
@@ -56,7 +57,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('autologin/{userId}/{conexion}/{token}', [CentralizadoController::class, 'change']);
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {});
     Route::get('centralizadoRedirect', [CentralizadoController::class, 'getViewCentralizado'])->middleware('validateSesion');
     Route::get('centralizado/{conexion}', [CentralizadoController::class, 'change'])->name('changeDb');
     Route::get('centralizado', [CentralizadoController::class, 'index'])->name('centralizado')->middleware('validateSesion');
@@ -142,6 +143,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/actualizar-parametro/{id}/{tabla}/{data}', [ParametrosController::class, 'actualizar']);
         Route::post('/inactivar-estado/{id}/{tabla}/{estado}', [ParametrosController::class, 'estadoInactivar']);
         Route::post('/nuevo', [ParametrosController::class, 'nuevo']);
+        Route::post('/tabla_informe_general', [InformeController::class, 'index']);
+        Route::post('/informe_general', [InformeController::class, 'filtrar']);
+        Route::post('/informe_general_descargar', [InformeController::class, 'descargar']);
 
 
 
@@ -157,11 +161,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/filtros-tribunales', [TribunalesController::class, 'filtrar']);
         Route::post('/departamentos_sorteo', [SorteoController::class, 'departamentos_sorteo']);
         Route::post('/departamentos_sortear', [SorteoController::class, 'sortear']);
+        Route::get('/magistradosxtribunal/{id}', [ActividadesController::class, 'magistradosxtribunal']);
 
         // Magistrados
         Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
         Route::post('/editar-magistrado', [MagistradosController::class, 'editar']);
         Route::post('/filtros-magistrados', [MagistradosController::class, 'filtrar']);
+        Route::post('/editar_sorteo', [SorteoController::class, 'update']);
 
         // Actividades
         Route::post('/guardar-actividad', [ActividadesController::class, 'save']);
@@ -196,6 +202,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class,'save']);
         Route::post('/cuenta-cobro-editar', [CuentaCobroController::class,'edit']);
         Route::post('/record-cuenta-cobro', [CuentaCobroController::class,'record']);
+        Route::post('/update-cuenta-cobro', [CuentaCobroController::class, 'update']);
         // Comisiones
         Route::post('/nueva-comision', [ComisionController::class,'store']);
         Route::post('/comision-listar', [ComisionController::class,'listar']);
@@ -268,7 +275,7 @@ Route::middleware('auth')->group(function () {
             return $pdf->download('ffsdf.pdf');
         });
     });
-});
+// });
 
 
 //--------------------------------------------------------------------------------------
@@ -322,6 +329,7 @@ Route::post('/filtros_historico_casos', [CasosController::class, 'filtros_histor
 Route::post('/nuevo-caso-data',[CasosController::class, 'nuevoCasoData']);
 Route::post('/ciudadxdepartamento/{id}',[CasosController::class, 'ciudadxdepartamento']);
 Route::post('/guardar-caso',[CasosController::class, 'guardarCaso']);
+Route::get('magistradoxdepartamento/{id}', [CasosController::class, 'magistradoxdepartamento']);
 
 
 
@@ -330,7 +338,50 @@ Route::get('/informe_pdf_mis', function (Request $request) {
     // return $request->all();
     $min_fecha = $request->min_fecha;
     $max_fecha = $request->max_fecha;
-    $data = Actividad::where('id_magistrado', Auth::user()->id_persona)->where('estado', '1')->get();
+    $data = Actividad::where('id_magistrado', Auth::user()->id)
+    ->select('actividades.*', 'ciudades.nombre AS ciudad', 'departamentos.nombre AS departamento', 'tipo_actividad.nombre as tipo_nombre')
+    ->join('tipo_actividad', 'tipo_actividad.id', 'actividades.id_tipo_actividad')
+    ->leftjoin("magistrados", "magistrados.id", "actividades.id_magistrado")
+    ->leftjoin("ciudades", "ciudades.id", "actividades.ciu_id")
+    ->leftjoin("departamentos", "departamentos.id", "actividades.dep_id")
+    ->orderBy('actividades.id','DESC')
+    ->where(function ($query) use ($request) {
+        if (isset($request['tema'])) {
+            if (!empty($request['tema']))
+                $query->orwhere("actividades.tema", 'like', "%" . $request['tema'] . "%");
+        }
+    })
+    ->where(function ($query) use ($request) {
+        if (isset($request['fecha_inicial'])) {
+            if (!empty($request['fecha_inicial']))
+                $query->orwhere("actividades.fecha", ">=", $request['fecha_inicial']);
+        }
+    })
+    ->where(function ($query) use ($request) {
+        if (isset($request['fecha_final'])) {
+            if (!empty($request['fecha_final']))
+                $query->orwhere("actividades.fecha", "<=", $request['fecha_final']);
+        }
+    })
+    ->where(function ($query) use ($request) {
+        if (isset($request['id_tipo_actividad'])) {
+            if (!empty($request['id_tipo_actividad']))
+                $query->orwhere("actividades.id_tipo_actividad", $request['id_tipo_actividad']);
+        }
+    })
+    ->where(function ($query) use ($request) {
+        if (isset($request['dep_id'])) {
+            if (!empty($request['dep_id']))
+                $query->orwhere("actividades.dep_id", $request['dep_id']);
+        }
+    })
+    ->where(function ($query) use ($request) {
+        if (isset($request['ciu_id'])) {
+            if (!empty($request['ciu_id']))
+                $query->orwhere("actividades.ciu_id", $request['ciu_id']);
+        }
+    })
+    ->get();
     // return $data;
     $delegado = Magistrado::find(Auth::user()->id_persona);
     $pdf = \PDF::loadView('ReportePDF', [

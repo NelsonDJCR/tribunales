@@ -251,13 +251,21 @@
               <td>{{ i.ciu_nombre }}</td>
               <td>{{ i.nombres_solicitante }}</td>
               <td>
-                <select class="form-control" disabled v-model="i.id_asesor_asignado"
-                style="background: white; outline: none; color: black">
-                    <option v-for="(item,index) in personas" :key="index" :value="item.id" v-text="item.nombre"></option>
+                <select
+                  class="form-control text-dark bg-transparent"
+                  disabled
+                  v-model="i.id_magistrado"
+                  style="outline: none;"
+                >
+                  <option
+                    v-for="(item, index) in magistrados1"
+                    :key="index"
+                    :value="item.id"
+                    v-text="item.nombre"
+                  ></option>
                 </select>
               </td>
               <td>{{ i.estado_nombre }}</td>
-              <!-- <td>{{ i.id_asesor_asignado }}</td> -->
             </tr>
           </tbody>
         </table>
@@ -306,7 +314,7 @@
                 ></option>
               </select>
             </div>
-            <div class="mb-3 col-12" v-if="gestion.estado == 2">
+            <!-- <div class="mb-3 col-12" v-if="gestion.estado == 2">
               <label for="" class="form-label"><b>Asesor</b></label>
               <select
                 name=""
@@ -317,6 +325,46 @@
                 <option value="">Seleccione</option>
                 <option v-for="(i,index) in personas" :key="index" :value="i.id" v-text="i.nombre"></option>
               </select>
+            </div> -->
+            <div class="mb-3 col-12">
+              <label for="" class="form-label"><b>Tribunales</b></label>
+              <select
+                class="form-select obliGes"
+                name=""
+                data-label="El asesor es requerido"
+                id="asesor"
+                v-model="gestion.tribunal"
+                @click="magistradoxdepartamento(gestion.tribunal)"
+              >
+                <option value="">Seleccione ...</option>
+                <option
+                  v-for="(i, index) in tribunales"
+                  :key="index"
+                  :value="i.id"
+                  v-text="i.nombre"
+                ></option>
+              </select>
+              <!-- <span style="color: red" v-text="gestion.msg"></span> -->
+            </div>
+
+            <div class="mb-3 col-12">
+              <label for="" class="form-label"><b>Funcionarios</b></label>
+              <select
+                class="form-select obliGes"
+                name=""
+                data-label="El asesor es requerido"
+                id="asesor"
+                v-model="gestion.magistrado"
+              >
+                <option value="">Seleccione ...</option>
+                <option
+                  v-for="(i, index) in magistrados"
+                  :key="index"
+                  :value="i.id"
+                  v-text="i.nombre"
+                ></option>
+              </select>
+              <!-- <span style="color: red" v-text="gestion.msg"></span> -->
             </div>
             <div
               class="mb-3 col-12"
@@ -425,7 +473,9 @@ export default {
       documentos: [],
       estados: [],
       personas: [],
+      tribunales: [],
       tramites: [],
+      magistrados: [],
       filtros: {
         tramite: "",
         fecha_recibido: "",
@@ -434,6 +484,7 @@ export default {
       },
       tipoArchivo: [],
       estado1: [],
+      magistrados1: [],
       archivo: { name: "" },
       casos: [],
       caso: {},
@@ -445,6 +496,8 @@ export default {
         index: 0,
         observacion: "",
         tipoArchivo: "",
+        tribunal: "",
+        magistrado: '',
       },
       id: 0,
       pantalla: "",
@@ -462,14 +515,16 @@ export default {
       this.casos = res.data.casos;
       this.estado1 = res.data.estado1;
       this.tipoArchivo = res.data.tipoArchivo;
-      this.personas = res.data.personas
+      this.magistrados1 = res.data.magistrados;
+      this.tribunales = res.data.tribunales;
+    //   console.log(res.data);
       this.formatearFecha();
     });
   },
   methods: {
-      cerrar_modal_gestionar_caso_admin(){
-          $('#gestion-caso-file').modal('hide')
-      },
+    cerrar_modal_gestionar_caso_admin() {
+      $("#gestion-caso-file").modal("hide");
+    },
     eliminar_archivo() {
       this.archivo = { name: "" };
     },
@@ -505,8 +560,6 @@ export default {
         if (
           this.gestion.estado == "4" &&
           (this.gestion.observacion == "" ||
-            this.gestion.tipoArchivo == "" ||
-            this.archivo.name == "" ||
             this.gestion.observacion == "")
         ) {
           Swal.fire("¡Advertencia!", "Completa todos los campos", "warning");
@@ -531,7 +584,7 @@ export default {
       }
       if (
         this.gestion.estado == "2" &&
-        (this.gestion.observacion == "" || this.gestion.asesor == "")
+        (this.gestion.observacion == "" || this.gestion.tribunal == "" && this.gestion.magistrado)
       ) {
         Swal.fire("¡Advertencia!", "Completa todos los campos", "warning");
         return;
@@ -546,7 +599,9 @@ export default {
         }
         if (res.data.caso.id_estado == 2) {
           this.casos[this.gestion.index].estado_nombre = "Asignado";
-          this.casos[this.gestion.index].id_asesor_asignado = res.data.caso.id_asesor_asignado
+          this.casos[this.gestion.index].id_asesor_asignado =
+          this.casos[this.gestion.index].id_magistrado = this.gestion.magistrado
+            res.data.caso.id_asesor_asignado;
           setTimeout(function () {
             $("#gestion-caso-file").modal("hide");
           }, 500);
@@ -574,9 +629,7 @@ export default {
       });
     },
     gestionarCaso() {
-      console.log(this.gestion);
       if (
-        this.gestion.asesor != "" &&
         this.gestion.id != 0 &&
         this.gestion.observacion != ""
       ) {
@@ -604,7 +657,7 @@ export default {
       let url = "/filtros_historico_casos";
       axios.post(url, this.filtros).then((res) => {
         this.casos = res.data;
-        this.formatearFecha()
+        this.formatearFecha();
       });
     },
     formatearFecha() {
@@ -620,6 +673,13 @@ export default {
     },
     nuevocaso() {
       window.location.href = "nuevo-caso";
+    },
+    magistradoxdepartamento(id) {
+      let url = "/magistradoxdepartamento/" + id;
+      axios.get(url).then((res) => {
+        this.magistrados = res.data.magistrados;
+        // console.log(this.magistrados);
+      });
     },
     cerrar_modal_g() {
       $("#gestion-caso").modal("hide");

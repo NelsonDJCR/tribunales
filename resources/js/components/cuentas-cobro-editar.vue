@@ -24,7 +24,7 @@
             <h1 class="text-blue"><b>EDITAR CUENTA DE COBRO</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-            <div @click="reload" class="btn btn-danger text-white w-100 mt-2">
+            <div @click="regresar" class="btn btn-danger text-white w-100 mt-2">
               Cancelar
             </div>
           </div>
@@ -34,7 +34,7 @@
       <form @submit.prevent="newForm">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
-          <div class="row">
+            <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
                 <select
@@ -98,6 +98,7 @@
                   type="number"
                   class="form-control"
                   v-model="form.valor_honorarios"
+                  @keyup="cal_valor_bruto"
                 />
               </div>
             </div>
@@ -108,6 +109,7 @@
                   type="number"
                   class="form-control"
                   v-model="form.numero_dias"
+                  @keyup="cal_valor_bruto"
                 />
               </div>
             </div>
@@ -115,9 +117,10 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Valor bruto</b></label>
                 <input
-                  type="number"
+                  type="text"
                   class="form-control"
                   v-model="form.valor_bruto"
+                  disabled
                 />
               </div>
             </div>
@@ -131,6 +134,20 @@
                 />
               </div>
             </div>
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Valor iva factura</b></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="form.iva_factura"
+                   @keyup="cal_total_pagar"
+                />
+              </div>
+            </div>
           </div>
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
@@ -141,10 +158,10 @@
                 >
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.total_pagar"
+                  disabled
                 />
               </div>
             </div>
@@ -153,10 +170,10 @@
                 <label for="" class="form-label"><b>Rete fuente</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.rete_fuente"
+                  @keyup="cal_neto_pagar()"
                 />
               </div>
             </div>
@@ -165,10 +182,10 @@
                 <label for="" class="form-label"><b>Rete IVA</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.rete_iva"
+                  @keyup="cal_neto_pagar()"
                 />
               </div>
             </div>
@@ -177,10 +194,10 @@
                 <label for="" class="form-label"><b>Rete ICA</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.rete_ica"
+                  @keyup="cal_neto_pagar()"
                 />
               </div>
             </div>
@@ -189,10 +206,10 @@
                 <label for="" class="form-label"><b>Neto a pagar</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.neto_pagar"
+                  disabled
                 />
               </div>
             </div>
@@ -361,7 +378,7 @@
 </template>
 <script>
 export default {
-    props: ["id"],
+  props: ["id"],
   data() {
     return {
       tribunales: [],
@@ -378,14 +395,43 @@ export default {
   },
   created() {
     if (this.solicitud) {
-      this.validacion = ''
-    }else{
-      this.validacion = '0'
+      this.validacion = "";
+    } else {
+      this.validacion = "0";
     }
     this.getRecord();
     // this.select();
   },
   methods: {
+    cal_neto_pagar() {
+      var resultado = 0;
+      resultado = parseFloat(this.form.total_pagar).toFixed(2);
+      resultado = resultado - parseFloat(this.form.rete_fuente).toFixed(2);
+      resultado = resultado - parseFloat(this.form.rete_ica).toFixed(2);
+      resultado = resultado - parseFloat(this.form.rete_iva).toFixed(2);
+      //   console.log('Resultado 1',resultado);
+      resultado = parseFloat(resultado).toFixed(2);
+      //   console.log("Resultado 2", resultado);
+      this.form.neto_pagar = resultado;
+    },
+    cal_total_pagar() {
+      console.log(this.form.valor_bruto + "-->" + this.form.iva_factura);
+      this.form.total_pagar =
+        parseFloat(this.form.valor_bruto) + parseFloat(this.form.iva_factura);
+      //   this.form.total_pagar  = parseFloat(this.form.total_pagar).toFixed(2);
+      this.cal_neto_pagar();
+    },
+    cal_valor_bruto() {
+      //   console.log(this.form.valor_honorarios + "-" + this.form.numero_dias);
+      this.form.valor_bruto =
+        (this.form.valor_honorarios * this.form.numero_dias) / 30;
+      this.form.valor_bruto = parseFloat(this.form.valor_bruto).toFixed(2);
+      this.cal_total_pagar();
+      //   this.cal_neto_pagar();
+    },
+    regresar() {
+      this.$emit("pantalla", "lista");
+    },
     eliminar_archivo(index) {
       if (this.documentos[index].id != 0) {
         this.eliminados.push(this.documentos[index].id);
@@ -394,8 +440,9 @@ export default {
       this.tipo_documentos.splice(index, 1);
     },
     getRecord() {
-        axios.post(`/record-cuenta-cobro`, { id: this.id }).then((r) => {
-    //   axios.post(`/record-cuenta-cobro`, { id: "6" }).then((r) => {
+      axios.post(`/record-cuenta-cobro`, { id: this.id }).then((r) => {
+        //   axios.post(`/record-cuenta-cobro`, { id: "6" }).then((r) => {
+        // console.log(r.data);
         this.form = r.data.data;
         this.documentos = r.data.documentos;
         this.type_file = r.data.tipo_archivos;
@@ -406,11 +453,11 @@ export default {
         let url = "/magistradosxtribunal/" + this.id;
         // let url = "/magistradosxtribunal/" + "6";
         axios.get(url).then((res) => {
-          console.log(res.data);
+          //   console.log(res.data);
           this.magistrados = res.data.funcionarios;
         });
         this.form["id_tipo_documento"] = "";
-        console.log(r.data);
+        // console.log(r.data);
       });
     },
     box_file() {
@@ -457,15 +504,9 @@ export default {
       });
     },
     newForm() {
-
-        if(this.documentos.length == 0){
-            Swal.fire('¡Error!','Carga por lo menos un archivo','error')
-            return
-        }
-
       let formulario = new FormData();
-      formulario.append('id', this.id)
-    //   formulario.append('id', 6)
+      formulario.append("id", this.id);
+      //   formulario.append('id', 6)
       formulario.append("id_tribunal", this.form.id_tribunal);
       formulario.append("id_magistrado", this.form.id_magistrado);
       formulario.append("fecha_inicio", this.form.fecha_inicio);
@@ -480,7 +521,8 @@ export default {
       formulario.append("rete_ica", this.form.rete_ica);
       formulario.append("neto_pagar", this.form.neto_pagar);
       formulario.append("cantidad", this.tipo_documentos.length);
-      formulario.append('cant_eliminados', this.eliminados.length)
+      formulario.append("cant_eliminados", this.eliminados.length);
+      formulario.append("iva_factura", this.form.iva_factura);
 
       for (let index = 0; index < this.documentos.length; index++) {
         formulario.append("archivo" + index, this.documentos[index]);
@@ -491,10 +533,10 @@ export default {
       }
 
       for (let index = 0; index < this.eliminados.length; index++) {
-          formulario.append('e_id'+index, this.eliminados[index])
+        formulario.append("e_id" + index, this.eliminados[index]);
       }
 
-      axios.post('/update-cuenta-cobro', formulario).then((r) => {
+      axios.post("/update-cuenta-cobro", formulario).then((r) => {
         if (r.data.status == 200) {
           swal.fire(r.data.msg, "", "success").then(function () {
             location.reload();

@@ -57,7 +57,7 @@ class CuentaCobroController extends Controller
 
 
         return response()->json([
-            'table' => $table           
+            'table' => $table
         ]);
     }
 
@@ -70,15 +70,14 @@ class CuentaCobroController extends Controller
             'id_magistrado' => 'required|',
             'fecha_inicio' => 'required|',
             'fecha_fin' => "required|after:$date",
-            'total_pagar' => 'required|max:8',
-            'neto_pagar' => 'required|max:8',
-            'valor_honorarios' => 'required|max:11',
-            'numero_dias' => 'required|max:11',
-            'valor_bruto' => 'required|max:9999999999|numeric',
-            'valor_factura' => 'required|max:9999999999|numeric',
-            'rete_iva' => 'required|max:9999999999|numeric',
-            'rete_ica' => 'required|max:99999999|numeric',
-            'neto_pagar' => 'required|max:99999999|numeric',
+            'total_pagar' => 'required',
+            'neto_pagar' => 'required',
+            'valor_honorarios' => 'required',
+            'numero_dias' => 'required',
+            'valor_bruto' => 'required',
+            'valor_factura' => 'required',
+            'rete_iva' => 'required',
+            'rete_ica' => 'required',
         ];
         $messages = [
             'id_tribunal.required' => 'El tribunal es requerido',
@@ -135,6 +134,7 @@ class CuentaCobroController extends Controller
         $cuenta->rete_iva = $request->rete_iva;
         $cuenta->rete_ica = $request->rete_ica;
         $cuenta->neto_pagar = $request->neto_pagar;
+        $cuenta->iva_factura = $request->iva_factura;
         $cuenta->save();
 
         for ($x = 0; $x < $request->cantidad; $x++) {
@@ -180,7 +180,7 @@ class CuentaCobroController extends Controller
             'valor_honorarios' => 'required|max:11',
             'numero_dias' => 'required|max:11',
             'valor_bruto' => 'required|max:8',
-            'valor_factura' => 'required|max:8|integer',
+            'valor_factura' => 'required|max:99999999|integer',
             'rete_iva' => 'required|max:8',
             'rete_ica' => 'required|max:8',
             'neto_pagar' => 'required|max:8',
@@ -215,6 +215,16 @@ class CuentaCobroController extends Controller
             return response()->json(['status' => 406, 'msg' => $validator->errors()->first()]);
         }
 
+        $request->valor_honorarios = number_format($request->valor_honorarios, 2);
+        $request->valor_bruto = number_format($request->valor_bruto, 2);
+        $request->numero_dias = number_format($request->numero_dias, 2);
+        $request->valor_factura = number_format($request->valor_factura, 2);
+        $request->total_pagar = number_format($request->total_pagar, 2);
+        $request->rete_fuente = number_format($request->rete_fuente, 2);
+        $request->rete_iva = number_format($request->rete_iva, 2);
+        $request->rete_ica = number_format($request->rete_ica, 2);
+        $request->neto_pagar = number_format($request->neto_pagar, 2);
+
         $cuenta = new CuentaCobro();
         $cuenta->id_tribunal = $request->id_tribunal;
         $cuenta->id_magistrado = $request->id_magistrado;
@@ -229,6 +239,7 @@ class CuentaCobroController extends Controller
         $cuenta->rete_iva = $request->rete_iva;
         $cuenta->rete_ica = $request->rete_ica;
         $cuenta->neto_pagar = $request->neto_pagar;
+        $cuenta->iva_factura = $request->iva_factura;
         $cuenta->save();
 
         for ($x = 0; $x < $request->cantidad; $x++) {

@@ -20,15 +20,10 @@
       <div class="row p-2 text-center border shadow rounded-3">
         <div class="row">
           <div class="col-12 col-md-12 col-lg-10 col-xl-10 p-2">
-            <h1 class="text-blue"><b>NUEVO MAGISTRADO</b></h1>
+            <h1 class="text-blue"><b>NUEVO FUNCIONARIO</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-            <router-link
-              :to="`/tribunales-magistrados-listar`"
-              @click.native="$router.go()"
-              class="btn btn-danger text-white w-100 mt-2"
-              >Cancelar</router-link
-            >
+          <button class="btn btn-warning btn-block text-white" @click="regresar">Cancelar</button>
           </div>
         </div>
       </div>
@@ -58,10 +53,6 @@
                 </select>
               </div>
             </div>
-<<<<<<< HEAD
-=======
-            <div class="row">
->>>>>>> 10355c5c0fe46f714ce8e0db1032c1e845f14059
               <div class="mb-3">
                 <label for="" class="form-label"><b>Tribunal</b></label>
                 <select class="form-select" name="" v-model="form.tribunal_id">
@@ -229,10 +220,23 @@
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"
-                  ><b>Número de Cuenta</b>
+                  ><b>Número de cuenta</b>
                 </label>
                 <input
                   v-model="form.numero_cuenta"
+                  type="number"
+                  class="form-control"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Número de resolución</b>
+                </label>
+                <input
+                  v-model="form.numero_resolucion"
                   type="number"
                   class="form-control"
                 />
@@ -423,6 +427,7 @@ export default {
         numero_identificacion: "",
         telefono: "",
         tribunal_id: "",
+        numero_resolucion: '',
       },
       documentos: [],
       usados: [],
@@ -442,6 +447,9 @@ export default {
     });
   },
   methods: {
+      regresar(){
+          this.$emit('pantalla', 'lista')
+      },
     eliminar_archivo(index) {
       this.archivos.splice(index);
       this.tipo_archivo.splice(index);
@@ -478,12 +486,6 @@ export default {
       });
     },
     save() {
-      console.log(this.form);
-      if (this.archivos.length == 0) {
-        Swal.fire("¡Error!", "Carga por lo menos un archivo", "error");
-        return;
-      }
-      // return
       var formulario = new FormData();
       formulario.append("cargo", this.form.cargo);
       formulario.append("ciu_id", this.form.ciu_id);
@@ -492,6 +494,7 @@ export default {
       formulario.append("direccion", this.form.direccion);
       formulario.append("id_banco", this.form.id_banco);
       formulario.append("id_tipo_cuenta", this.form.id_tipo_cuenta);
+      formulario.append('numero_resolucion', this.form.numero_resolucion)
       formulario.append(
         "id_tipo_identificacion",
         this.form.id_tipo_identificacion

@@ -25,10 +25,10 @@
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
             <button
-              @click="reload"
+              @click="regresar"
               class="btn btn-danger text-white w-100 mt-2"
             >
-              Volver
+              Cancelar
             </button>
           </div>
         </div>
@@ -114,6 +114,18 @@
                   type="number"
                   class="form-control"
                   v-model="record.valor_bruto"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"><b>Iva factura</b></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  v-model="record.iva_factura"
                   disabled
                 />
               </div>
@@ -323,6 +335,9 @@ export default {
     },
     reload() {
       location.reload();
+    },
+    regresar(){
+        this.$emit('pantalla', 'lista')
     },
   },
 };

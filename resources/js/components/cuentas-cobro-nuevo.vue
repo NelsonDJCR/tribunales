@@ -24,7 +24,7 @@
             <h1 class="text-blue"><b>NUEVA CUENTA DE COBRO</b></h1>
           </div>
           <div class="col-12 col-md-12 col-lg-2 col-xl-2 p-2">
-            <div @click="reload" class="btn btn-danger text-white w-100 mt-2">
+            <div @click="regresar" class="btn btn-danger text-white w-100 mt-2">
               Cancelar
             </div>
           </div>
@@ -98,6 +98,7 @@
                   type="number"
                   class="form-control"
                   v-model="form.valor_honorarios"
+                  @keyup="cal_valor_bruto"
                 />
               </div>
             </div>
@@ -108,6 +109,7 @@
                   type="number"
                   class="form-control"
                   v-model="form.numero_dias"
+                  @keyup="cal_valor_bruto"
                 />
               </div>
             </div>
@@ -115,9 +117,10 @@
               <div class="mb-3">
                 <label for="" class="form-label"><b>Valor bruto</b></label>
                 <input
-                  type="number"
+                  type="text"
                   class="form-control"
                   v-model="form.valor_bruto"
+                  disabled
                 />
               </div>
             </div>
@@ -131,9 +134,20 @@
                 />
               </div>
             </div>
-          </div>
 
-          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Valor iva factura</b></label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  v-model="form.iva_factura"
+                  @keyup="cal_total_pagar"
+                />
+              </div>
+            </div>
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"
@@ -141,22 +155,25 @@
                 >
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.total_pagar"
+                  disabled
                 />
               </div>
             </div>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-5">
             <div class="row">
               <div class="mb-3">
                 <label for="" class="form-label"><b>Rete fuente</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.rete_fuente"
+                  @keyup="cal_neto_pagar()"
                 />
               </div>
             </div>
@@ -165,10 +182,10 @@
                 <label for="" class="form-label"><b>Rete IVA</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.rete_iva"
+                  @keyup="cal_neto_pagar()"
                 />
               </div>
             </div>
@@ -177,10 +194,10 @@
                 <label for="" class="form-label"><b>Rete ICA</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.rete_ica"
+                  @keyup="cal_neto_pagar()"
                 />
               </div>
             </div>
@@ -189,10 +206,10 @@
                 <label for="" class="form-label"><b>Neto a pagar</b></label>
                 <input
                   type="number"
-                  min="1"
                   step="any"
                   class="form-control"
                   v-model="form.neto_pagar"
+                  disabled
                 />
               </div>
             </div>
@@ -296,65 +313,65 @@
       </form>
     </div>
 
-              <div
-                class="modal fade"
-                id="modal_file"
-                data-bs-backdrop="static"
-                data-bs-keyboard="false"
-                tabindex="-1"
-                aria-labelledby="staticBackdropLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">
-                        Agregar Documentos
-                      </h5>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        @click="closeAddFile()"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="row mb-2">
-                        <div class="col-11">
-                          <label class="form-label">Agrege todos los documentos</label>
-                        </div>
-                        <div class="col-1">
-                          <button
-                            class="btn-more btn"
-                            id="add_file"
-                            @click="add_file()"
-                            type="button"
-                          >
-                            <!-- <i class="fas fa-plus"></i> -->
-                            <i class="typcn typcn-document-add" style="color: green"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="col-12" id="box_files"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button
-                        type="submit"
-                        class="btn btn-primary"
-                        @click="closeAddFile()"
-                      >
-                        Aceptar
-                      </button>
-                    </div>
-                  </div>
-                </div>
+    <div
+      class="modal fade"
+      id="modal_file"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Agregar Documentos
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              @click="closeAddFile()"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row mb-2">
+              <div class="col-11">
+                <label class="form-label">Agrege todos los documentos</label>
               </div>
+              <div class="col-1">
+                <button
+                  class="btn-more btn"
+                  id="add_file"
+                  @click="add_file()"
+                  type="button"
+                >
+                  <!-- <i class="fas fa-plus"></i> -->
+                  <i class="typcn typcn-document-add" style="color: green"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-12" id="box_files"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              @click="closeAddFile()"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 export default {
-  props:['id'],
+  props: ["id"],
   data() {
     return {
       tribunales: [],
@@ -363,19 +380,56 @@ export default {
       type_file: [],
       archivos: [],
       archivo: {},
-      form: { id_tipo_documento: "" },
+      form: {
+        id_tipo_documento: "",
+        neto_pagar: 0,
+        rete_ica: 0,
+        rete_iva: 0,
+        rete_fuente: 0,
+        total_pagar: 0,
+        valor_factura: 0,
+        valor_bruto: 0,
+        numero_dias: 0,
+        valor_honorarios: 0,
+        iva_factura: 0,
+      },
     };
   },
   created() {
-    
-    if(this.id){
-      this.origen = 'magistrado'
-    }else{
-      this.origen = 'tribunal'
-    }   
-     this.select()
+    if (this.id) {
+      this.origen = "magistrado";
+    } else {
+      this.origen = "tribunal";
+    }
+    this.select();
   },
   methods: {
+    cal_neto_pagar() {
+      var resultado = 0;
+      resultado = parseFloat(this.form.total_pagar).toFixed(2);
+      resultado = resultado - parseFloat(this.form.rete_fuente).toFixed(2);
+      resultado = resultado - parseFloat(this.form.rete_ica).toFixed(2);
+      resultado = resultado - parseFloat(this.form.rete_iva).toFixed(2);
+      //   console.log('Resultado 1',resultado);
+      resultado = parseFloat(resultado).toFixed(2);
+    //   console.log("Resultado 2", resultado);
+      this.form.neto_pagar = resultado;
+    },
+    cal_total_pagar() {
+        console.log(this.form.valor_bruto + '-->' + this.form.iva_factura);
+      this.form.total_pagar =
+        parseFloat(this.form.valor_bruto) + parseFloat(this.form.iva_factura);
+    //   this.form.total_pagar  = parseFloat(this.form.total_pagar).toFixed(2);
+      this.cal_neto_pagar();
+    },
+    cal_valor_bruto() {
+      //   console.log(this.form.valor_honorarios + "-" + this.form.numero_dias);
+      this.form.valor_bruto =
+        (this.form.valor_honorarios * this.form.numero_dias) / 30;
+      this.form.valor_bruto = parseFloat(this.form.valor_bruto).toFixed(2);
+      this.cal_total_pagar();
+    //   this.cal_neto_pagar();
+    },
     box_file() {
       if (this.form.id_tipo_documento != "") {
         $("#file").trigger("click");
@@ -384,11 +438,11 @@ export default {
       }
     },
     magistradosxtribunal(i) {
-        let url = '/magistradosxtribunal/'+ i;
-      axios.get(url).then(res => {
-          console.log(res.data);
-          this.magistrados = res.data.funcionarios
-      })
+      let url = "/magistradosxtribunal/" + i;
+      axios.get(url).then((res) => {
+        console.log(res.data);
+        this.magistrados = res.data.funcionarios;
+      });
     },
     upload_file(event) {
       for (let index = 0; index < this.tipo_archivo.length; index++) {
@@ -407,6 +461,9 @@ export default {
       this.tipo_archivo.push(this.form.id_tipo_documento);
       this.form.id_tipo_documento = "";
       //   console.log(this.archivos);
+    },
+    regresar() {
+      this.$emit("pantalla", "lista");
     },
     reload() {
       location.reload();
@@ -435,6 +492,7 @@ export default {
       formulario.append("rete_ica", this.form.rete_ica);
       formulario.append("neto_pagar", this.form.neto_pagar);
       formulario.append("cantidad", this.archivos.length);
+      formulario.append('iva_factura', this.form.iva_factura)
 
       for (let index = 0; index < this.archivos.length; index++) {
         formulario.append("archivo" + index, this.archivos[index]);
@@ -460,7 +518,10 @@ export default {
 };
 </script>
 
-
-
-
-
+<style>
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>
