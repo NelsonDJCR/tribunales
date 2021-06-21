@@ -22,10 +22,10 @@ class SorteoController extends Controller
     {
 
         $tabla = DB::table('sorteo')
-        ->select('sorteo.*', 'tipo_eleccion.nombre as nom_eleccion')
-        ->join('tipo_eleccion','tipo_eleccion.id', 'sorteo.id_tipo_eleccion')
-        ->orderByDesc('sorteo.id')
-        ->get();
+            ->select('sorteo.*', 'tipo_eleccion.nombre as nom_eleccion')
+            ->join('tipo_eleccion', 'tipo_eleccion.id', 'sorteo.id_tipo_eleccion')
+            ->orderByDesc('sorteo.id')
+            ->get();
 
         // $tabla = DB::table('sorteo')
         //     ->select("sorteo.*", 'magistrados.nombre AS magistrado', 'tribunal.nombre AS tribunal', 'tipo_eleccion.nombre AS tipo_eleccion')
@@ -35,7 +35,7 @@ class SorteoController extends Controller
         //     ->get();
         return response()->json([
             'tabla' => $tabla,
-            'tipo_eleccion' => TipoEleccion::all()->where('estado',1),
+            'tipo_eleccion' => TipoEleccion::all()->where('estado', 1),
             'usuarios' => PersonaCentralizado::all(),
         ]);
     }
@@ -43,66 +43,66 @@ class SorteoController extends Controller
     {
         // return $r->all();
         return response()->json([
-            'tabla'=>DB::table('sorteo')
-            ->select("sorteo.*",'tipo_eleccion.nombre AS nom_eleccion')
-            ->join("tipo_eleccion", "tipo_eleccion.id", "sorteo.id_tipo_eleccion")
-            ->where(function ($query) use ($r) {
-                if (isset($r['sorteo'])) {
-                    if (!empty($r['sorteo']))
-                        $query->orwhere("sorteo.nombre", "like", "%".$r['sorteo']."%");
-                }
-            })
-            ->where(function ($query) use ($r) {
-                if (isset($r['fecha_inicio'])) {
-                    if (!empty($r['fecha_inicio']))
-                        $query->orwhere("sorteo.fecha",'>',$r['fecha_inicio']);
-                }
-            })
-            ->where(function ($query) use ($r) {
-                if (isset($r['fecha_fin'])) {
-                    if (!empty($r['fecha_fin']))
-                        $query->orwhere("sorteo.fecha", '<' ,$r['fecha_fin']);
-                }
-            })
-            ->where(function ($query) use ($r) {
-                if (isset($r['id_tipo_eleccion'])) {
-                    if (!empty($r['id_tipo_eleccion']))
-                        $query->orwhere("tipo_eleccion.id", "=" , $r['id_tipo_eleccion']);
-                }
-            })
-            ->get()
+            'tabla' => DB::table('sorteo')
+                ->select("sorteo.*", 'tipo_eleccion.nombre AS nom_eleccion')
+                ->join("tipo_eleccion", "tipo_eleccion.id", "sorteo.id_tipo_eleccion")
+                ->where(function ($query) use ($r) {
+                    if (isset($r['sorteo'])) {
+                        if (!empty($r['sorteo']))
+                            $query->orwhere("sorteo.nombre", "like", "%" . $r['sorteo'] . "%");
+                    }
+                })
+                ->where(function ($query) use ($r) {
+                    if (isset($r['fecha_inicio'])) {
+                        if (!empty($r['fecha_inicio']))
+                            $query->orwhere("sorteo.fecha", '>', $r['fecha_inicio']);
+                    }
+                })
+                ->where(function ($query) use ($r) {
+                    if (isset($r['fecha_fin'])) {
+                        if (!empty($r['fecha_fin']))
+                            $query->orwhere("sorteo.fecha", '<', $r['fecha_fin']);
+                    }
+                })
+                ->where(function ($query) use ($r) {
+                    if (isset($r['id_tipo_eleccion'])) {
+                        if (!empty($r['id_tipo_eleccion']))
+                            $query->orwhere("tipo_eleccion.id", "=", $r['id_tipo_eleccion']);
+                    }
+                })
+                ->get()
         ]);
     }
 
     public function nuevoSorteo(Request $r)
     {
         $rules = [
-            'nombre'=>'required|',
-            'id_tipo_eleccion'=>'required|',
+            'nombre' => 'required|',
+            'id_tipo_eleccion' => 'required|',
         ];
         $messages = [
-            'nombre.required'=>'El nombre es requerido',
-            'id_tipo_eleccion.required'=>'El tipo de elección es requerido',
+            'nombre.required' => 'El nombre es requerido',
+            'id_tipo_eleccion.required' => 'El tipo de elección es requerido',
         ];
         $validator = Validator::make(request()->all(), $rules, $messages);
         if ($validator->fails()) {
             return response()->json(['code' => 406, 'msg' => $validator->errors()->first()]);
         }
 
-        $limite_asignados = intval( count(Magistrado::all()->where('estado',1)->where('cargo','Magistrado')) / count(Tribunal::all()->where('estado',1)));
-        if (count(Magistrado::all()->where('estado',1)->where('asignado',0)->where('cargo','Magistrado')) == 0) {
+        $limite_asignados = intval(count(Magistrado::all()->where('estado', 1)->where('cargo', 'Magistrado')) / count(Tribunal::all()->where('estado', 1)));
+        if (count(Magistrado::all()->where('estado', 1)->where('asignado', 0)->where('cargo', 'Magistrado')) == 0) {
             return response()->json([
-                'code' =>407,
+                'code' => 407,
                 'msg' => 'No hay magistrados para sortear'
             ]);
-        }elseif(count(Tribunal::all()->where('estado',1)->where('asignados','<',$limite_asignados)) == 0) {
+        } elseif (count(Tribunal::all()->where('estado', 1)->where('asignados', '<', $limite_asignados)) == 0) {
             $limite_asignados = $limite_asignados + 1;
-            $tribunal = Tribunal::all()->where('estado',1)->where('asignados','<',$limite_asignados)->random();
+            $tribunal = Tribunal::all()->where('estado', 1)->where('asignados', '<', $limite_asignados)->random();
         }
-        $sorteo =  count(Magistrado::all()->where('estado',1)->where('asignado',0)->where('cargo','Magistrado'));
-        for ($i=0; $i < $sorteo; $i++) {
-            $tribunal = Tribunal::all()->where('estado',1)->where('asignados','<',$limite_asignados)->random();
-            $magistrado = Magistrado::all()->where('estado',1)->where('asignado',0)->where('cargo','Magistrado')->random();
+        $sorteo =  count(Magistrado::all()->where('estado', 1)->where('asignado', 0)->where('cargo', 'Magistrado'));
+        for ($i = 0; $i < $sorteo; $i++) {
+            $tribunal = Tribunal::all()->where('estado', 1)->where('asignados', '<', $limite_asignados)->random();
+            $magistrado = Magistrado::all()->where('estado', 1)->where('asignado', 0)->where('cargo', 'Magistrado')->random();
             $x = Tribunal::find($tribunal->id);
             $x->asignados = $x->asignados + 1;
             $x->save();
@@ -118,15 +118,15 @@ class SorteoController extends Controller
             $x->save();
         }
         return response()->json([
-            'code' =>200,
+            'code' => 200,
             'msg' => 'El sorteo se ha realizado satisfactoriamente'
         ]);
     }
 
     public function departamentos_sorteo()
     {
-        $departamentos = Departamentos::where('estado','1')->get();
-        $tipo_eleccion = TipoEleccion::where('estado','1')->get();
+        $departamentos = Departamentos::where('estado', '1')->get();
+        $tipo_eleccion = TipoEleccion::where('estado', '1')->get();
         return response()->json([
             'departamentos' => $departamentos,
             'tipo_eleccion' => $tipo_eleccion,
@@ -155,7 +155,7 @@ class SorteoController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
-        if($validator->fails()):
+        if ($validator->fails()) :
             return response()->json([
                 'status' => 406,
                 'msg' => $validator->errors()->first(),
@@ -171,32 +171,34 @@ class SorteoController extends Controller
 
         $departamentos = [];
         $cantidad = [];
-        for ($x=0; $x < $request->cantidad; $x++) {
+        for ($x = 0; $x < $request->cantidad; $x++) {
             $departamentos[$x] = $request["dep$x"];
             $cantidad[$x] = $request["cant$x"];
         }
 
-        $magistrados = Magistrado::where('estado',1)->where('cargo','Magistrado')->get();
+        $magistrados = Magistrado::where('estado', 1)->where('cargo', 'Magistrado')->get();
         $asignados = [];
         $copia_asignados = [];
-        for ($i=0; $i < sizeof($magistrados); $i++) {
+        for ($i = 0; $i < sizeof($magistrados); $i++) {
             $asignados[$i] = $i;
         }
 
 
 
         $copia_asignados = $asignados;
-        for ($x=0; $x < sizeof($cantidad); $x++) {
+        for ($x = 0; $x < sizeof($cantidad); $x++) {
             $dep_id = $departamentos[$x];
             $asignados = $copia_asignados;
-            for ($z=0; $z <$cantidad[$x] ; $z++) {
-                $numero = array_rand($asignados,1);
+            // return $asignados;
+            for ($z = 0; $z < $cantidad[$x]; $z++) {
+                $numero = array_rand($asignados, 1);
                 unset($asignados[$numero]);
                 $mag_id = $magistrados[$numero]->id;
                 $sorteo = new SorteoDepartamento();
                 $sorteo->departamentos_id = $dep_id;
                 $sorteo->magistrado_id = $mag_id;
                 $sorteo->sorteo_id = $sor->id;
+                $sorteo->estado = 1;
                 $sorteo->save();
             }
         }
@@ -207,22 +209,52 @@ class SorteoController extends Controller
         ]);
     }
 
+    public function update(Request $request){
+        // return $request->all();
+        // return sizeof($request->all());
+        $data = $request->all();
+        for ($x=0; $x < sizeof($request->all()); $x++) {
+            // return $data[$x];
+            if(!empty($data[$x]['e_id'])){
+                // return '1';
+                $id = $data[$x]['e_id'];
+                // return '1 --> '.$id;
+                $sorteo = SorteoDepartamento::find($id);
+                $sorteo->estado = 0;
+                $sorteo->save();
+            }
+            if(!empty($data[$x]['n_id'])):
+                $sorteo = new SorteoDepartamento();
+                $sorteo->departamentos_id = $data[$x]['dep_id'];
+                $sorteo->magistrado_id = $data[$x]['mag_id'];
+                $sorteo->sorteo_id = $data[$x]['sorteo_id'];
+                $sorteo->estado = 1;
+                $sorteo->save();
+            endif;
+
+        }
+        return response()->json([
+            'status' => 200,
+            'msg' => 'Datos editados con éxito',
+        ]);
+    }
+
     public function show($id)
     {
         $sorteo = DB::table('sorteo_departamentos')
-        ->select(
-            'sorteo_departamentos.*',
-            'departamentos.nombre as dep_nombre',
-            'magistrados.nombre as mag_nombre',
-            'magistrados.id as mag_id',
-            // 'departamentos.id as dep_id',
-            // DB::raw("count('sorteo_departamentos.magistrado_id') as cantidad")
-        )
-        ->join('departamentos','departamentos.id', 'sorteo_departamentos.departamentos_id')
-        ->join('magistrados','magistrados.id', 'sorteo_departamentos.magistrado_id')
-        ->where('sorteo_id', $id)
-        ->groupBy('mag_id')
-        ->get();
+            ->select(
+                'sorteo_departamentos.*',
+                'departamentos.nombre as dep_nombre',
+                'magistrados.nombre as mag_nombre',
+                'magistrados.id as mag_id',
+                'departamentos.id as dep_id',
+                // DB::raw("count('sorteo_departamentos.magistrado_id') as cantidad")
+            )
+            ->join('departamentos', 'departamentos.id', 'sorteo_departamentos.departamentos_id')
+            ->join('magistrados', 'magistrados.id', 'sorteo_departamentos.magistrado_id')
+            ->where('sorteo_id', $id)
+            ->groupBy('mag_id')
+            ->get();
 
         $sor = Sorteo::find($id);
 
@@ -232,7 +264,8 @@ class SorteoController extends Controller
         return response()->json([
             'sorteo' => $sorteo,
             'sor' => $sor,
-            'eleccion' => $eleccion
+            'eleccion' => $eleccion,
+            'magistrados' => Magistrado::where('estado', 1)->get(),
         ]);
     }
 }

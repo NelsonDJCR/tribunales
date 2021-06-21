@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class TipoArchivo extends Model
 {
     use HasFactory;
-    protected $table = 'tipo_archivo';
+    protected $connection = 'dinamico';
+    protected $table = 'tipo_documento';
 }

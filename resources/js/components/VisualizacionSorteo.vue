@@ -55,15 +55,37 @@
           <tr v-for="(i, index) in departamentos" :key="index">
             <td class="p-4">{{ i.dep_nombre }}</td>
             <td>
-              {{ i.mag_nombre }}
+              <select
+                class="form-select"
+                v-model="i.mag_id"
+                @change="cambiar(i, index)"
+                :disabled="i.disa == 1"
+              >
+                <option
+                  v-for="(i, index) in magistrados"
+                  :key="index"
+                  :value="i.id"
+                  v-text="i.nombre"
+                ></option>
+              </select>
+              <!-- {{ i.mag_nombre }} -->
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div class="mt-3">
-        <button class="btn btn-secondary active" @click="regresar">Regresar</button>
+    <div class="row mt-3">
+      <div class="col-2">
+        <button class="btn btn-secondary active" @click="regresar">
+          Regresar
+        </button>
+      </div>
+      <div class="col-2">
+        <button class="btn btn-secondary active" @click="editar">
+          Editar
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -74,22 +96,60 @@ export default {
   data() {
     return {
       departamentos: [],
+      magistrados: [],
+      disabl: 0,
       sor: {},
+      mag_id: [],
       eleccion: {},
+      departamento: {
+        dep_nombre: "",
+        mag_nombre: "",
+        mag_id: "",
+        dep_id: "",
+        id: 0,
+      },
     };
   },
   created() {
     let url = "/detalles_sorteo/" + this.id;
     axios.get(url).then((res) => {
       this.departamentos = res.data.sorteo;
+      for (let index = 0; index < this.departamentos.length; index++) {
+          if(this.departamentos[index].estado == 1){
+              this.departamentos[index]["disa"] = 0;
+          }else{
+              this.departamentos[index]["disa"] = 1;
+          }
+        this.mag_id.push(this.departamentos[index].mag_id);
+      }
+      this.magistrados = res.data.magistrados;
       this.sor = res.data.sor;
       this.eleccion = res.data.eleccion;
     });
   },
   methods: {
-      regresar(){
-          this.$emit("pantalla", 'lista')
-      }
-  }
+    regresar() {
+      this.$emit("pantalla", "lista");
+    },
+    editar() {
+      let url = "/editar_sorteo";
+      axios.post(url, this.departamentos).then((res) => {
+        console.log(res.data);
+        // Swal.fire('Éxito', res.data.msg, 'success');
+      });
+    },
+    cambiar(i, index) {
+      // alert(i.dep_nombre)
+
+      this.departamentos[index]["disa"] = 1;
+      this.departamentos[index]["e_id"] = this.departamentos[index].id;
+      // this.departamentos[index]['id_mag']
+      this.departamento = { dep_nombre: i.dep_nombre, mag_id: i.mag_id, n_id: 1, dep_id: i.dep_id, sorteo_id: i.sorteo_id };
+      this.departamentos.push(this.departamento);
+      this.departamentos[index]["mag_id"] = this.mag_id[index];
+      this.mag_id.push(this.departamento.mag_id)
+    //   this.departamentos[index]["n_id"] = 1;
+    },
+  },
 };
 </script>

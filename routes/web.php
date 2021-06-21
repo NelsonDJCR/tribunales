@@ -57,7 +57,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('autologin/{userId}/{conexion}/{token}', [CentralizadoController::class, 'change']);
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {});
     Route::get('centralizadoRedirect', [CentralizadoController::class, 'getViewCentralizado'])->middleware('validateSesion');
     Route::get('centralizado/{conexion}', [CentralizadoController::class, 'change'])->name('changeDb');
     Route::get('centralizado', [CentralizadoController::class, 'index'])->name('centralizado')->middleware('validateSesion');
@@ -167,6 +167,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/guardarMagistrados', [MagistradosController::class, 'save']);
         Route::post('/editar-magistrado', [MagistradosController::class, 'editar']);
         Route::post('/filtros-magistrados', [MagistradosController::class, 'filtrar']);
+        Route::post('/editar_sorteo', [SorteoController::class, 'update']);
 
         // Actividades
         Route::post('/guardar-actividad', [ActividadesController::class, 'save']);
@@ -269,7 +270,7 @@ Route::middleware('auth')->group(function () {
             return $pdf->download('ffsdf.pdf');
         });
     });
-});
+// });
 
 
 //--------------------------------------------------------------------------------------
