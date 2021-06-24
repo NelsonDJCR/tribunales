@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TipoTramite extends Model
 {
+    protected $connection = 'dinamico';
     protected $table = 'tipo_tramite';
     use HasFactory;
 }

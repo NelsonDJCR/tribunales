@@ -34,6 +34,7 @@ use App\Models\Caso;
 use App\Http\Controllers\CasosController;
 use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\InformeController;
+use App\Http\Controllers\MasivoController;
 use App\Http\Resources\EstadosResource;
 use App\Models\Estado;
 use App\Http\Resources\TipoTramitesResource;
@@ -387,3 +388,5 @@ Route::get('/informe_pdf_mis', function (Request $request) {
     ]);
     return $pdf->stream('mis_actividades.pdf');
 });
+
+Route::post('/excel_masivo', [MasivoController::class, 'import']);

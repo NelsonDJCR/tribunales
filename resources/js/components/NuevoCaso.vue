@@ -20,8 +20,16 @@
         </li>
       </ol>
       <div class="row p-2 text-center border shadow mb-2 rounded-3">
-        <div class="row">
+        <div class="col-sm-10">
           <h1 class="text-blue"><b>NUEVO DE CASO</b></h1>
+        </div>
+        <div class="col-sm-2">
+          <button
+            class="btn btn-warning btn-block text-white mt-2"
+            @click="regresar"
+          >
+            Regresar
+          </button>
         </div>
       </div>
 
@@ -211,6 +219,43 @@
                   ></option>
                 </select>
               </div>
+            </div>
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Abono asunto anterior</b></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="caso.abono_asunto_anterior"
+                  max="2500"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="mb-3">
+                <label for="" class="form-label"
+                  ><b>Entidades informadas</b></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="caso.entidades_informadas"
+                  max="2500"
+                />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="" class="form-label mt-3"
+                ><b>Link de soporte</b></label
+              >
+              <input
+                type="text"
+                class="form-control"
+                v-model="caso.link_soporte"
+                max="5000"
+              />
             </div>
           </div>
           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-2">
@@ -473,6 +518,7 @@ export default {
       ciudad: [],
       ciudad_solicitante: [],
       identificacion: [],
+      pantalla: 'listado',
     };
   },
   created() {
@@ -487,6 +533,10 @@ export default {
     });
   },
   methods: {
+    regresar() {
+        // alert('llego')
+      this.$emit("pantalla", this.pantalla);
+    },
     ciudadxdepartamento(option) {
       if (option == 1) {
         let id = this.caso.id_departamento;

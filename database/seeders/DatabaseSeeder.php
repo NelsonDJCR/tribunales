@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CiudadSeed::class);
         $this->call(MigrationSeed::class);
         $this->call(SorteoDepartamentoSeed::class);
+        $this->call(DocumentoSeed::class);
     }
 }

@@ -135,6 +135,8 @@ class CasosController extends Controller
         $estado1 = Estado::where('estado', 1)
             ->where('id', '<>', 1)->get();
 
+        $ruta = Documento::where('nombre','Formato_cargue_masivo_casos.xlsx')->first()->ruta;
+
         return response()->json([
             'tipoArchivo' => $tipoArchivo,
             'tramite' => $tramite,
@@ -144,6 +146,7 @@ class CasosController extends Controller
             'usuarios' => $usuarios,
             'estado1' => $estado1,
             'tribunales' => $tribunales,
+            'ruta' => $ruta,
         ]);
     }
 

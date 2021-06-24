@@ -129,7 +129,7 @@
               <div class="col-8 col-md-8 col-lg-8 col-xl-8 p-2">
                 <h1 class="text-blue"><b>LISTADO DE CASOS</b></h1>
               </div>
-              <div class="col-4 p-3">
+              <div class="col-3 p-3">
                 <button
                   @click="nuevocaso"
                   class="btn-general btn-warning btn w-80 btn_search text-white"
@@ -137,6 +137,16 @@
                   Nuevo Caso
                 </button>
                 <!-- </a> -->
+              </div>
+              <div class="col-1">
+                <button
+                  style="margin-top: 6px !important"
+                  class="btn btn-warning text-white btn-lg mt-3"
+                  @click="modal_cargue_masivo"
+                >
+                  <i class="typcn typcn-upload link-light"></i>
+                  <!-- Cargue masivo -->
+                </button>
               </div>
             </div>
           </div>
@@ -374,6 +384,78 @@
         <nuevo-caso />
       </div>
     </template>
+
+    <!-- Inicio modal cargue masivo -->
+    <div
+      class="modal fade"
+      id="modal_cargue_masivo"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Cargue masivo</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container row text-center">
+              <div class="col-12">
+                <span
+                  >Descargue el formato
+                  <a :href="ruta" :download="ruta">Aquí</a></span
+                >
+              </div>
+              <!-- <div class="col-1"></div> -->
+              <div class="col-12 mt-4">
+                <button class="btn btn-warning text-white" @click="box_masivo">
+                  Cargar archivo
+                </button>
+                <input
+                  type="file"
+                  class="d-none"
+                  id="file_masivo"
+                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  @change="upload_file($event)"
+                />
+              </div>
+              <div class="mt-4 col-12 row" v-if="archivo.name != ''">
+                <div class="col-10">
+                  {{ archivo.name }}
+                </div>
+                <div class="col-2">
+                  <button
+                    class="btn btn-danger btn-sm"
+                    @click="eliminar_archivo"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary active"
+              @click="cargar"
+            >
+              Cargar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fin modal cargue masivo -->
   </div>
 </template>
 
@@ -404,6 +486,8 @@ export default {
       },
       id: 0,
       pantalla: "",
+      archivo: { name: "" },
+      ruta: '',
     };
   },
   mounted() {
@@ -420,7 +504,8 @@ export default {
       this.tipoArchivo = res.data.tipoArchivo;
       this.usuarios = res.data.usuarios;
       this.tribunales = res.data.tribunales;
-      console.log(this.usuarios);
+      this.ruta = res.data.ruta
+    //   console.log(this.usuarios);
       this.formatearFecha();
     });
   },
@@ -438,6 +523,43 @@ export default {
       //   this.gestion.asesor = caso.id_asesor_asignado;
       this.posicion = index;
       $("#gestion-caso").modal("show");
+    },
+    cargar() {
+      if (this.archivo.name == "") {
+        Swal.fire("¡Error!", "Tienes que cargar un archivo", "error");
+        return;
+      }
+      var formulario = new FormData();
+      formulario.append("archivo", this.archivo);
+      axios.post("/excel_masivo", formulario).then((res) => {
+        setTimeout(function () {
+          $("#modal_cargue_masivo").modal("hide");
+        }, 500);
+        Swal.fire(
+          "¡Éxito!",
+          "Cargue masivo realizado con éxito",
+          "success"
+        ).then(function () {
+          location.reload();
+        });
+        let blob = new Blob([res.data]);
+        let link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "ReporteErrores.xls";
+        link.click();
+      });
+    },
+    eliminar_archivo() {
+      this.archivo = { name: "" };
+    },
+    upload_file(event) {
+      this.archivo = event.target.files[0];
+    },
+    modal_cargue_masivo() {
+      $("#modal_cargue_masivo").modal("show");
+    },
+    box_masivo() {
+      $("#file_masivo").trigger("click");
     },
     magistradoxdepartamento(id) {
       let url = "/magistradoxdepartamento/" + id;
@@ -464,12 +586,12 @@ export default {
     },
     gestionarCaso() {
       console.log(this.gestion);
-    //   return
+      //   return
       if (
         this.gestion.id != 0 &&
         this.gestion.observacion != "" &&
-        this.gestion.tribunal != '' &&
-        this.gestion.id_magistrado != ''
+        this.gestion.tribunal != "" &&
+        this.gestion.id_magistrado != ""
       ) {
         let url = "/asignar-caso";
         let gestion = this.gestion;
@@ -517,6 +639,9 @@ export default {
     },
     cerrar_modal_s() {
       $("#modal_download").modal("hide");
+    },
+    modal_cargue_masivo() {
+      $("#modal_cargue_masivo").modal("show");
     },
   },
 };
