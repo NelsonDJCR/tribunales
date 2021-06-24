@@ -211,6 +211,11 @@ Route::middleware('auth')->group(function () {});
         Route::post('/comision-editar-data', [ComisionController::class,'dataEdit']);
         Route::post('/comision-editar', [ComisionController::class,'edit']);
 
+        Route::post('/tabla-cuentas-cobro', [CuentaCobroController::class, 'table']);
+        Route::post('/guardar-cuenta-cobro', [CuentaCobroController::class, 'save']);
+        Route::post('/record-cuenta-cobro', [CuentaCobroController::class, 'record']);
+        Route::post('/update-cuenta-cobro', [CuentaCobroController::class, 'update']);
+        Route::get('/magistradosxtribunal/{id}', [CuentaCobroController::class, 'magistradosxtribunal']);
 
 
 
